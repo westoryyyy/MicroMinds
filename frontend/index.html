@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>MicroMinds – the little city where AI agents shop for tiny APIs</title>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf6;--ink:#2a2a4a;--red:#e8322b;--grn:#23a84a;--blu:#3a46c8;--yel:#f6c21c;--card:#fff;--mut:#65658a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#171728;--ink:#f4efe0;--card:#222238;--mut:#a9a9c4}}
+:root[data-theme=dark]{--paper:#171728;--ink:#f4efe0;--card:#222238;--mut:#a9a9c4}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:19px/1.45 'Patrick Hand','Comic Sans MS',cursive;overflow-x:hidden}
+h1,h2,h3,.btn,.logo{font-family:'Gochi Hand','Patrick Hand',cursive;font-weight:400;line-height:1.1;margin:.2em 0}
+h1{font-size:clamp(2.5rem,7vw,4.6rem)}h2{font-size:clamp(1.9rem,4.5vw,3rem)}h3{font-size:1.5rem}
+a{color:var(--blu)}.wrap{max-width:1080px;margin:auto;padding:0 18px}section{padding:46px 0}
+.cr{filter:url(#w);max-width:100%;height:auto}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;padding:20px 24px;box-shadow:5px 6px 0 var(--yel)}
+.btn{display:inline-block;border:3px solid var(--ink);background:var(--yel);color:#2a2a4a;font-size:1.25rem;padding:8px 20px;border-radius:30px 8px 28px 10px/10px 28px 8px 30px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:rotate(-2deg) translateY(-2px)}.btn:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px dashed var(--red);outline-offset:3px}
+.b-b{background:var(--blu);color:#fff}.b-g{background:var(--grn);color:#fff}.b-r{background:var(--red);color:#fff}.btn[disabled]{opacity:.5}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--paper);border-bottom:3px dashed var(--ink)}
+nav .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+.logo{font-size:1.8rem;color:var(--ink);text-decoration:none;margin-right:auto;display:flex;align-items:center;gap:6px}
+nav a.l{color:var(--ink);text-decoration:none;font-size:1.15rem;padding:2px 8px;border-bottom:3px solid transparent}nav a.l:hover{border-color:var(--red)}
+.chip{background:var(--yel);color:#2a2a4a;border:2px solid var(--ink);border-radius:20px 6px 18px 6px;padding:1px 10px;font-size:.95rem}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:center;padding-top:30px}
+.lead{font-size:1.35rem;max-width:30em}.row{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+.scene{position:relative;height:380px}.fl{position:absolute;cursor:pointer;animation:bob 4s ease-in-out infinite;animation-delay:var(--d,0s);background:none;border:0;padding:0}
+.fl:hover{animation-play-state:paused;transform:rotate(8deg) scale(1.1)}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-3deg)}}@keyframes spin{to{rotate:360deg}}
+.sun{animation:spin 40s linear infinite}
+#bub{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);min-width:220px;text-align:center;z-index:2}
+.tick{overflow:hidden;border-block:3px dashed var(--ink);background:var(--card);white-space:nowrap}
+.tick div{display:inline-block;padding:8px 0;animation:mq 40s linear infinite}.tick span{margin:0 26px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.who{text-align:center;cursor:pointer}.who:hover svg{animation:bob 1s ease-in-out infinite}
+.stage{position:relative;display:flex;justify-content:space-between;align-items:flex-end;padding:56px 10px 10px}
+.coin{position:absolute;top:8px;width:34px;height:34px;border-radius:50%;background:var(--yel);border:3px solid #d99a00;color:#2a2a4a;text-align:center;line-height:28px;transition:left 1s ease;left:8%}
+.panel{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.panel .card:nth-child(even){transform:rotate(1.2deg)}.panel .card:nth-child(odd){transform:rotate(-1deg)}
+details{margin:10px 0}summary{cursor:pointer;font-size:1.25rem;font-family:'Gochi Hand',cursive}
+.sky{width:100%;height:150px;display:block}
+.bdg{display:inline-block;padding:0 10px;border-radius:14px 4px 14px 4px;border:2px solid var(--ink);font-size:.95rem;color:#fff}.rel{background:var(--grn)}.ref{background:var(--red)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:3px solid var(--ink);border-radius:14px 4px 12px 4px;padding:6px 10px;max-width:100%}
+textarea{width:100%;min-height:90px;font-family:monospace;font-size:.95rem}
+pre{background:var(--paper);border:3px dashed var(--ink);padding:10px;overflow-x:auto;font-size:.9rem;margin:8px 0}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border-bottom:2px dashed var(--mut);padding:6px 8px;text-align:left;white-space:nowrap}
+.err{color:var(--red)}.mut{color:var(--mut)}.steps li{margin:3px 0}.tabs{display:flex;gap:10px;margin:14px 0}
+.sk{height:120px;background:repeating-linear-gradient(45deg,var(--card),var(--card) 10px,var(--paper) 10px,var(--paper) 20px);border:3px dashed var(--mut);border-radius:20px;animation:bob 1.5s infinite}
+.empty{text-align:center;padding:24px}.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20}
+dialog{border:3px solid var(--ink);border-radius:30px 8px 28px 10px;background:var(--card);color:var(--ink);max-width:min(420px,92vw)}
+.cta{text-align:center}.cta .sun{display:block;margin:0 auto}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.scene{height:330px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="w"><feTurbulence baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+<pattern id="hy" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="6" height="6" fill="#fff8d6"/><line y2="6" stroke="#f6c21c" stroke-width="4"/></pattern>
+<pattern id="hg" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><rect width="6" height="6" fill="#e6f7ea"/><line y2="6" stroke="#23a84a" stroke-width="3"/></pattern>
+<pattern id="hb" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(50)"><rect width="6" height="6" fill="#e9ebff"/><line y2="6" stroke="#3a46c8" stroke-width="3"/></pattern>
+<pattern id="hr" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(20)"><rect width="6" height="6" fill="#ffe8e6"/><line y2="6" stroke="#e8322b" stroke-width="3"/></pattern></defs>
+<symbol id="cat" viewBox="0 0 100 100"><path d="M16 42 20 10 40 28Q50 25 60 28L80 10 84 42Q94 66 50 88 6 66 16 42Z" fill="url(#hy)" stroke="#d99a00" stroke-width="3"/><circle cx="36" cy="48" r="5" fill="#3a46c8"/><circle cx="64" cy="48" r="5" fill="#3a46c8"/><path d="M45 58h10l-5 6zM30 62 6 58M30 68 8 76M70 62 94 58M70 68 92 76M38 72Q50 82 62 72" fill="none" stroke="#e8322b" stroke-width="3"/></symbol>
+<symbol id="frog" viewBox="0 0 100 100"><ellipse cx="50" cy="64" rx="36" ry="28" fill="url(#hg)" stroke="#23a84a" stroke-width="3"/><circle cx="30" cy="30" r="13" fill="#fff" stroke="#23a84a" stroke-width="3"/><circle cx="70" cy="30" r="13" fill="#fff" stroke="#23a84a" stroke-width="3"/><circle cx="32" cy="32" r="4" fill="#2a2a4a"/><circle cx="68" cy="32" r="4" fill="#2a2a4a"/><path d="M28 62Q50 82 72 62M50 74q4 12 10 6" fill="none" stroke="#2a2a4a" stroke-width="3"/></symbol>
+<symbol id="croc" viewBox="0 0 200 80"><path d="M4 46Q30 14 100 26L196 36 190 52 160 50 154 60 146 50 136 60 128 50 118 58 108 50Q50 74 4 46Z" fill="url(#hg)" stroke="#23a84a" stroke-width="3"/><path d="M30 28l6-10 8 8 8-10 8 10 8-8 8 10" fill="none" stroke="#23a84a" stroke-width="3"/><circle cx="150" cy="37" r="4" fill="#2a2a4a"/></symbol>
+<symbol id="bird" viewBox="0 0 100 100"><ellipse cx="50" cy="52" rx="30" ry="28" fill="url(#hy)" stroke="#d99a00" stroke-width="3"/><path d="M44 26 50 8 58 26M78 46 96 52 78 58M42 80 38 96M58 80 62 96M22 52Q10 40 24 36" fill="none" stroke="#d99a00" stroke-width="3"/><circle cx="62" cy="44" r="3.5" fill="#2a2a4a"/></symbol>
+<symbol id="monkey" viewBox="0 0 100 100"><circle cx="16" cy="44" r="12" fill="url(#hr)" stroke="#e8322b" stroke-width="3"/><circle cx="84" cy="44" r="12" fill="url(#hr)" stroke="#e8322b" stroke-width="3"/><circle cx="50" cy="50" r="30" fill="#fff" stroke="#e8322b" stroke-width="3"/><ellipse cx="50" cy="60" rx="20" ry="15" fill="url(#hr)"/><circle cx="40" cy="42" r="4" fill="#2a2a4a"/><circle cx="60" cy="42" r="4" fill="#2a2a4a"/><path d="M40 64Q50 72 60 64" fill="none" stroke="#2a2a4a" stroke-width="3"/></symbol>
+<symbol id="bug" viewBox="0 0 100 60"><ellipse cx="50" cy="32" rx="26" ry="16" fill="url(#hr)" stroke="#e8322b" stroke-width="3"/><path d="M24 24 8 12M24 40 8 52M76 24 92 12M76 40 92 52M50 16V8M44 8h12" fill="none" stroke="#3a46c8" stroke-width="3"/></symbol>
+<symbol id="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="26" fill="url(#hy)" stroke="#d99a00" stroke-width="3"/><path d="M50 4v14M50 82v14M4 50h14M82 50h14M18 18l10 10M72 72l10 10M82 18 72 28M28 72 18 82" stroke="#f6c21c" stroke-width="5" fill="none"/></symbol>
+<symbol id="cloud" viewBox="0 0 100 50"><path d="M5 44Q0 22 25 24Q30 6 55 14Q76 2 86 24Q106 26 96 44Z" fill="url(#hb)" stroke="#3a46c8" stroke-width="3"/></symbol></svg>
+
+<nav><div class="wrap"><a class="logo" href="#/">🖍️ MicroMinds</a><a class="l" href="#/explore">Explore</a><a class="l" href="#/dashboard">Dashboard</a><a class="l" href="#/docs">Docs</a><span id="bal" class="chip" hidden></span><button class="btn b-b" id="auth" data-a="login">Log in</button></div></nav>
+<main id="app"></main>
+<footer><div id="sky"></div><p class="mut" style="text-align:center;margin:0;padding:10px">Demo mode: the chain, gateway and Privy login are simulated in this file. Real endpoints plug in through CFG at the top of the script. Fee 0% on testnet.</p></footer>
+<dialog id="dlg"><h3>Log in with Privy</h3><p class="mut">Email or wallet login. An embedded wallet on Monad testnet is created for you.</p><input id="em" type="email" placeholder="you@email.com" aria-label="Email" style="width:100%"><div class="row"><button class="btn b-b" data-a="doLogin">Continue</button><button class="btn" data-a="doLogin">Use my wallet</button><button class="btn" data-a="close">Cancel</button></div></dialog>
+<div id="toast" class="toast"></div>
+<script>
+const CFG={MOCK:true,EXPLORER:'https://testnet.monadexplorer.com/tx/',API:'https://api.microminds.example',RATE:16000};
+const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const hx=n=>'0x'+[...Array(n)].map(()=>(Math.random()*16|0).toString(16)).join('');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>(+n).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+const idr=n=>'≈ Rp '+Math.round(n*CFG.RATE).toLocaleString('id-ID');
+const SZ={croc:[200,80],bug:[100,60],cloud:[100,50]};
+const sv=(id,w,x='')=>{const[a,b]=SZ[id]||[100,100];return`<svg class="cr ${x}" width="${w}" viewBox="0 0 ${a} ${b}" role="img" aria-label="${id}"><use href="#${id}" width="${a}" height="${b}"/></svg>`};
+const S={u:null,bal:0,hold:0,key:'',calls:[],prov:0,tab:'c'};
+const L=[
+{id:'croc',n:"Croc's JSON Tidy",s:'croc',c:'Formatting',p:.001,d:'Chomps messy JSON into neat, pretty JSON.',ex:'{"raw":"{a:1,b:[2,3]}"}',out:['formatted'],ok:97,n2:120,ms:240},
+{id:'bird',n:"Bird's Word Picker",s:'bird',c:'Text',p:.002,d:'Picks words, emails and links out of any text.',ex:'{"text":"Mail hi@mimi.id or see https://monad.xyz today"}',out:['words','emails','urls'],ok:99,n2:88,ms:310},
+{id:'frog',n:"Frog's Link Peek",s:'frog',c:'Web',p:.003,d:'Hops to a URL and brings back its title and host.',ex:'{"url":"https://monad.xyz/docs"}',out:['title','host'],ok:95,n2:64,ms:420},
+{id:'bug',n:"Beetle's Wobbly Fortune",s:'bug',c:'Flaky demo',p:.001,d:'On purpose, trips over its own legs (HTTP 500 or wrong schema). Watch the refund happen.',ex:'{"question":"Will it work?"}',out:['fortune'],ok:12,n2:40,ms:500}];
+async function run(l,i){const t=performance.now();await sleep(300+Math.random()*500);let st=200,b;
+try{if(l.id==='croc'){b={formatted:JSON.stringify(JSON.parse(String(i.raw).replace(/([{,]\s*)([a-z_]\w*)\s*:/gi,'$1"$2":')),null,2)}}
+else if(l.id==='bird'){const t=String(i.text||'');b={words:t.split(/\s+/).filter(Boolean).length,emails:t.match(/[\w.]+@[\w.]+\w/g)||[],urls:t.match(/https?:\/\/\S+/g)||[]}}
+else if(l.id==='frog'){const u=new URL(i.url);b={title:u.hostname.replace(/^www\./,'')+' (simulated title)',host:u.hostname}}
+else if(l.id==='bug'){if(Math.random()<.5){st=500;b={oops:'beetle tripped'}}else b={prophecy:'maybe'}}
+else b={echo:i}}catch(e){st=422;b={error:'bad input: '+e.message}}return{st,b,ms:Math.round(performance.now()-t)}}
+function check(l,r){if(r.st<200||r.st>=300)return'HTTP '+r.st;const k=l.out.find(k=>!(k in r.b));if(k)return'schema mismatch: missing "'+k+'"';if(r.ms>5000)return'timeout over 5s';return''}
+const badge=s=>s==='released'?'<span class="bdg rel">Released</span>':'<span class="bdg ref">Refunded</span>';
+const txl=h=>`<a href="${CFG.EXPLORER+h}" target="_blank" rel="noopener" title="${CFG.MOCK?'Simulated transaction in demo mode':'View on explorer'}">${h.slice(0,10)}…</a>`;
+function toast(m){const t=$('#toast');t.innerHTML=`<span class="card" style="display:inline-block;padding:8px 18px">${m}</span>`;clearTimeout(toast.t);toast.t=setTimeout(()=>t.innerHTML='',2800)}
+function nav(){$('#bal').hidden=!S.u;$('#bal').textContent=fmt(S.bal)+' tMON';const a=$('#auth');a.textContent=S.u?S.u.slice(0,6)+'… · Log out':'Log in';a.dataset.a=S.u?'logout':'login'}
+const app=h=>{$('#app').innerHTML=h};
+const skel=()=>`<div class="wrap"><section><div class="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></section></div>`;
+const lcard=l=>`<a href="#/listing/${l.id}" style="text-decoration:none;color:inherit"><div class="card who" style="cursor:pointer">${sv(l.s,l.s==='croc'?190:90)}<h3>${esc(l.n)}</h3><p>${esc(l.d)}</p><p><span class="chip">${esc(l.c)}</span> <b>${fmt(l.p)} tMON</b><br><small class="mut">${idr(l.p)} (demo rate) · ${Math.round(l.ok)}% success · ${l.ms}ms avg</small></p></div></a>`;
+function sky(){const f=['hy','hg','hb','hr'],s=['#d99a00','#23a84a','#3a46c8','#e8322b'];let x='<svg class="sky cr" viewBox="0 0 600 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">',p=-4,i=0;while(p<600){const w=34+(i*37)%26,h=44+(i*53)%90;x+=`<rect x="${p}" y="${150-h}" width="${w}" height="${h}" fill="url(#${f[i%4]})" stroke="${s[i%4]}" stroke-width="3"/>`;for(let r=0;r<h/24-1;r++)x+=`<rect x="${p+8}" y="${150-h+10+r*22}" width="8" height="11" fill="#fff" stroke="${s[i%4]}"/>`;if(i==6)x+=`<use href="#cat" x="${p-6}" y="${150-h-34}" width="46" height="46"/>`;p+=w+3;i++}return x+'</svg>'}
+const lines=['Mimi: "Five calls only! No subscription, please."','Cat: "Purr. Coins stay with me until the work is good."','Bird: "Tweet! I pick words out of anything."','Frog: "Ribbit. Give me a link and I will hop there."','Sun: "Monad is fast, so the coins barely wait."'];
+const tickItems=['Mimi → Croc: JSON tidied, <b>Released</b> 0.001','Mimi → Beetle: tripped, <b>Refunded</b> 0.001','Agent #212 → Bird: 41 words found, <b>Released</b> 0.002','Agent #87 → Frog: host found, <b>Released</b> 0.003','Agent #5 → Croc: <b>Released</b> 0.001'];
+function home(){return`<div class="wrap hero"><div><h1>The little city where AI agents shop for tiny APIs.</h1><p class="lead">Pay per call, not per month. A sleepy Escrow Cat on a Monad rooftop holds your coins and only hands them over when the work comes back right.</p><div class="row"><a class="btn b-g" href="#/explore">Explore APIs</a><button class="btn b-b" data-a="login">Log in</button><a class="btn" href="#/docs">Connect in 2 minutes</a></div></div>
+<div class="scene"><div class="fl sun" style="right:0;top:0">${sv('sun',130)}</div><div class="fl" style="left:0;top:20px;--d:.5s">${sv('cloud',130)}</div>
+<button class="fl" data-a="talk" data-i="2" style="left:36%;top:0;--d:1s">${sv('bird',90)}</button><button class="fl" data-a="talk" data-i="0" style="left:2%;top:110px;--d:.2s">${sv('monkey',110)}</button>
+<button class="fl" data-a="talk" data-i="1" style="left:36%;top:130px;--d:.8s">${sv('cat',130)}</button><button class="fl" data-a="talk" data-i="3" style="right:6%;top:170px;--d:1.4s">${sv('frog',110)}</button>
+<div class="fl" style="left:4%;bottom:40px;--d:.3s">${sv('croc',200)}</div><div class="fl" style="right:30%;bottom:20px">${sv('bug',60)}</div><div id="bub" class="card" role="status">Click a friend!</div></div></div>
+<div class="tick"><div>${[...tickItems,...tickItems,...tickItems,...tickItems].map(t=>`<span>${t}</span>`).join('')}</div></div>
+<div class="wrap"><section><h2>The problem: subscription fatigue</h2><div class="card"><p>Your agent needs a JSON tidier for <b>five</b> calls. The service wants a monthly plan and a credit card. For a few coins' worth of work, that is a silly deal. Cards cannot move tiny amounts, and agents do not have cards.</p></div></section>
+<section><h2>The idea</h2><p class="lead">Deposit once. Every call pays only for itself. Good result: the provider gets paid. Bad result: your coins come back.</p>
+<div class="panel">${[['1. Deposit once','Log in with Privy, put tMON in the Escrow. It is your only manual signature.'],['2. Agent calls','Cursor or Claude uses the search_api and call_api tools over MCP.'],['3. Cat holds coins','The gateway reserves the price in the contract, then calls the provider with a 5s timeout.'],['4. Valid? Pay. Not? Refund.','Status 2xx, JSON schema ok, in time: Released. Anything else: Refunded.']].map(a=>`<div class="card"><h3>${a[0]}</h3><p>${a[1]}</p></div>`).join('')}</div></section>
+<section><h2>Try it: send Mimi shopping</h2><div class="card"><div class="stage"><div class="coin" id="coin">¢</div><div style="text-align:center">${sv('monkey',90)}<br>Mimi</div><div style="text-align:center">${sv('cat',100)}<br>Escrow Cat</div><div style="text-align:center" id="prov">${sv('croc',150)}<br>Provider</div></div><p id="plog" role="status">Pick a path to watch the coin travel.</p><div class="row"><button class="btn b-g" data-a="play" data-o="1">Good response</button><button class="btn b-r" data-a="play" data-o="0">Beetle trips</button></div></div></section>
+<section><h2>Meet the neighbourhood</h2><div class="grid">${[['monkey','Mimi','Your AI agent. Curious, small pockets, big errands.',0],['cat','Escrow Cat','Sits on the Monad rooftop. Only the operator whistle can tell her release or refund.',1],['croc','Croc, Bird & Frog','Honest providers. Croc formats, Bird picks words, Frog fetches links.',2],['bug','Beetle','Deliberately flaky, so you can see a refund for real.',4]].map(c=>`<div class="card who" data-a="talk" data-i="${c[3]}"><div>${sv(c[0],c[0]=='croc'?170:100)}</div><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join('')}</div></section>
+<section><h2>A short story</h2><div class="panel">${['Once, Mimi the toy monkey needed JSON tidied. Every shop asked for a monthly pass.','Then she found a rooftop where a yellow cat sat on a jar of coins.','"Pay only when it works," purred the cat. Croc chomped the JSON. Coin released!','Beetle tripped on his legs. The cat nudged the coin right back to Mimi. Fair is fair.'].map(t=>`<div class="card"><p>${t}</p></div>`).join('')}</div></section>
+<section><h2>Honest trust model</h2><div class="card"><p>In this MVP, validation happens off-chain in a trusted gateway, and only the operator wallet can reserve, release or refund. Every decision is an on-chain event. You can withdraw your remaining balance any time. Next: multi-party validation, optimistic verification, or TEE.</p><p><b>Built with</b> Privy (login + embedded wallet), Envio (live events), Alchemy (RPC), on Monad testnet.</p></div>
+<details><summary>Why blockchain, not a card?</summary><p>Tiny per-call amounts make card fees uneconomic, agents need a wallet instead of a card, and the pay/refund rule is public.</p></details><details><summary>Why Monad?</summary><p>EVM tooling, fast finality and very low gas fit microtransactions.</p></details><details><summary>What if a provider sends junk that matches the schema?</summary><p>Schemas catch structure only. Ratings, on-chain reputation and provider stake are on the roadmap, along with QA agents and a platform fee of 2-5%.</p></details></section>
+<section class="cta"><div class="fl sun" style="position:static;display:inline-block">${sv('sun',120)}</div><h2>Ready to give your agent a pocket?</h2><div class="row" style="justify-content:center"><a class="btn b-g" href="#/explore">Explore APIs</a><a class="btn b-b" href="#/docs">Connect MCP</a></div></section></div>`}
+function explore(){return`<div class="wrap"><section><h2>Explore the shops</h2><div class="row"><input id="q" data-a="flt" placeholder="Search: json, text, link…" aria-label="Search"><select id="mp" data-a="flt" aria-label="Max price"><option value="9">Any price</option><option value=".001">≤ 0.001 tMON</option><option value=".002">≤ 0.002 tMON</option></select></div><div id="list" class="grid" style="margin-top:20px"></div></section></div>`}
+function flist(){const q=($('#q').value||'').toLowerCase(),m=+$('#mp').value;const r=L.filter(l=>l.p<=m&&(l.n+l.d+l.c).toLowerCase().includes(q));$('#list').innerHTML=r.length?r.map(lcard).join(''):`<div class="card empty" style="grid-column:1/-1">${sv('cat',90)}<h3>No shops match</h3><p>Clear the search or raise the price limit.</p></div>`}
+function listing(id){const l=L.find(x=>x.id===id);if(!l)return`<div class="wrap"><section class="card empty"><h2>That shop is not on the map</h2><p class="err">Listing "${esc(id)}" does not exist.</p><a class="btn" href="#/explore">Back to Explore</a></section></div>`;
+return`<div class="wrap"><section><a href="#/explore">← All shops</a><div class="card"><div class="row" style="align-items:center">${sv(l.s,l.s==='croc'?200:110)}<div><h1 style="font-size:2.4rem">${esc(l.n)}</h1><p>${esc(l.d)}</p><p><span class="chip">${esc(l.c)}</span> <b>${fmt(l.p)} tMON</b> per call · ${idr(l.p)} (demo rate) · timeout 5s · ${Math.round(l.ok)}% success · ${l.ms}ms avg</p></div></div>
+<h3>Schema</h3><pre>input: JSON object, e.g. ${esc(l.ex)}\noutput must contain: ${l.out.join(', ')}</pre><h3>Try a call</h3><textarea id="inp" aria-label="JSON input">${esc(l.ex)}</textarea><div class="row"><button class="btn b-g" data-a="call" data-id="${l.id}">Call API</button></div><div id="res" role="status" aria-live="polite" style="margin-top:14px"></div></div></section></div>`}
+async function call(l){if(!S.u)return login();let inp;const res=h=>$('#res').innerHTML=h;
+try{inp=JSON.parse($('#inp').value)}catch{return res('<p class="err">Input is not valid JSON. Fix the braces and quotes, then call again.</p>')}
+if(S.bal<l.p)return res('<p class="err">Not enough balance. <a href="#/dashboard">Deposit tMON</a> first.</p>');
+const st=[],show=m=>{st.push(m);res('<ol class="steps">'+st.map(x=>`<li>${x}</li>`).join('')+'</ol>')};
+const id=hx(64),tr=hx(64);S.bal-=l.p;S.hold+=l.p;nav();show(`The cat holds <b>${fmt(l.p)} tMON</b> (reserve ${txl(tr)})`);await sleep(500);
+show('Calling provider…');const r=await run(l,inp);show('Validating response…');await sleep(500);
+const why=check(l,r),tf=hx(64);S.hold-=l.p;l.n2++;if(why)S.bal+=l.p;else{l.ok=(l.ok*(l.n2-1)+100)/l.n2;if(l.own)S.prov+=l.p}
+const status=why?'refunded':'released';S.calls.unshift({id,l:l.n,amt:l.p,status,why,ms:r.ms,tf});nav();
+res(`<ol class="steps">${st.map(x=>`<li>${x}</li>`).join('')}</ol><p>${badge(status)} ${why?`<span class="err">${esc(why)}. Your coins came back.</span>`:'Coins moved to the provider.'} · ${r.ms}ms · tx ${txl(tf)}</p><pre>${esc(JSON.stringify(r.b,null,2))}</pre>`)}
+function dash(){if(!S.u)return`<div class="wrap"><section class="card empty">${sv('cat',100)}<h2>Log in to open your dashboard</h2><p>Your embedded wallet and balance appear here.</p><button class="btn b-b" data-a="login">Log in</button></section></div>`;
+const c=S.tab==='c';let h=`<div class="wrap"><section><h2>Dashboard</h2><p class="mut">Wallet ${S.u} · Monad testnet · demo mode</p><div class="tabs"><button class="btn ${c?'b-b':''}" data-a="tab" data-t="c">Consumer</button><button class="btn ${c?'':'b-b'}" data-a="tab" data-t="p">Provider</button></div>`;
+if(c){h+=`<div class="grid"><div class="card"><h3>Balance</h3><p style="font-size:1.8rem;margin:0">${fmt(S.bal)} tMON</p><p class="mut">held by cat: ${fmt(S.hold)} · ${idr(S.bal)}</p></div>
+<div class="card"><h3>Deposit / withdraw</h3><input id="amt" type="number" step=".001" min="0" value="0.05" style="width:7em" aria-label="Amount"> <button class="btn b-g" data-a="dep">Deposit</button> <button class="btn" data-a="wd">Withdraw</button></div>
+<div class="card"><h3>API key</h3>${S.key?`<pre>${S.key}</pre>`:'<p class="mut">No key yet. It will be tied to your wallet.</p>'}<button class="btn b-b" data-a="key">${S.key?'New key':'Create API key'}</button></div></div>
+<h3 style="margin-top:26px">Call history</h3>${S.calls.length?`<div class="tw card"><table><tr><th>Shop</th><th>Price</th><th>Status</th><th>Latency</th><th>Tx</th></tr>${S.calls.map(x=>`<tr><td>${esc(x.l)}</td><td>${fmt(x.amt)}</td><td>${badge(x.status)}</td><td>${x.ms}ms</td><td>${txl(x.tf)}</td></tr>`).join('')}</table></div>`:`<div class="card empty">${sv('monkey',80)}<p>No calls yet. <a href="#/explore">Send Mimi to a shop</a>.</p></div>`}`}
+else{const own=L.filter(l=>l.own);h+=`<div class="grid"><div class="card"><h3>Earnings</h3><p style="font-size:1.8rem;margin:0">${fmt(S.prov)} tMON</p><button class="btn b-g" data-a="pwd">Withdraw earnings</button></div>
+<div class="card"><h3>Create a listing</h3><input id="ln" placeholder="Name" aria-label="Name"><br><input id="lp" type="number" step=".001" value="0.001" aria-label="Price tMON"><br><input id="le" placeholder="https://your-endpoint" aria-label="Endpoint"><br><button class="btn b-b" data-a="addl">Add listing</button></div></div>
+<h3 style="margin-top:26px">Your listings</h3>${own.length?`<div class="grid">${own.map(lcard).join('')}</div>`:'<div class="card empty"><p>No listings yet. Add one above; it echoes input back so you can test the flow.</p></div>'}`}
+return h+'</section></div>'}
+function docs(){const k=S.key||'mm_log_in_to_get_your_key';const cfg=JSON.stringify({mcpServers:{microminds:{command:'node',args:['packages/mcp-server/dist/index.js'],env:{MICROMINDS_API_KEY:k,MICROMINDS_BASE_URL:CFG.API}}}},null,2);
+return`<div class="wrap"><section><h2>Connect your agent in under 2 minutes</h2><div class="card"><h3>1. Get the MCP server</h3><pre>git clone &lt;your microminds repo&gt;\ncd microminds/packages/mcp-server && npm i && npm run build</pre>
+<h3>2. Copy your config</h3><p class="mut">${S.key?'Filled with your API key.':'<a href="#/dashboard">Log in and create a key</a> to fill it in automatically.'}</p><pre id="cfg">${esc(cfg)}</pre><button class="btn b-b" data-a="copy">Copy config</button>
+<h3>3. Restart Cursor and try it</h3><pre>Find an API that tidies JSON, then use it on {a:1,b:[2,3]}</pre><p>The agent calls <b>search_api</b>, then <b>call_api</b>, and reports the payment status and tx hash.</p>
+<p>Test with a friend: <button class="btn" data-a="sw">Start stopwatch</button> <b id="swt">0.0s</b> (goal: under 120s)</p></div></section></div>`}
+function login(){$('#dlg').showModal()}
+let swi,swt0;
+document.addEventListener('click',async e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a,d=t.dataset;
+if(a==='login')login();else if(a==='close')$('#dlg').close();
+else if(a==='doLogin'){S.u=hx(40);$('#dlg').close();nav();toast('Logged in. Embedded wallet ready on Monad testnet.');route()}
+else if(a==='logout'){S.u=null;S.bal=S.hold=0;S.key='';nav();route()}
+else if(a==='talk'){$('#bub')&&($('#bub').textContent=lines[d.i])}
+else if(a==='play'){const c=$('#coin'),g=$('#plog'),ok=d.o==='1';t.disabled=true;c.style.left='8%';g.textContent='Mimi hands a coin to the cat…';await sleep(300);c.style.left='46%';await sleep(1100);
+g.textContent=ok?'Provider replied: valid JSON in 240ms.':'Beetle replied: HTTP 500.';await sleep(900);c.style.left=ok?'84%':'8%';g.innerHTML=(ok?badge('released')+' The cat gave the coin to the provider.':badge('refunded')+' The cat gave the coin back to Mimi.');t.disabled=false}
+else if(a==='call')call(L.find(l=>l.id===d.id));
+else if(a==='flt')flist();
+else if(a==='tab'){S.tab=d.t;route()}
+else if(a==='dep'){const v=+$('#amt').value;if(v>0){S.bal+=v;nav();toast('Deposited '+fmt(v)+' tMON');route()}else toast('Enter an amount above 0.')}
+else if(a==='wd'){const v=+$('#amt').value;if(v>0&&v<=S.bal){S.bal-=v;nav();toast('Withdrew '+fmt(v)+' tMON');route()}else toast('Amount must be between 0 and your balance.')}
+else if(a==='key'){S.key='mm_'+hx(24).slice(2);toast('API key created for your wallet');route()}
+else if(a==='pwd'){S.bal+=S.prov;S.prov=0;nav();toast('Earnings moved to your balance');route()}
+else if(a==='addl'){const n=$('#ln').value.trim();if(!n)return toast('Give the listing a name.');L.push({id:'u'+L.length,n,s:'frog',c:'Yours',p:+$('#lp').value||.001,d:'A listing you added. Echoes its input.',ex:'{"hello":"world"}',out:['echo'],ok:100,n2:0,ms:300,own:1});toast('Listing added');route()}
+else if(a==='copy'){try{await navigator.clipboard.writeText($('#cfg').textContent);toast('Config copied')}catch{toast('Select the text and copy it by hand.')}}
+else if(a==='sw'){clearInterval(swi);swt0=Date.now();swi=setInterval(()=>{const s=$('#swt');s?s.textContent=((Date.now()-swt0)/1000).toFixed(1)+'s':clearInterval(swi)},100)}});
+document.addEventListener('input',e=>{if(e.target.dataset.a==='flt')flist()});
+document.addEventListener('change',e=>{if(e.target.dataset.a==='flt')flist()});
+let rt;function route(){const[p,a]=(location.hash.slice(2)||'').split('/');nav();const keep=document.activeElement;clearTimeout(rt);
+if(p==='explore'){app(skel());rt=setTimeout(()=>{app(explore());flist()},350)}
+else if(p==='listing')app(listing(a));else if(p==='dashboard')app(dash());else if(p==='docs')app(docs());else app(home())}
+let lastH=null;addEventListener('hashchange',()=>{scrollTo(0,0);route()});
+$('#sky').innerHTML=sky();route();
+</script></body></html>
