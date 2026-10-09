@@ -12,8 +12,10 @@ async function bootstrap() {
   // Global uniform error format: { error: { code, message } }
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // Cors for local development
-  app.enableCors();
+  // Cors for frontend domain
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || '*',
+  });
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);

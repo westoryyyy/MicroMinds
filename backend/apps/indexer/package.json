@@ -1,0 +1,13 @@
+{
+  "name": "microminds-indexer",
+  "version": "1.0.0",
+  "description": "MicroMinds API Gateway Escrow Indexer",
+  "main": "index.js",
+  "scripts": {
+    "start": "envio start",
+    "dev": "envio dev"
+  },
+  "dependencies": {
+    "envio": "^2.1.0"
+  }
+}

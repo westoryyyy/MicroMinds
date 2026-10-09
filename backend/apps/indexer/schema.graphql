@@ -1,0 +1,26 @@
+type Balance @entity {
+  id: ID!
+  amount: BigInt!
+}
+
+type Deposit @entity {
+  id: ID!
+  user: String!
+  amount: BigInt!
+  timestamp: Int!
+}
+
+type CallReservation @entity {
+  id: ID!
+  consumer: String!
+  amount: BigInt!
+  status: String!
+  timestamp: Int!
+}
+
+type Withdrawal @entity {
+  id: ID!
+  user: String!
+  amount: BigInt!
+  timestamp: Int!
+}
