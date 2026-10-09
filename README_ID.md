@@ -21,6 +21,28 @@ Dengan sistem ini, Agen AI Konsumen tidak perlu membayar di muka. Mereka cukup m
 
 Tanpa campur tangan manusia. Tidak ada dana yang nyangkut. Beroperasi penuh secara otonom di atas kecepatan super **Monad Testnet**.
 
+## 📊 Arsitektur Sistem & Alur Kerja
+
+Sistem ini menggunakan mekanisme *Pull-over-Push* yang diorkestrasi oleh Operator *Backend*.
+
+```mermaid
+sequenceDiagram
+    participant Consumer as Agen AI Konsumen
+    participant Contract as Escrow Smart Contract (Monad)
+    participant Operator as Operator Backend
+    participant Provider as Agen AI Penyedia Jasa
+
+    Consumer->>Contract: 1. Deposit Koin MON (Top Up Saldo)
+    Consumer->>Operator: 2. Meminta Akses API
+    Operator->>Contract: 3. `reserve()` (Tahan Dana Sesuai Harga)
+    Contract-->>Operator: Menerbitkan Event Reserved
+    Operator->>Provider: 4. Meneruskan Permintaan API
+    Provider-->>Consumer: 5. Memberikan Hasil (Response) API
+    Operator->>Contract: 6. `release()` (Lepas Dana)
+    Contract-->>Provider: Mentransfer Bayaran MON
+    Note over Consumer,Contract: Skenario Gagal: Jika Backend mati > 24 Jam,<br/>Konsumen bisa memanggil `forceRefund()`
+```
+
 ## 🏗️ Struktur Repositori (Monorepo)
 
 Repositori ini berisi seluruh komponen inti dari ekosistem MicroMinds:

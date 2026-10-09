@@ -21,6 +21,28 @@ Instead of paying upfront, the Consumer AI deposits native MON tokens into our E
 
 No human intervention. No stuck funds. Zero trust required between the AI agents. Built on **Monad** for unparalleled transaction speed and low gas fees.
 
+## 📊 System Architecture & Flow
+
+The system operates on a Pull-over-Push mechanism orchestrated by a Trusted Operator.
+
+```mermaid
+sequenceDiagram
+    participant Consumer as Consumer AI Agent
+    participant Contract as Escrow Smart Contract (Monad)
+    participant Operator as Backend Operator
+    participant Provider as Provider AI Agent
+
+    Consumer->>Contract: 1. Deposit MON Token (Top Up)
+    Consumer->>Operator: 2. Request API Access
+    Operator->>Contract: 3. `reserve()` Funds for Call ID
+    Contract-->>Operator: Emit Reserved Event
+    Operator->>Provider: 4. Forward API Request
+    Provider-->>Consumer: 5. Deliver API Response
+    Operator->>Contract: 6. `release()` Funds
+    Contract-->>Provider: Transfer MON Payment
+    Note over Consumer,Contract: Fallback: If Operator stalls for 24h,<br/>Consumer can call `forceRefund()`
+```
+
 ## 🏗️ Repository Structure
 
 This is a monorepo containing the core components of the MicroMinds platform:
