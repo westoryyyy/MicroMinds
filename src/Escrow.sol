@@ -74,12 +74,7 @@ contract Escrow is Ownable, ReentrancyGuard {
     event Withdrawn(address indexed account, uint256 amount);
 
     /// @notice Emitted when the operator reserves funds for an API call.
-    event Reserved(
-        bytes32 indexed callId,
-        address indexed consumer,
-        address indexed provider,
-        uint256 amount
-    );
+    event Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount);
 
     /// @notice Emitted when the operator releases escrowed funds to the provider.
     event Released(bytes32 indexed callId, address indexed provider, uint256 amount);
@@ -96,9 +91,7 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @param initialOwner   Address that will own this contract (can change operator).
     /// @param initialOperator Address authorized to reserve / release / refund.
-    constructor(address initialOwner, address initialOperator)
-        Ownable(initialOwner)
-    {
+    constructor(address initialOwner, address initialOperator) Ownable(initialOwner) {
         if (initialOperator == address(0)) revert ZeroAddress();
         operator = initialOperator;
         emit OperatorUpdated(address(0), initialOperator);
@@ -126,11 +119,11 @@ contract Escrow is Ownable, ReentrancyGuard {
     function withdraw(uint256 amount) external nonReentrant {
         if (amount == 0) revert ZeroAmount();
         if (balances[msg.sender] < amount) revert InsufficientBalance();
-        
+
         balances[msg.sender] -= amount;
         emit Withdrawn(msg.sender, amount);
-        
-        (bool success, ) = msg.sender.call{value: amount}("");
+
+        (bool success,) = msg.sender.call{value: amount}("");
         if (!success) revert TransferFailed();
     }
 
@@ -139,24 +132,14 @@ contract Escrow is Ownable, ReentrancyGuard {
     /// @param consumer Address of the consumer whose balance is debited.
     /// @param provider Address of the provider who will receive payment on release.
     /// @param amount   Amount of native token to reserve (must be > 0).
-    function reserve(
-        bytes32 callId,
-        address consumer,
-        address provider,
-        uint256 amount
-    ) external onlyOperator {
+    function reserve(bytes32 callId, address consumer, address provider, uint256 amount) external onlyOperator {
         if (amount == 0) revert ZeroAmount();
         if (consumer == address(0) || provider == address(0)) revert ZeroAddress();
         if (calls[callId].status != Status.None) revert CallAlreadyExists();
         if (balances[consumer] < amount) revert InsufficientBalance();
 
         balances[consumer] -= amount;
-        calls[callId] = Call({
-            consumer: consumer,
-            provider: provider,
-            amount: amount,
-            status: Status.Reserved
-        });
+        calls[callId] = Call({consumer: consumer, provider: provider, amount: amount, status: Status.Reserved});
 
         emit Reserved(callId, consumer, provider, amount);
     }

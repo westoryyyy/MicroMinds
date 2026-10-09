@@ -31,7 +31,7 @@ contract Attacker {
 
 contract EscrowTest is Test {
     Escrow public escrow;
-    
+
     address public owner = address(1);
     address public operator = address(2);
     address public consumer = address(3);
@@ -75,7 +75,7 @@ contract EscrowTest is Test {
     function test_DirectPaymentNotAllowed() public {
         vm.prank(consumer);
         vm.expectRevert(Escrow.DirectPaymentNotAllowed.selector);
-        (bool success, ) = address(escrow).call{value: 1 ether}("");
+        (bool success,) = address(escrow).call{value: 1 ether}("");
         require(success, "Call failed but not reverted as expected");
     }
 
@@ -83,7 +83,7 @@ contract EscrowTest is Test {
     function test_Withdraw_Success() public {
         vm.startPrank(consumer);
         escrow.deposit{value: 10 ether}();
-        
+
         vm.expectEmit(true, false, false, true);
         emit Withdrawn(consumer, 4 ether);
         escrow.withdraw(4 ether);
@@ -102,7 +102,7 @@ contract EscrowTest is Test {
     function test_Withdraw_RevertsInsufficientBalance() public {
         vm.prank(consumer);
         escrow.deposit{value: 10 ether}();
-        
+
         vm.prank(consumer);
         vm.expectRevert(Escrow.InsufficientBalance.selector);
         escrow.withdraw(11 ether);
@@ -112,9 +112,9 @@ contract EscrowTest is Test {
     function test_Withdraw_RevertsOnReentrancy() public {
         Attacker attacker = new Attacker(escrow);
         vm.deal(address(attacker), 10 ether);
-        
+
         attacker.attackDeposit{value: 10 ether}();
-        
+
         // The inner reentrant call reverts with ReentrancyGuardReentrantCall,
         // which causes the outer .call to fail and revert with TransferFailed.
         vm.expectRevert(Escrow.TransferFailed.selector);
@@ -127,7 +127,7 @@ contract EscrowTest is Test {
         escrow.deposit{value: 10 ether}();
 
         bytes32 callId = keccak256("call1");
-        
+
         vm.prank(operator);
         vm.expectEmit(true, true, true, true);
         emit Reserved(callId, consumer, provider, 5 ether);
@@ -138,7 +138,7 @@ contract EscrowTest is Test {
         assertEq(c.consumer, consumer);
         assertEq(c.provider, provider);
         assertEq(c.amount, 5 ether);
-        assertEq(uint(c.status), uint(Escrow.Status.Reserved));
+        assertEq(uint256(c.status), uint256(Escrow.Status.Reserved));
     }
 
     function test_Reserve_RevertsNotOperator() public {
@@ -156,7 +156,7 @@ contract EscrowTest is Test {
         vm.startPrank(operator);
         vm.expectRevert(Escrow.ZeroAddress.selector);
         escrow.reserve(keccak256("call1"), address(0), provider, 5 ether);
-        
+
         vm.expectRevert(Escrow.ZeroAddress.selector);
         escrow.reserve(keccak256("call2"), consumer, address(0), 5 ether);
         vm.stopPrank();
@@ -169,7 +169,7 @@ contract EscrowTest is Test {
         bytes32 callId = keccak256("call1");
         vm.startPrank(operator);
         escrow.reserve(callId, consumer, provider, 5 ether);
-        
+
         vm.expectRevert(Escrow.CallAlreadyExists.selector);
         escrow.reserve(callId, consumer, provider, 5 ether);
         vm.stopPrank();
@@ -201,7 +201,7 @@ contract EscrowTest is Test {
 
         assertEq(escrow.balances(provider), 5 ether);
         Escrow.Call memory c = escrow.getCall(callId);
-        assertEq(uint(c.status), uint(Escrow.Status.Released));
+        assertEq(uint256(c.status), uint256(Escrow.Status.Released));
     }
 
     function test_Release_RevertsNotReserved() public {
@@ -227,7 +227,7 @@ contract EscrowTest is Test {
 
         assertEq(escrow.balances(consumer), 10 ether);
         Escrow.Call memory c = escrow.getCall(callId);
-        assertEq(uint(c.status), uint(Escrow.Status.Refunded));
+        assertEq(uint256(c.status), uint256(Escrow.Status.Refunded));
     }
 
     // ─── SET OPERATOR ───
@@ -257,7 +257,7 @@ contract EscrowTest is Test {
         vm.assume(amount > 0);
         vm.assume(amount < 1_000_000 ether); // prevent max value overflow in dealing
         vm.deal(consumer, amount);
-        
+
         vm.prank(consumer);
         escrow.deposit{value: amount}();
         assertEq(escrow.balances(consumer), amount);
@@ -268,12 +268,12 @@ contract EscrowTest is Test {
         vm.assume(amount > 0);
         vm.assume(amount < 1_000_000 ether);
         vm.deal(consumer, amount);
-        
+
         vm.startPrank(consumer);
         escrow.deposit{value: amount}();
         escrow.withdraw(amount);
         vm.stopPrank();
-        
+
         assertEq(escrow.balances(consumer), 0);
         assertEq(consumer.balance, amount);
     }
