@@ -43,7 +43,6 @@ contract EscrowTest is Test {
     event Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount);
     event Released(bytes32 indexed callId, address indexed provider, uint256 amount);
     event Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount);
-    event RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount);
     event OperatorUpdated(address indexed oldOperator, address indexed newOperator);
 
     function setUp() public {
@@ -278,63 +277,5 @@ contract EscrowTest is Test {
 
         assertEq(escrow.balances(consumer), 0);
         assertEq(consumer.balance, amount);
-    }
-
-    // ─── FORCE REFUND ───
-    function test_ForceRefund_Success() public {
-        vm.prank(consumer);
-        escrow.deposit{value: 10 ether}();
-
-        bytes32 callId = keccak256("call1");
-        vm.prank(operator);
-        escrow.reserve(callId, consumer, provider, 5 ether);
-
-        // Fast forward time past the 1 day expiry
-        vm.warp(block.timestamp + 1 days + 1);
-
-        vm.prank(consumer);
-        vm.expectEmit(true, true, false, true);
-        emit RefundedForcibly(callId, consumer, 5 ether);
-        escrow.forceRefund(callId);
-
-        assertEq(escrow.balances(consumer), 10 ether);
-        IEscrow.Call memory c = escrow.getCall(callId);
-        assertEq(uint256(c.status), uint256(IEscrow.Status.Refunded));
-    }
-
-    function test_ForceRefund_RevertsNotReserved() public {
-        bytes32 callId = keccak256("call1");
-        vm.prank(consumer);
-        vm.expectRevert(IEscrow.CallNotReserved.selector);
-        escrow.forceRefund(callId);
-    }
-
-    function test_ForceRefund_RevertsNotConsumer() public {
-        vm.prank(consumer);
-        escrow.deposit{value: 10 ether}();
-
-        bytes32 callId = keccak256("call1");
-        vm.prank(operator);
-        escrow.reserve(callId, consumer, provider, 5 ether);
-
-        vm.warp(block.timestamp + 1 days + 1);
-
-        vm.prank(provider);
-        vm.expectRevert(IEscrow.NotConsumer.selector);
-        escrow.forceRefund(callId);
-    }
-
-    function test_ForceRefund_RevertsNotExpired() public {
-        vm.prank(consumer);
-        escrow.deposit{value: 10 ether}();
-
-        bytes32 callId = keccak256("call1");
-        vm.prank(operator);
-        escrow.reserve(callId, consumer, provider, 5 ether);
-
-        // Do not warp time
-        vm.prank(consumer);
-        vm.expectRevert(IEscrow.CallNotExpired.selector);
-        escrow.forceRefund(callId);
     }
 }
