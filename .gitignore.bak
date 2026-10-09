@@ -1,0 +1,8 @@
+.agent/
+.agents/
+.env
+out/
+cache/
+broadcast/
+.solidity-auditor/
+x-ray/
