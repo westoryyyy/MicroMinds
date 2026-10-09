@@ -1,5 +1,7 @@
 # MicroMinds Escrow Contract
 
+**"The Trust Layer for AI Micro-Economies."**
+
 A pull-over-push escrow smart contract for the MicroMinds Metropolis Hackathon on Monad Testnet. This contract safely holds consumer native token deposits (MON), allowing an off-chain operator to orchestrate reservations and releases (or refunds) for API usage.
 
 ## Architecture & Flow
