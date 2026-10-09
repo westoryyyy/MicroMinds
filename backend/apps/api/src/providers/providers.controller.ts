@@ -24,21 +24,26 @@ export class ProvidersController {
     
     try {
       const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
+        'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'gpt-3.5-turbo',
+          model: 'google/gemini-flash-1.5',
           messages: [{ role: 'user', content: body.prompt }]
         },
         {
+          timeout: 25000,
           headers: {
             'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': 'http://localhost:3000',
             'Content-Type': 'application/json'
           }
         }
       );
-      return { answer: response.data.choices[0].message.content };
+      
+      const content = response.data?.choices?.[0]?.message?.content || '';
+      return { answer: content };
     } catch (error) {
-      throw new HttpException('LLM API error', HttpStatus.INTERNAL_SERVER_ERROR);
+      // Return 500 so the Gateway treats it as an error and triggers refund()
+      throw new HttpException('LLM API error or timeout', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
