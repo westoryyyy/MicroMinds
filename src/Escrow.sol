@@ -116,13 +116,22 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Deposit native token (MON) into the caller's escrow balance.
     function deposit() external payable {
-        revert("TODO");
+        if (msg.value == 0) revert ZeroAmount();
+        balances[msg.sender] += msg.value;
+        emit Deposited(msg.sender, msg.value);
     }
 
     /// @notice Withdraw native token from the caller's escrow balance.
     /// @param amount Amount of native token to withdraw (must be > 0).
     function withdraw(uint256 amount) external nonReentrant {
-        revert("TODO");
+        if (amount == 0) revert ZeroAmount();
+        if (balances[msg.sender] < amount) revert InsufficientBalance();
+        
+        balances[msg.sender] -= amount;
+        emit Withdrawn(msg.sender, amount);
+        
+        (bool success, ) = msg.sender.call{value: amount}("");
+        if (!success) revert TransferFailed();
     }
 
     /// @notice Reserve funds from a consumer's balance for an API call.
@@ -136,25 +145,53 @@ contract Escrow is Ownable, ReentrancyGuard {
         address provider,
         uint256 amount
     ) external onlyOperator {
-        revert("TODO");
+        if (amount == 0) revert ZeroAmount();
+        if (consumer == address(0) || provider == address(0)) revert ZeroAddress();
+        if (calls[callId].status != Status.None) revert CallAlreadyExists();
+        if (balances[consumer] < amount) revert InsufficientBalance();
+
+        balances[consumer] -= amount;
+        calls[callId] = Call({
+            consumer: consumer,
+            provider: provider,
+            amount: amount,
+            status: Status.Reserved
+        });
+
+        emit Reserved(callId, consumer, provider, amount);
     }
 
     /// @notice Release reserved funds to the provider after successful API call.
     /// @param callId Identifier of a call in Reserved status.
     function release(bytes32 callId) external onlyOperator {
-        revert("TODO");
+        Call storage c = calls[callId];
+        if (c.status != Status.Reserved) revert CallNotReserved();
+
+        c.status = Status.Released;
+        balances[c.provider] += c.amount;
+
+        emit Released(callId, c.provider, c.amount);
     }
 
     /// @notice Refund reserved funds to the consumer after a failed API call.
     /// @param callId Identifier of a call in Reserved status.
     function refund(bytes32 callId) external onlyOperator {
-        revert("TODO");
+        Call storage c = calls[callId];
+        if (c.status != Status.Reserved) revert CallNotReserved();
+
+        c.status = Status.Refunded;
+        balances[c.consumer] += c.amount;
+
+        emit Refunded(callId, c.consumer, c.amount);
     }
 
     /// @notice Transfer operator role to a new address. Only callable by owner.
     /// @param newOperator The new operator address (must not be zero).
     function setOperator(address newOperator) external onlyOwner {
-        revert("TODO");
+        if (newOperator == address(0)) revert ZeroAddress();
+        address oldOperator = operator;
+        operator = newOperator;
+        emit OperatorUpdated(oldOperator, newOperator);
     }
 
     /// @notice Retrieve the full Call struct for a given call ID.
