@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "solidity-auditor": {
+      "source": "pashov/skills",
+      "sourceType": "github",
+      "skillPath": "solidity-auditor/SKILL.md",
+      "computedHash": "a1f9edb09e0e01360d7c24c6db06d9e829a3a2fb06c47b5a5a898415805602d8"
+    },
+    "x-ray": {
+      "source": "pashov/skills",
+      "sourceType": "github",
+      "skillPath": "x-ray/SKILL.md",
+      "computedHash": "e8e2bd74d174c8dcb1ae0e7e21c42e311e58c9d4cb5528e10a6cf19bfed9292a"
+    }
+  }
+}
