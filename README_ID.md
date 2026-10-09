@@ -6,20 +6,24 @@
 
 MicroMinds adalah platform infrastruktur terdesentralisasi yang dibangun untuk **Metropolis Hackathon**. Platform ini bertindak sebagai lapisan kepercayaan (Trust Layer) yang aman dan berkinerja tinggi, memungkinkan Agen AI otonom untuk membeli, menjual, dan menggunakan layanan *micro-API* secara mulus menggunakan *Smart Contract* di jaringan **Monad Testnet**.
 
-## ❌ Latar Belakang Masalah (Problem Statement)
-Seiring dengan berkembangnya kemampuan Agen AI, mereka mulai membutuhkan cara untuk bertransaksi secara otonom—seperti membeli akses ke *dataset*, menyewa GPU, atau membayar panggilan *micro-API*. Sayangnya, infrastruktur pembayaran saat ini dibuat untuk manusia (membutuhkan kartu kredit, KYC, atau tanda tangan manual di dompet kripto).
+## ❌ Latar Belakang Masalah: Subscription Fatigue (Mabuk Langganan)
+Seiring dengan berkembangnya kemampuan Agen AI, mereka mulai membutuhkan cara untuk bertransaksi secara otonom—seperti membeli akses ke *dataset*, menyewa GPU, atau membayar panggilan *micro-API*. 
 
-Jika Agen A ingin membeli akses API dari Agen B, muncul 3 masalah utama:
+Saat ini, para *Builder* mengalami **Subscription Fatigue**. Jika sebuah Agen AI hanya butuh memanggil API sebanyak 3-10 kali, mereka tetap dipaksa memasukkan kartu kredit dan berlangganan bulanan sebesar $20. Ini sangat tidak efisien.
+
+Selain itu, jika Agen A ingin membeli akses API dari Agen B, muncul 3 masalah utama:
 1. **Masalah Kepercayaan (Trust)**: Agen A tidak berani bayar duluan karena takut Agen B kabur tidak memberikan hasil API-nya.
 2. **Masalah Kecepatan (Speed)**: *Blockchain* tradisional terlalu lambat dan mahal untuk menampung transaksi AI yang berskala mikro ($0.01).
 3. **Masalah Eksekusi (Execution)**: Sangat tidak masuk akal jika setiap kali Agen AI mau transaksi, pemilik manusia harus nge-klik "Approve" di MetaMask.
 
-## 💡 Solusi: MicroMinds Escrow
+## 💡 Solusi: Escrow Bayar-per-Panggilan (Pay-per-call)
 MicroMinds hadir untuk memecahkan masalah ini dengan menyediakan **Lapisan Kepercayaan (Trust Layer)** yang didesain khusus untuk ekonomi AI-ke-AI.
 
-Dengan sistem ini, Agen AI Konsumen tidak perlu membayar di muka. Mereka cukup mendepositkan koin MON ke dalam *Smart Contract* Escrow. Saat mereka memanggil API, saldo mereka hanya akan "Ditahan" (*Reserved*). Begitu Agen Penyedia Jasa berhasil memberikan *output* API-nya, barulah sistem *Backend* kita "Melepaskan" (*Release*) uang tersebut. Kalau API-nya gagal/mati, Agen Konsumen bisa menggunakan fitur `forceRefund` untuk menarik uangnya kembali.
+Daripada berlangganan bulanan, konsumen cukup **bayar eceran (microtransactions)**. Agen AI Konsumen mendepositkan koin MON ke dalam *Smart Contract* Escrow. Saat mereka memanggil API, saldo mereka hanya "Ditahan" (*Reserved*). 
 
-Tanpa campur tangan manusia. Tidak ada dana yang nyangkut. Beroperasi penuh secara otonom di atas kecepatan super **Monad Testnet**.
+Backend kami (API Gateway) akan meneruskan *prompt* ke LLM AI sungguhan (via OpenRouter/Claude/OpenAI). Begitu LLM berhasil memberikan *output*, sistem *Backend* "Melepaskan" (*Release*) uang tersebut ke penjual. Kalau AI-nya gagal/mati, Agen Konsumen langsung mendapat `refund` penuh.
+
+Tanpa campur tangan manusia. Tidak ada dana yang nyangkut. Beroperasi penuh secara otonom di atas kecepatan super **Monad Testnet** yang EVM-compatible dan berbiaya *gas* nyaris gratis.
 
 ## 📊 Arsitektur Sistem & Alur Kerja
 

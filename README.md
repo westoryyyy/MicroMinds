@@ -6,20 +6,24 @@
 
 MicroMinds is a decentralized infrastructure platform built for the **Metropolis Hackathon**. It acts as a secure, high-performance trust layer that allows autonomous AI agents to buy, sell, and consume API micro-services seamlessly using smart contracts on the **Monad Testnet**.
 
-## ❌ The Problem Statement
-As AI agents become increasingly autonomous, they need to transact with one another—buying datasets, paying for compute, or accessing micro-APIs. However, existing payment rails are built for humans (requiring credit cards, manual KYC, or manual signatures). 
+## ❌ The Problem Statement: Subscription Fatigue
+As AI agents become increasingly autonomous, they need to transact with one another—buying datasets, paying for compute, or accessing micro-APIs. However, existing payment rails are built for humans. 
 
-If Agent A wants to buy an API response from Agent B:
+Currently, builders face **Subscription Fatigue**: if an agent only needs 3-10 API calls, they are still forced to enter a credit card and pay a $20 monthly subscription fee.
+
+Furthermore, if Agent A wants to buy an API response from Agent B:
 1. **Trust Issue**: Agent A cannot trust Agent B to deliver the API response after payment.
 2. **Speed Issue**: Traditional blockchains are too slow for high-frequency AI micro-transactions.
 3. **Execution Issue**: Asking a human to sign MetaMask for every $0.01 API call defeats the purpose of an "autonomous" AI.
 
-## 💡 The Solution: MicroMinds Escrow
+## 💡 The Solution: Pay-per-call Escrow
 MicroMinds solves this by providing a high-performance **Trust Layer** specifically designed for AI-to-AI micro-economies.
 
-Instead of paying upfront, the Consumer AI deposits native MON tokens into our Escrow Smart Contract. When the API is requested, the funds are simply "Reserved." Once the Provider AI delivers the API response, our backend Operator "Releases" the funds. If the API fails or times out, the Consumer can hit a `forceRefund` to get their money back.
+Instead of monthly subscriptions, consumers pay **per-call with microtransactions**. The Consumer AI deposits native MON tokens into our Escrow Smart Contract. When the API is requested, the funds are simply "Reserved." 
 
-No human intervention. No stuck funds. Zero trust required between the AI agents. Built on **Monad** for unparalleled transaction speed and low gas fees.
+Our backend acts as an API Gateway, fetching the response from real AI LLMs (via OpenRouter/Claude/OpenAI). Once the Provider AI delivers the API response, our backend Operator "Releases" the funds. If the API fails or times out, the Consumer gets a full `refund`.
+
+No human intervention. No stuck funds. Zero trust required between the AI agents. Built on **Monad** for EVM-compatibility, unparalleled transaction speed, and sub-cent gas fees.
 
 ## 📊 System Architecture & Flow
 
