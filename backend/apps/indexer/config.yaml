@@ -2,15 +2,17 @@ name: microminds-indexer
 description: MicroMinds API Gateway Escrow Indexer
 networks:
   - id: 10143
-    start_block: 0
+    start_block: 69485029
     contracts:
       - name: Escrow
+        abi_file_path: ../../smart-contract/deployments/EscrowABI.json
         address:
-          - "0x0000000000000000000000000000000000000000"
+          - "0x5c7141ab4d637915858ee97881fd613af468c76a"
         handler: src/EventHandlers.ts
         events:
-          - event: Deposited(address indexed user, uint256 amount)
-          - event: Reserved(bytes32 indexed callId, address indexed consumer, uint256 amount)
+          - event: Deposited(address indexed account, uint256 amount)
+          - event: Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount)
           - event: Released(bytes32 indexed callId, address indexed provider, uint256 amount)
           - event: Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)
-          - event: Withdrawn(address indexed user, uint256 amount)
+          - event: RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)
+          - event: Withdrawn(address indexed account, uint256 amount)

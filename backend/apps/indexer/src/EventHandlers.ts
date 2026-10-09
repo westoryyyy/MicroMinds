@@ -1,7 +1,7 @@
 import { Escrow } from "generated";
 
 Escrow.Deposited.handler(async ({ event, context }) => {
-  const user = event.params.user.toLowerCase();
+  const user = event.params.account.toLowerCase();
   const amount = event.params.amount;
 
   const currentBalance = await context.Balance.get(user);
@@ -23,6 +23,7 @@ Escrow.Deposited.handler(async ({ event, context }) => {
 Escrow.Reserved.handler(async ({ event, context }) => {
   const callId = event.params.callId;
   const consumer = event.params.consumer.toLowerCase();
+  const provider = event.params.provider.toLowerCase();
   const amount = event.params.amount;
 
   const currentBalance = await context.Balance.get(consumer);
@@ -33,12 +34,14 @@ Escrow.Reserved.handler(async ({ event, context }) => {
     });
   }
 
-  context.CallReservation.set({
+  context.Call.set({
     id: callId,
     consumer: consumer,
+    provider: provider,
     amount: amount,
     status: "reserved",
-    timestamp: event.block.timestamp,
+    reservedAt: event.block.timestamp,
+    reserveTx: event.transaction.hash,
   });
 });
 
@@ -47,11 +50,13 @@ Escrow.Released.handler(async ({ event, context }) => {
   const provider = event.params.provider.toLowerCase();
   const amount = event.params.amount;
 
-  const reservation = await context.CallReservation.get(callId);
-  if (reservation) {
-    context.CallReservation.set({
-      ...reservation,
+  const call = await context.Call.get(callId);
+  if (call) {
+    context.Call.set({
+      ...call,
       status: "released",
+      finalizedAt: event.block.timestamp,
+      finalTx: event.transaction.hash,
     });
   }
 
@@ -67,11 +72,13 @@ Escrow.Refunded.handler(async ({ event, context }) => {
   const consumer = event.params.consumer.toLowerCase();
   const amount = event.params.amount;
 
-  const reservation = await context.CallReservation.get(callId);
-  if (reservation) {
-    context.CallReservation.set({
-      ...reservation,
+  const call = await context.Call.get(callId);
+  if (call) {
+    context.Call.set({
+      ...call,
       status: "refunded",
+      finalizedAt: event.block.timestamp,
+      finalTx: event.transaction.hash,
     });
   }
 
@@ -83,7 +90,7 @@ Escrow.Refunded.handler(async ({ event, context }) => {
 });
 
 Escrow.Withdrawn.handler(async ({ event, context }) => {
-  const user = event.params.user.toLowerCase();
+  const user = event.params.account.toLowerCase();
   const amount = event.params.amount;
 
   const currentBalance = await context.Balance.get(user);
@@ -99,5 +106,27 @@ Escrow.Withdrawn.handler(async ({ event, context }) => {
     user: user,
     amount: amount,
     timestamp: event.block.timestamp,
+  });
+});
+
+Escrow.RefundedForcibly.handler(async ({ event, context }) => {
+  const callId = event.params.callId;
+  const consumer = event.params.consumer.toLowerCase();
+  const amount = event.params.amount;
+
+  const call = await context.Call.get(callId);
+  if (call) {
+    context.Call.set({
+      ...call,
+      status: "force_refunded",
+      finalizedAt: event.block.timestamp,
+      finalTx: event.transaction.hash,
+    });
+  }
+
+  const consumerBalance = await context.Balance.get(consumer);
+  context.Balance.set({
+    id: consumer,
+    amount: consumerBalance ? consumerBalance.amount + amount : amount,
   });
 });

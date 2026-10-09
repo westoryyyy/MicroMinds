@@ -10,12 +10,16 @@ type Deposit @entity {
   timestamp: Int!
 }
 
-type CallReservation @entity {
+type Call @entity {
   id: ID!
   consumer: String!
+  provider: String!
   amount: BigInt!
   status: String!
-  timestamp: Int!
+  reservedAt: Int!
+  finalizedAt: Int
+  reserveTx: String!
+  finalTx: String
 }
 
 type Withdrawal @entity {

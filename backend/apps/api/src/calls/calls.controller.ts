@@ -73,19 +73,33 @@ export class CallsController {
   }
 
   /**
-   * POST /call
+   * POST /api/chat-agent (Primary)
+   * POST /call (Alias)
    * Execute a micro-API call using the 10-step escrow flow.
    * Body: { listingId: UUID, input: object }
-   * Returns: { callId, status, data?, latencyMs, txReserve, txFinal }
+   * Returns: { callId, status, output, txHash, reason? }
    */
-  @Post('call')
+  @Post(['api/chat-agent', 'call'])
   @HttpCode(HttpStatus.OK)
   async call(@Req() req: AuthRequest, @Body() body: unknown) {
     const dto = CallDto.parse(body);
-    return this.callsService.executeCall(
+    const result = await this.callsService.executeCall(
       req.walletAddress,
       dto.listingId,
       dto.input,
     );
+
+    const response: any = {
+      callId: result.callId,
+      status: result.status,
+      txHash: result.txFinal,
+    };
+    if (result.status === 'released') {
+      response.output = result.data;
+    }
+    if (result.reason) {
+      response.reason = result.reason;
+    }
+    return response;
   }
 }

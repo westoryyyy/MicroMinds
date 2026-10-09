@@ -16,7 +16,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const API_URL = process.env.MICROMINDS_BASE_URL || "http://localhost:3001";
+const API_URL = process.env.MICROMINDS_BASE_URL || "http://localhost:3000";
 
 const server = new Server(
   {
@@ -119,7 +119,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
         throw new McpError(ErrorCode.InvalidParams, "listingId and input are required");
       }
 
-      const response = await axiosInstance.post("/call", {
+      const response = await axiosInstance.post("/api/chat-agent", {
         listingId,
         input,
       });

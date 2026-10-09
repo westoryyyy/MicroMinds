@@ -49,7 +49,7 @@ export class AuthController {
     // Step 4: Return plaintext key — caller must store this immediately
     return {
       id: result.id,
-      key: result.key,
+      apiKey: result.key,
       walletAddress: dto.walletAddress,
       label: dto.label ?? null,
       message: 'Store this key securely — it will not be shown again.',

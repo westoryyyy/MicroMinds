@@ -116,6 +116,7 @@ export class CallsService {
     latencyMs: number;
     txReserve: string;
     txFinal: string;
+    reason?: string | null;
   }> {
     // ── Step 1: Rate limit ──────────────────────────────────────────────────
     checkRateLimit(walletAddress.toLowerCase());
@@ -325,6 +326,7 @@ export class CallsService {
       latencyMs,
       txReserve,
       txFinal: txFinal!,
+      reason,
     };
   }
 

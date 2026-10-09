@@ -1,56 +1,115 @@
 /**
- * Seed script: inserts 2 demo listings for testing GET /listings.
+ * Seed script: inserts demo listings for MicroMinds testing.
  * Run: ts-node scripts/seed.ts
  */
 import { Pool } from 'pg';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 const listings = [
   {
-    name: 'Weather API',
-    description: 'Get current weather for any city using OpenWeatherMap data.',
-    endpoint: 'http://localhost:3001/dummy/weather',
-    price_wei: '1000000000000000', // 0.001 tMON
+    name: 'JSON Formatter',
+    description: 'Format unreadable JSON strings into pretty JSON.',
+    endpoint: 'http://localhost:3000/providers/json-format',
+    price_wei: '100000000000000', // 0.0001 tMON
     schema_input: JSON.stringify({
       type: 'object',
-      properties: { city: { type: 'string' } },
-      required: ['city'],
+      properties: { raw: { type: 'string' } },
+      required: ['raw'],
     }),
     schema_output: JSON.stringify({
       type: 'object',
-      properties: {
-        city: { type: 'string' },
-        temperature: { type: 'number' },
-        unit: { type: 'string' },
-      },
-      required: ['city', 'temperature'],
+      properties: { formatted: { type: 'string' } },
+      required: ['formatted'],
     }),
     timeout_ms: 5000,
-    provider_address: '0x000000000000000000000000000000000000dead',
-    category: 'weather',
+    provider_address: '0x0000000000000000000000000000000000000001',
+    category: 'utility',
   },
   {
-    name: 'Text Summarizer',
-    description: 'Summarize any long text into 2-3 sentences using AI.',
-    endpoint: 'http://localhost:3001/dummy/summarize',
-    price_wei: '5000000000000000', // 0.005 tMON
+    name: 'Text Extraction',
+    description: 'Extract emails and phone numbers from raw text.',
+    endpoint: 'http://localhost:3000/providers/text-extract',
+    price_wei: '100000000000000', // 0.0001 tMON
     schema_input: JSON.stringify({
       type: 'object',
-      properties: { text: { type: 'string', minLength: 1 } },
+      properties: { text: { type: 'string' } },
       required: ['text'],
     }),
     schema_output: JSON.stringify({
       type: 'object',
-      properties: { summary: { type: 'string' } },
-      required: ['summary'],
+      properties: {
+        emails: { type: 'array', items: { type: 'string' } },
+        phones: { type: 'array', items: { type: 'string' } },
+      },
+      required: ['emails', 'phones'],
     }),
-    timeout_ms: 8000,
-    provider_address: '0x000000000000000000000000000000000000dead',
+    timeout_ms: 5000,
+    provider_address: '0x0000000000000000000000000000000000000002',
+    category: 'utility',
+  },
+  {
+    name: 'URL Metadata',
+    description: 'Get title and description of a web page.',
+    endpoint: 'http://localhost:3000/providers/url-metadata',
+    price_wei: '100000000000000', // 0.0001 tMON
+    schema_input: JSON.stringify({
+      type: 'object',
+      properties: { url: { type: 'string' } },
+      required: ['url'],
+    }),
+    schema_output: JSON.stringify({
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+      },
+      required: ['title', 'description'],
+    }),
+    timeout_ms: 5000,
+    provider_address: '0x0000000000000000000000000000000000000003',
+    category: 'utility',
+  },
+  {
+    name: 'Flaky Listing',
+    description: 'Simulates failures (500 or bad schema) for testing refunds.',
+    endpoint: 'http://localhost:3000/providers/flaky',
+    price_wei: '500000000000000', // 0.0005 tMON
+    schema_input: JSON.stringify({
+      type: 'object',
+      properties: { trigger: { type: 'string' } },
+      required: ['trigger'],
+    }),
+    schema_output: JSON.stringify({
+      type: 'object',
+      properties: { result: { type: 'string' } },
+      required: ['result'],
+    }),
+    timeout_ms: 5000,
+    provider_address: '0x0000000000000000000000000000000000000004',
+    category: 'testing',
+  },
+  {
+    name: 'AI Assistant',
+    description: 'LLM-backed AI Assistant.',
+    endpoint: 'http://localhost:3000/providers/ai-assistant',
+    price_wei: '5000000000000000', // 0.005 tMON
+    schema_input: JSON.stringify({
+      type: 'object',
+      properties: { prompt: { type: 'string', maxLength: 1000 } },
+      required: ['prompt'],
+    }),
+    schema_output: JSON.stringify({
+      type: 'object',
+      properties: { answer: { type: 'string' } },
+      required: ['answer'],
+    }),
+    timeout_ms: 25000, // AI listings ~25000 ms
+    provider_address: '0x0000000000000000000000000000000000000005',
     category: 'ai',
   },
 ];

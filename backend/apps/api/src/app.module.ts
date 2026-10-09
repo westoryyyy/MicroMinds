@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { CallsModule } from './calls/calls.module';
 import { EscrowModule } from './escrow/escrow.module';
 import { ValidationModule } from './validation/validation.module';
+import { ProvidersModule } from './providers/providers.module';
 import { ApiKeyMiddleware } from './auth/api-key.middleware';
 
 @Module({
@@ -19,6 +20,7 @@ import { ApiKeyMiddleware } from './auth/api-key.middleware';
     ValidationModule,
     CallsModule,
     HealthModule,
+    ProvidersModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -32,6 +34,7 @@ export class AppModule implements NestModule {
         { path: 'listings/(.*)', method: RequestMethod.GET },
         { path: 'api-keys', method: RequestMethod.POST },
         { path: 'health', method: RequestMethod.GET },
+        { path: 'providers/(.*)', method: RequestMethod.POST },
         // Escrow debug endpoints (balance requires key in prod, but open for testing)
         { path: 'escrow/balance/(.*)', method: RequestMethod.GET },
         { path: 'escrow/mock-deposit', method: RequestMethod.POST },

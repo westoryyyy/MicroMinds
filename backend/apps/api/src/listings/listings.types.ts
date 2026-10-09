@@ -26,8 +26,8 @@ export interface ListingSummary {
 }
 
 export interface ListingDetail extends ListingSummary {
-  schemaInput: Record<string, unknown>;
-  schemaOutput: Record<string, unknown>;
+  inputSchema: Record<string, unknown>;
+  outputSchema: Record<string, unknown>;
   timeoutMs: number;
   providerAddress: string;
   endpoint: string;
