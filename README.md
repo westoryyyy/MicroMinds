@@ -163,7 +163,7 @@ Deployment is handled via Alchemy RPC endpoints.
 
 | Network | Address | Start Block | Explorer |
 |---------|---------|-------------|----------|
-| Monad Testnet | `<TO_BE_FILLED>` | `<TO_BE_FILLED>` | `<TO_BE_FILLED>` |
+| Monad Testnet | `0x5c7141ab4d637915858ee97881fd613af468c76a` | `69485029` | [View on Monad Explorer](https://testnet-explorer.monad.xyz/address/0x5c7141ab4d637915858ee97881fd613af468c76a) |
 
 ## Testing Strategy
 

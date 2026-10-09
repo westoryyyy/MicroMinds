@@ -33,7 +33,7 @@ const walletClient = createWalletClient({
 
 // 2. Reading Balance
 const consumerBalance = await publicClient.readContract({
-  address: '<TO_BE_FILLED>',
+  address: '0x5c7141ab4d637915858ee97881fd613af468c76a',
   abi: escrowAbi,
   functionName: 'balances',
   args: ['0xCONSUMER_ADDRESS']
@@ -46,7 +46,7 @@ const callId = keccak256(toBytes(uuid));
 
 // 4. Calling Reserve (Operator action)
 const tx = await walletClient.writeContract({
-  address: '<TO_BE_FILLED>',
+  address: '0x5c7141ab4d637915858ee97881fd613af468c76a',
   abi: escrowAbi,
   functionName: 'reserve',
   args: [callId, '0xCONSUMER_ADDRESS', '0xPROVIDER_ADDRESS', parseEther('1')],
@@ -76,7 +76,7 @@ import { createPublicClient, http, parseEther } from 'viem';
 
 // 1. Read balance
 const balance = await publicClient.readContract({
-  address: '<TO_BE_FILLED>',
+  address: '0x5c7141ab4d637915858ee97881fd613af468c76a',
   abi: escrowAbi,
   functionName: 'balances',
   args: [walletClient.account.address]
@@ -84,7 +84,7 @@ const balance = await publicClient.readContract({
 
 // 2. Deposit Native MON
 const depositTx = await walletClient.writeContract({
-  address: '<TO_BE_FILLED>',
+  address: '0x5c7141ab4d637915858ee97881fd613af468c76a',
   abi: escrowAbi,
   functionName: 'deposit',
   value: parseEther('5') 
@@ -94,7 +94,7 @@ const depositTx = await walletClient.writeContract({
 // IMPORTANT: Do NOT offer "withdraw max balance" unless the wallet has plenty of MON left, 
 // because Monad enforces a 10 MON reserve balance. Emptying the wallet will cause execution reversion.
 const withdrawTx = await walletClient.writeContract({
-  address: '<TO_BE_FILLED>',
+  address: '0x5c7141ab4d637915858ee97881fd613af468c76a',
   abi: escrowAbi,
   functionName: 'withdraw',
   args: [parseEther('2')]
@@ -115,8 +115,8 @@ const withdrawTx = await walletClient.writeContract({
 To index events reliably on Monad testnet, use the following `config.yaml` parameters (placeholders to be updated post-deploy):
 
 - **Network**: `monad_testnet` (Chain 10143)
-- **Start Block**: `<TO_BE_FILLED>`
-- **Contract Address**: `<TO_BE_FILLED>`
+- **Start Block**: `69485029`
+- **Contract Address**: `0x5c7141ab4d637915858ee97881fd613af468c76a`
 
 ### Event Signatures
 1. `event Deposited(address indexed account, uint256 amount)`
