@@ -1,0 +1,17 @@
+{
+  "name": "microminds-backend",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm --filter @microminds/api dev",
+    "build:api": "pnpm --filter @microminds/api build",
+    "start:api": "pnpm --filter @microminds/api start:prod",
+    "db:migrate": "pnpm --filter @microminds/api db:migrate",
+    "db:seed": "pnpm --filter @microminds/api db:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@nestjs/core"]
+  }
+}
