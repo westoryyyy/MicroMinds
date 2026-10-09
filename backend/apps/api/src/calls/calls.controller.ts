@@ -1,42 +1,91 @@
-import { Controller, Get, Post, Body, Query, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Req,
+  Query,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { CallsService } from './calls.service';
+import { z } from 'zod';
+
+// Extend Express Request to include walletAddress set by ApiKeyMiddleware
+type AuthRequest = Request & { walletAddress: string };
+
+const CallDto = z.object({
+  listingId: z.string().uuid('listingId must be a valid UUID'),
+  input: z.record(z.unknown()).default({}),
+});
+
+const PaginationDto = z.object({
+  limit: z.coerce.number().min(1).max(100).default(50),
+  offset: z.coerce.number().min(0).default(0),
+});
 
 @Controller()
 export class CallsController {
   constructor(private readonly callsService: CallsService) {}
 
   /**
+   * GET /me
+   * Returns the authenticated consumer's wallet address.
+   * Requires: x-api-key header (ApiKeyMiddleware sets req.walletAddress)
+   */
+  @Get('me')
+  getMe(@Req() req: AuthRequest) {
+    return {
+      walletAddress: req.walletAddress,
+    };
+  }
+
+  /**
+   * GET /calls
+   * Returns the caller's call history (paginated, newest first).
+   * Query: limit=50&offset=0
+   */
+  @Get('calls')
+  async getCalls(
+    @Req() req: AuthRequest,
+    @Query() query: unknown,
+  ) {
+    const { limit, offset } = PaginationDto.parse(query);
+    const rows = await this.callsService.findByConsumer(
+      req.walletAddress,
+      limit,
+      offset,
+    );
+    return rows.map((r) => ({
+      callId: r.call_id,
+      listingId: r.listing_id,
+      consumer: r.consumer,
+      provider: r.provider,
+      amountWei: r.amount_wei,
+      status: r.status,
+      reason: r.reason,
+      latencyMs: r.latency_ms,
+      txReserve: r.tx_reserve,
+      txFinal: r.tx_final,
+      createdAt: r.created_at,
+    }));
+  }
+
+  /**
    * POST /call
-   * Phase 3: full 10-step implementation.
+   * Execute a micro-API call using the 10-step escrow flow.
+   * Body: { listingId: UUID, input: object }
+   * Returns: { callId, status, data?, latencyMs, txReserve, txFinal }
    */
   @Post('call')
   @HttpCode(HttpStatus.OK)
-  async call(
-    @Body() body: unknown,
-    @Req() req: Request & { walletAddress: string },
-  ) {
-    const { listingId, input } = body as { listingId: string; input: unknown };
-    return this.callsService.executeCall(listingId, input, req.walletAddress);
-  }
-
-  /**
-   * GET /calls?consumer=0x...
-   */
-  @Get('calls')
-  async findCalls(@Query('consumer') consumer: string) {
-    return this.callsService.findByConsumer(consumer);
-  }
-
-  /**
-   * GET /me — returns wallet address + on-chain balance.
-   * Phase 2: balance wired after EscrowService is complete.
-   */
-  @Get('me')
-  async me(@Req() req: Request & { walletAddress: string }) {
-    return {
-      walletAddress: req.walletAddress,
-      balanceWei: null, // TODO Phase 2
-    };
+  async call(@Req() req: AuthRequest, @Body() body: unknown) {
+    const dto = CallDto.parse(body);
+    return this.callsService.executeCall(
+      req.walletAddress,
+      dto.listingId,
+      dto.input,
+    );
   }
 }

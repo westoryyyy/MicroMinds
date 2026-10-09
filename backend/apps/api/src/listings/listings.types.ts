@@ -30,4 +30,5 @@ export interface ListingDetail extends ListingSummary {
   schemaOutput: Record<string, unknown>;
   timeoutMs: number;
   providerAddress: string;
+  endpoint: string;
 }

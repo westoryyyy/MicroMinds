@@ -72,6 +72,7 @@ export class ListingsService {
       schemaOutput: parsed.schema_output,
       timeoutMs: parsed.timeout_ms,
       providerAddress: parsed.provider_address,
+      endpoint: parsed.endpoint,
     };
   }
 

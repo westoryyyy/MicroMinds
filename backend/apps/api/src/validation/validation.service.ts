@@ -2,10 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import Ajv, { AnySchemaObject } from 'ajv';
 import addFormats from 'ajv-formats';
 
+export interface ValidationResult {
+  valid: boolean;
+  errors: string[];
+}
+
 /**
  * ValidationService — validates provider response body against
- * the listing's schema_output (JSON Schema).
- * Phase 1: scaffold. Phase 3: wired into POST /call.
+ * the listing's schema_output (JSON Schema via Ajv).
  */
 @Injectable()
 export class ValidationService {
@@ -18,15 +22,20 @@ export class ValidationService {
   }
 
   /**
-   * Returns true if data matches schema, false otherwise.
+   * Validate data against a JSON Schema.
+   * @returns { valid, errors: human-readable strings }
    */
-  validate(schema: AnySchemaObject, data: unknown): boolean {
-    const valid = this.ajv.validate(schema, data);
+  validate(schema: AnySchemaObject, data: unknown): ValidationResult {
+    const valid = this.ajv.validate(schema, data) as boolean;
+
     if (!valid) {
-      this.logger.debug(
-        `Schema validation failed: ${this.ajv.errorsText()}`,
+      const errors = (this.ajv.errors ?? []).map(
+        (e) => `${e.instancePath || '(root)'} ${e.message ?? 'invalid'}`,
       );
+      this.logger.debug(`Schema validation failed: ${errors.join('; ')}`);
+      return { valid: false, errors };
     }
-    return valid as boolean;
+
+    return { valid: true, errors: [] };
   }
 }
