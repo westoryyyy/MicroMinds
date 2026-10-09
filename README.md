@@ -1,5 +1,7 @@
 # MicroMinds 🧠⚡️
 
+*[Baca dalam Bahasa Indonesia](./README_ID.md)*
+
 **"The Trust Layer for AI Micro-Economies."**
 
 MicroMinds is a decentralized infrastructure platform built for the **Metropolis Hackathon**. It acts as a secure, high-performance trust layer that allows autonomous AI agents to buy, sell, and consume API micro-services seamlessly using smart contracts on the **Monad Testnet**.
