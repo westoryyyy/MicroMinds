@@ -102,11 +102,11 @@ const withdrawTx = await walletClient.writeContract({
 ```
 
 ### Frontend Error Mapping
-- `ZeroAmount()` → "Silakan masukkan nominal lebih dari 0."
-- `InsufficientBalance()` → "Saldo escrow Anda tidak mencukupi untuk penarikan ini."
-- `TransferFailed()` → "Penarikan gagal diproses oleh jaringan."
-- `CallNotExpired()` → "Waktu timeout belum berakhir, Anda belum bisa memaksa refund."
-- `NotConsumer()` → "Anda tidak memiliki hak untuk melakukan refund pada call ID ini."
+- `ZeroAmount()` → "Please enter an amount greater than 0."
+- `InsufficientBalance()` → "Your escrow balance is insufficient for this withdrawal."
+- `TransferFailed()` → "The withdrawal failed to be processed by the network."
+- `CallNotExpired()` → "The timeout period has not ended yet; you cannot force a refund."
+- `NotConsumer()` → "You are not authorized to perform a refund for this call ID."
 
 ## 3. Indexer (Envio)
 
@@ -145,10 +145,10 @@ The structure mimics the output of Foundry deployments.
 
 ```
 --- Handoff Note ---
-Selesai: 
-Nilai penting: 
-Cara pakai: 
-Belum selesai atau berisiko: 
-Perubahan antarmuka: 
+Completed: 
+Key Value: 
+How to use: 
+Unfinished or Risky: 
+Interface Changes: 
 --------------------
 ```
