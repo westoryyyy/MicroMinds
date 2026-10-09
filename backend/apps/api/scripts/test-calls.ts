@@ -169,6 +169,59 @@ async function main() {
     }
   });
 
+  // ── Test 6: normal call → expiry is populated ──────────────────────────────
+  await test('success → expiry is ~24h into the future', async () => {
+    const escrow = new MockEscrowService();
+    escrow.mockDeposit(CONSUMER, 5_000_000_000_000_000n);
+
+    axiosMock.onPost(ENDPOINT).replyOnce(200, {
+      city: 'Jakarta',
+      temperature: 28.5,
+    });
+
+    const pool = {
+      query: async (sql: string, params: any[]) => {
+        // Intercept DB insert to check expiry
+        const expiry = params[10];
+        const now = Date.now();
+        const diffMs = expiry.getTime() - now;
+        const oneDayMs = 24 * 60 * 60 * 1000;
+        console.assert(Math.abs(diffMs - oneDayMs) < 5000, `Expiry is not ~24h ahead: diff=${diffMs}`);
+        return { rows: [] };
+      },
+    } as never;
+
+    const validation = new ValidationService();
+    const svc = new CallsService(pool, escrow as never, validation, listingsService);
+    
+    const result = await svc.executeCall(CONSUMER, LISTING_ID, { city: 'Jakarta' });
+    console.assert(result.status === 'released', 'Expected released');
+  });
+
+  // ── Test 7: consumer force refund → release fails gracefully ───────────────
+  await test('consumer force refund → release handled gracefully', async () => {
+    const escrow = new MockEscrowService();
+    escrow.mockDeposit(CONSUMER, 5_000_000_000_000_000n);
+
+    axiosMock.onPost(ENDPOINT).replyOnce(async () => {
+      // Find the active call ID
+      const callIds = Array.from((escrow as any).calls.keys());
+      const callId = callIds[callIds.length - 1] as string;
+      
+      // Simulate consumer calling forceRefund() on-chain
+      const call = (escrow as any).calls.get(callId);
+      call.status = 'refunded';
+
+      return [200, { city: 'Jakarta', temperature: 28.5 }];
+    });
+
+    const svc = buildSvc(escrow);
+    const result = await svc.executeCall(CONSUMER, LISTING_ID, { city: 'Jakarta' });
+
+    console.assert(result.status === 'refunded', `Expected refunded due to force-refund, got ${result.status}`);
+    console.assert(result.txFinal === '0x_force_refunded', `Expected 0x_force_refunded, got ${result.txFinal}`);
+  });
+
   // ── Summary ───────────────────────────────────────────────────────────────
   axiosMock.restore();
   const passed = results.filter((r) => r.passed).length;

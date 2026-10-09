@@ -13,7 +13,7 @@ import {
 import { privateKeyToAccount } from 'viem/accounts';
 import { monadTestnet } from './chains';
 import { ESCROW_ABI } from './escrow.abi';
-import { loadDeployedEscrowAddress } from './deployment-loader';
+import { loadDeployedEscrow, DeploymentData } from './deployment-loader';
 import { ApiException } from '../common/exceptions/api.exception';
 
 /**
@@ -34,6 +34,7 @@ export class RealEscrowService implements OnModuleInit {
   private operatorAccount!: LocalAccount;
   private publicClient!: ReturnType<typeof createPublicClient>;
   private walletClient!: ReturnType<typeof createWalletClient>;
+  private escrowAbi!: any;
 
   constructor(private readonly config: ConfigService) {}
 
@@ -44,9 +45,9 @@ export class RealEscrowService implements OnModuleInit {
     ) as `0x${string}`;
 
     // Resolve contract address: deployment file > env var
-    const fromFile = loadDeployedEscrowAddress();
-    const fromEnv = this.config.get<string>('ESCROW_ADDRESS');
-    const address = fromFile ?? fromEnv;
+    const deployment = loadDeployedEscrow();
+    const address = deployment?.address ?? this.config.get<string>('ESCROW_ADDRESS');
+    this.escrowAbi = deployment?.abi ?? ESCROW_ABI;
 
     if (!address) {
       throw new Error(
@@ -84,7 +85,7 @@ export class RealEscrowService implements OnModuleInit {
     try {
       const balance = await this.publicClient.readContract({
         address: this.escrowAddress,
-        abi: ESCROW_ABI,
+        abi: this.escrowAbi,
         functionName: 'balances',
         args: [consumer as Address],
       });
@@ -109,7 +110,7 @@ export class RealEscrowService implements OnModuleInit {
         account: this.operatorAccount,
         chain: monadTestnet,
         address: this.escrowAddress,
-        abi: ESCROW_ABI,
+        abi: this.escrowAbi,
         functionName: 'reserve',
         args: [callId, consumer as Address, provider as Address, amount],
       });
@@ -131,7 +132,7 @@ export class RealEscrowService implements OnModuleInit {
         account: this.operatorAccount,
         chain: monadTestnet,
         address: this.escrowAddress,
-        abi: ESCROW_ABI,
+        abi: this.escrowAbi,
         functionName: 'release',
         args: [callId],
       });
@@ -153,7 +154,7 @@ export class RealEscrowService implements OnModuleInit {
         account: this.operatorAccount,
         chain: monadTestnet,
         address: this.escrowAddress,
-        abi: ESCROW_ABI,
+        abi: this.escrowAbi,
         functionName: 'refund',
         args: [callId],
       });
@@ -163,6 +164,42 @@ export class RealEscrowService implements OnModuleInit {
       return hash;
     } catch (err) {
       throw this.wrapError('refund', err);
+    }
+  }
+
+  /**
+   * Fetch Call struct from chain.
+   */
+  async getCall(callId: `0x${string}`): Promise<{ consumer: string; provider: string; amount: bigint; status: number; expiry: bigint }> {
+    try {
+      const data = await this.publicClient.readContract({
+        address: this.escrowAddress,
+        abi: this.escrowAbi,
+        functionName: 'getCall',
+        args: [callId],
+      }) as any;
+      
+      // data is a tuple or struct. viem usually returns an object if fields are named.
+      // If it's a tuple: [consumer, provider, amount, status, expiry]
+      // Wait, in solidity it's a struct. Viem returns an object for structs.
+      if (Array.isArray(data)) {
+        return {
+          consumer: data[0],
+          provider: data[1],
+          amount: data[2],
+          status: Number(data[3]),
+          expiry: data[4]
+        };
+      }
+      return {
+        consumer: data.consumer,
+        provider: data.provider,
+        amount: data.amount,
+        status: Number(data.status),
+        expiry: data.expiry
+      };
+    } catch (err) {
+      throw this.wrapError('getCall', err);
     }
   }
 

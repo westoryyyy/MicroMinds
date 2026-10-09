@@ -24,13 +24,15 @@ interface DeploymentFile {
  * We intentionally do NOT throw if the file is missing — the file is
  * managed by the contracts team and may not exist in all environments.
  */
-export function loadDeployedEscrowAddress(): string | null {
-  // Walk up from apps/api to the repo root to find packages/contracts
+export interface DeploymentData {
+  address: string;
+  abi?: unknown[];
+}
+
+export function loadDeployedEscrow(): DeploymentData | null {
   const possiblePaths = [
-    // Running from apps/api/
     path.resolve(__dirname, '../../../../smart-contract/deployments/monad-testnet.json'),
     path.resolve(__dirname, '../../../../packages/contracts/deployments/monad-testnet.json'),
-    // Running from repo root
     path.resolve(process.cwd(), 'packages/contracts/deployments/monad-testnet.json'),
     path.resolve(process.cwd(), 'smart-contract/deployments/monad-testnet.json'),
   ];
@@ -39,23 +41,25 @@ export function loadDeployedEscrowAddress(): string | null {
     if (fs.existsSync(filePath)) {
       try {
         const raw = fs.readFileSync(filePath, 'utf-8');
-        const data: DeploymentFile = JSON.parse(raw) as DeploymentFile;
+        const data = JSON.parse(raw);
 
-        // Try multiple possible shapes of the deployment JSON
         const address =
-          (data.escrow as string | undefined) ??
-          (data.Escrow as string | undefined) ??
+          data.address ??
+          data.escrow ??
+          data.Escrow ??
           data.contracts?.Escrow?.address ??
           data.contracts?.escrow?.address;
 
         if (address && /^0x[0-9a-fA-F]{40}$/.test(address)) {
-          logger.log(`Loaded Escrow address from ${filePath}: ${address}`);
-          return address;
+          logger.log(`Loaded Escrow deployment from ${filePath}: ${address}`);
+          return {
+            address,
+            abi: data.abi,
+          };
         }
 
         logger.warn(
-          `Deployment file found at ${filePath} but Escrow address not found or invalid. ` +
-            `Keys available: ${Object.keys(data).join(', ')}`,
+          `Deployment file found at ${filePath} but Escrow address not found or invalid.`
         );
       } catch (err) {
         logger.warn(`Failed to parse deployment file at ${filePath}: ${String(err)}`);

@@ -77,6 +77,13 @@ export class EscrowService implements OnModuleInit {
   }
 
   /**
+   * Fetch Call struct from chain/mock
+   */
+  async getCall(callId: `0x${string}`): Promise<{ consumer: string; provider: string; amount: bigint; status: number; expiry: bigint }> {
+    return this.backend.getCall(callId);
+  }
+
+  /**
    * Expose mock backend for test seeding (only available in mock mode).
    * Throws if called in real mode.
    */

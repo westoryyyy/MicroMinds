@@ -6,7 +6,7 @@
     "build": "nest build",
     "dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "db:migrate": "node-pg-migrate up -f migrations/database.json",
+    "db:migrate": "node -r ts-node/register node_modules/node-pg-migrate/bin/node-pg-migrate.js up -f database.json",
     "db:seed": "ts-node scripts/seed.ts",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "test": "jest"

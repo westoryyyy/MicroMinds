@@ -56,6 +56,7 @@ export interface CallRow {
   tx_reserve: string | null;
   tx_final: string | null;
   created_at: Date;
+  expiry: Date | null;
 }
 
 @Injectable()
@@ -152,9 +153,25 @@ export class CallsService {
     const txReserve = await this.escrow.reserve(callId, consumer, provider, amountWei);
     this.logger.log(`[${callId}] Reserved: tx=${txReserve}`);
 
+    // Fetch expiry from the contract (non-fatal)
+    let expiryDate: Date | null = null;
+    try {
+      const callData = await this.escrow.getCall(callId);
+      if (callData.expiry > 0n) {
+        // Convert seconds to ms safely
+        const expiryMs = Number(callData.expiry) * 1000;
+        if (Number.isSafeInteger(expiryMs)) {
+          expiryDate = new Date(expiryMs);
+        }
+      }
+    } catch (err) {
+      this.logger.warn(`[${callId}] Failed to fetch call struct for expiry: ${String(err)}`);
+    }
+
     // Steps 6–9 wrapped in try/finally to guarantee refund on error
     let txFinal: string;
     let status: 'released' | 'refunded';
+    let dbStatus: 'released' | 'refunded' | 'refunded_forcibly';
     let responseData: unknown;
     let latencyMs = 0;
     let reason: string | null = null;
@@ -217,18 +234,39 @@ export class CallsService {
       }
 
       // ── Step 8: release or refund ───────────────────────────────────────────
-      if (valid) {
-        txFinal = await this.escrow.release(callId);
-        status = 'released';
-        this.logger.log(
-          `[${callId}] RELEASED: latency=${latencyMs}ms tx=${txFinal}`,
-        );
-      } else {
-        txFinal = await this.escrow.refund(callId);
-        status = 'refunded';
-        this.logger.warn(
-          `[${callId}] REFUNDED: reason="${reason}" latency=${latencyMs}ms tx=${txFinal}`,
-        );
+      try {
+        if (valid) {
+          txFinal = await this.escrow.release(callId);
+          status = 'released';
+          dbStatus = 'released';
+          this.logger.log(
+            `[${callId}] RELEASED: latency=${latencyMs}ms tx=${txFinal}`,
+          );
+        } else {
+          txFinal = await this.escrow.refund(callId);
+          status = 'refunded';
+          dbStatus = 'refunded';
+          this.logger.warn(
+            `[${callId}] REFUNDED: reason="${reason}" latency=${latencyMs}ms tx=${txFinal}`,
+          );
+        }
+      } catch (err: unknown) {
+        // Check if the operator transaction reverted because the consumer already forced a refund
+        this.logger.warn(`[${callId}] Tx failed, checking on-chain status: ${String(err)}`);
+        try {
+          const callData = await this.escrow.getCall(callId);
+          if (callData.status === 3) { // 3 = Refunded
+            this.logger.warn(`[${callId}] Call was already force-refunded on-chain.`);
+            txFinal = '0x_force_refunded';
+            status = 'refunded';
+            dbStatus = 'refunded_forcibly';
+            reason = 'force_refunded_by_consumer';
+          } else {
+            throw err;
+          }
+        } catch (getErr) {
+          throw err;
+        }
       }
     } catch (err: unknown) {
       // Unexpected error after reserve — must refund
@@ -238,12 +276,29 @@ export class CallsService {
       try {
         txFinal = await this.escrow.refund(callId);
         this.logger.log(`[${callId}] Emergency refund: tx=${txFinal}`);
+        status = 'refunded';
+        dbStatus = 'refunded';
       } catch (refundErr) {
-        this.logger.error(`[${callId}] Emergency refund FAILED: ${String(refundErr)}`);
-        txFinal = '0x_refund_failed';
+        this.logger.error(`[${callId}] Emergency refund FAILED, checking if already refunded...`);
+        try {
+          const callData = await this.escrow.getCall(callId);
+          if (callData.status === 3) {
+             txFinal = '0x_force_refunded';
+             status = 'refunded';
+             dbStatus = 'refunded_forcibly';
+             reason = 'force_refunded_by_consumer';
+          } else {
+             txFinal = '0x_refund_failed';
+             status = 'failed' as any;
+             dbStatus = 'failed' as any;
+          }
+        } catch (e) {
+          txFinal = '0x_refund_failed';
+          status = 'failed' as any;
+          dbStatus = 'failed' as any;
+        }
       }
-      status = 'refunded';
-      reason = err instanceof Error ? err.message : String(err);
+      if (!reason) reason = err instanceof Error ? err.message : String(err);
       txFinal = txFinal!;
     }
 
@@ -254,11 +309,12 @@ export class CallsService {
       consumer,
       provider,
       amountWei: amountWei.toString(),
-      status,
+      status: dbStatus,
       reason,
       latencyMs,
       txReserve,
       txFinal: txFinal!,
+      expiry: expiryDate,
     });
 
     // ── Step 10: Respond ────────────────────────────────────────────────────
@@ -280,18 +336,19 @@ export class CallsService {
     consumer: string;
     provider: string;
     amountWei: string;
-    status: 'released' | 'refunded';
+    status: string;
     reason: string | null;
     latencyMs: number;
     txReserve: string;
     txFinal: string;
+    expiry: Date | null;
   }): Promise<void> {
     try {
       await this.pool.query(
         `INSERT INTO calls
            (call_id, listing_id, consumer, provider, amount_wei,
-            status, reason, latency_ms, tx_reserve, tx_final)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+            status, reason, latency_ms, tx_reserve, tx_final, expiry)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
          ON CONFLICT (call_id) DO NOTHING`,
         [
           params.callId,
@@ -304,6 +361,7 @@ export class CallsService {
           params.latencyMs,
           params.txReserve,
           params.txFinal,
+          params.expiry,
         ],
       );
     } catch (err) {

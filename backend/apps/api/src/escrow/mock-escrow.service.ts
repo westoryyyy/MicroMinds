@@ -8,6 +8,7 @@ interface ReservedCall {
   provider: string;
   amount: bigint;
   status: 'reserved' | 'released' | 'refunded';
+  expiry: bigint;
 }
 
 /**
@@ -68,6 +69,7 @@ export class MockEscrowService {
       provider: provider.toLowerCase(),
       amount,
       status: 'reserved',
+      expiry: BigInt(Math.floor(Date.now() / 1000) + 86400), // +1 day
     });
 
     const txHash = `0xmock_reserve_${randomBytes(8).toString('hex')}` as `0x${string}`;
@@ -125,5 +127,20 @@ export class MockEscrowService {
     const txHash = `0xmock_refund_${randomBytes(8).toString('hex')}` as `0x${string}`;
     this.logger.debug(`Mock refund: callId=${callId} consumer=${call.consumer} amount=${call.amount} tx=${txHash}`);
     return txHash;
+  }
+
+  async getCall(callId: `0x${string}`): Promise<{ consumer: string; provider: string; amount: bigint; status: number; expiry: bigint }> {
+    const call = this.calls.get(callId);
+    if (!call) {
+      return { consumer: '0x0000000000000000000000000000000000000000', provider: '0x0000000000000000000000000000000000000000', amount: 0n, status: 0, expiry: 0n };
+    }
+    const statusMap = { reserved: 1, released: 2, refunded: 3 };
+    return {
+      consumer: call.consumer,
+      provider: call.provider,
+      amount: call.amount,
+      status: statusMap[call.status],
+      expiry: call.expiry,
+    };
   }
 }
