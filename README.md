@@ -30,4 +30,4 @@ We are targeting the following integrations and bounties for the Metropolis Hack
 4. **Envio**: *(Planned)* Real-time indexing of our Escrow events (Reserve, Release, Refund) for rapid dashboard updates.
 
 ## 📜 License
-[MIT License](./LICENSE) - Copyright (c) 2024 Team Ketupat / Metropolis Hackathon
+[MIT License](./LICENSE) - Copyright (c) 2026 Team Ketupat / Metropolis Hackathon
