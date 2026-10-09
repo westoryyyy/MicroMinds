@@ -74,9 +74,6 @@ export default function Home() {
           </p>
           <div className="mm-row">
             <Link className="btn b-g" href="/explore">Explore APIs</Link>
-            {authenticated
-              ? <Link className="btn b-b" href="/dashboard">Open dashboard</Link>
-              : <button className="btn b-b" onClick={login}>Log in</button>}
             <Link className="btn" href="/docs">Connect in 2 minutes</Link>
           </div>
         </div>

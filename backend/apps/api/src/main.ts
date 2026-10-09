@@ -13,8 +13,19 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
 
   // Cors for frontend domain
+  const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3001')
+    .split(',')
+    .map((s) => s.trim());
   app.enableCors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: (origin, cb) => {
+      // Allow requests with no origin (curl, Postman) or from allowed list
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        cb(null, true);
+      } else {
+        cb(new Error(`CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
   });
 
   const port = process.env.PORT ?? 3000;

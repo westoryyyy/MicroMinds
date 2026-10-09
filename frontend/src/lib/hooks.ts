@@ -67,9 +67,9 @@ export function useCallApi() {
   });
 }
 export function useCreateApiKey() {
-  const { getToken } = useSession(), { save } = useApiKey();
+  const { getToken, address } = useSession(), { save } = useApiKey();
   return useMutation({
-    mutationFn: async () => api.createApiKey(await getToken()),
+    mutationFn: async () => api.createApiKey(await getToken(), address ?? null),
     onSuccess: (k) => save(k),
   });
 }

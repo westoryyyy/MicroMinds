@@ -53,14 +53,18 @@ export async function postCall(listingId: string, input: unknown, apiKey: string
   return req<CallResult>("/call", { method: "POST", body: JSON.stringify({ listingId, input }) }, { [API_KEY_HEADER]: apiKey });
 }
 
-export async function createApiKey(privyToken: string | null): Promise<string> {
+export async function createApiKey(privyToken: string | null, walletAddress: string | null): Promise<string> {
   if (MOCK) { await sleep(400); return "mm_" + Math.random().toString(16).slice(2, 26); }
   if (!privyToken) throw new ApiError("NO_TOKEN", "Sesi login habis. Login ulang.");
-  const r = await req<{ apiKey: string }>("/api-keys", { method: "POST" }, { Authorization: `Bearer ${privyToken}` });
+  if (!walletAddress) throw new ApiError("NO_ADDRESS", "Wallet address tidak ditemukan.");
+  const r = await req<{ apiKey: string }>("/api-keys",
+    { method: "POST", body: JSON.stringify({ walletAddress }) },
+    { Authorization: `Bearer ${privyToken}` }
+  );
   return r.apiKey;
 }
 
-export async function getMe(apiKey: string): Promise<{ address: Hex; balance: string }> {
+export async function getMe(apiKey: string): Promise<{ address: string; balance: string }> {
   if (MOCK) return { address: "0x1111111111111111111111111111111111111111", balance: mockDb.balance.toString() };
   return req("/me", {}, { [API_KEY_HEADER]: apiKey });
 }

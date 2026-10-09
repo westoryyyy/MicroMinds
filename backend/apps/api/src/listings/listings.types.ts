@@ -23,6 +23,8 @@ export interface ListingSummary {
   description: string;
   priceWei: string;
   category: string | null;
+  successRate: number;
+  avgLatencyMs: number;
 }
 
 export interface ListingDetail extends ListingSummary {

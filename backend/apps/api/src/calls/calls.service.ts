@@ -216,7 +216,7 @@ export class CallsService {
         reason = `Provider response exceeded timeout: ${latencyMs}ms > ${timeoutMs}ms`;
       } else {
         // Schema validation (schemaOutput from listing)
-        const schemaOutput = listing.schemaOutput as object | undefined;
+        const schemaOutput = listing.outputSchema as object | undefined;
         if (schemaOutput && Object.keys(schemaOutput).length > 0) {
           const validationResult = this.validation.validate(
             schemaOutput,

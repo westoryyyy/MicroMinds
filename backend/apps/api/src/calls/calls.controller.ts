@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { CallsService } from './calls.service';
+import { EscrowService } from '../escrow/escrow.service';
 import { z } from 'zod';
 
 // Extend Express Request to include walletAddress set by ApiKeyMiddleware
@@ -27,7 +28,10 @@ const PaginationDto = z.object({
 
 @Controller()
 export class CallsController {
-  constructor(private readonly callsService: CallsService) {}
+  constructor(
+    private readonly callsService: CallsService,
+    private readonly escrowService: EscrowService,
+  ) {}
 
   /**
    * GET /me
@@ -35,9 +39,13 @@ export class CallsController {
    * Requires: x-api-key header (ApiKeyMiddleware sets req.walletAddress)
    */
   @Get('me')
-  getMe(@Req() req: AuthRequest) {
+  async getMe(@Req() req: AuthRequest) {
+    const balance = await this.escrowService.getBalance(req.walletAddress);
     return {
-      walletAddress: req.walletAddress,
+      address: req.walletAddress,
+      walletAddress: req.walletAddress, // backward compat
+      balance: balance.toString(),
+      balanceWei: balance.toString(),
     };
   }
 

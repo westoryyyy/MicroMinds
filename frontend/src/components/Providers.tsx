@@ -23,14 +23,14 @@ export default function Providers({ children }: { children: ReactNode }) {
     <PrivyProvider
       appId={CFG.privyAppId}
       config={{
-        loginMethods: ["email", "wallet"],
+        loginMethods: ["google", "discord", "twitter", "github"],
         defaultChain: monadTestnet,
         supportedChains: [monadTestnet],
         embeddedWallets: {
           ethereum: { createOnLogin: "users-without-wallets" },
           showWalletUIs: false, // tanpa pop-up konfirmasi saat deposit
         },
-        appearance: { theme: "light", accentColor: "#3a46c8" },
+        appearance: { theme: "dark", accentColor: "#f6c21c" },
       }}
     >
       <QueryClientProvider client={qc}>
