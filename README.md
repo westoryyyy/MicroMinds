@@ -138,11 +138,11 @@ Deployment is handled via Alchemy RPC endpoints.
 2. Ensure you have two separate keys/keystores for the Deployer (Owner) and Operator.
 3. Run the deployment script (currently in development):
    ```bash
-   # <TO_BE_FILLED> (Deployment commands utilizing forge script)
+   make deploy-testnet
    ```
 4. Extract the ABI and deployments using the export script:
    ```bash
-   ./script/export-deployment.sh
+   ./script/export.sh
    ```
    This generates `deployments/monad-testnet.json`.
 5. Perform smoke tests:
@@ -152,7 +152,9 @@ Deployment is handled via Alchemy RPC endpoints.
    *Note: Ensure the testing wallets have >= 10 MON to accommodate the Monad Reserve Balance.*
 6. Verify the contract on [MonadVision](https://monadvision.xyz) / Monadscan:
    ```bash
-   # <TO_BE_FILLED> (Verification command using forge verify-contract)
+   forge verify-contract <DEPLOYED_ADDRESS> src/Escrow.sol:Escrow \
+     --verifier blockscout \
+     --verifier-url https://testnet-explorer.monad.xyz/api
    ```
 
 ## Deployed Contracts
@@ -196,11 +198,13 @@ monad-contracts/
 │   └── SOURCES.md
 ├── lib/
 ├── script/
-│   └── <TO_BE_FILLED> (export-deployment.sh, smoke.sh)
+│   ├── Deploy.s.sol
+│   ├── SmokeTest.s.sol
+│   └── export.sh
 ├── src/
 │   └── Escrow.sol
 └── test/
-    └── <TO_BE_FILLED> (Escrow.t.sol)
+    └── Escrow.t.sol
 ```
 
 ## Audit and Security Review
@@ -218,4 +222,4 @@ Future iterations of this Escrow should incorporate:
 
 ## License
 
-<TO_BE_FILLED>
+MIT License
