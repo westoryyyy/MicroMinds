@@ -3,57 +3,14 @@ pragma solidity ^0.8.24;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {IEscrow} from "./interfaces/IEscrow.sol";
 
 /// @title MicroMinds Escrow
 /// @notice Holds native token (MON) deposits for consumers, allows an operator to
 ///         reserve funds per API call, then release to provider or refund to consumer.
 ///         Consumers and providers withdraw their own balances (pull-over-push).
 /// @dev    Deployed on Monad testnet (chain 10143). No ERC-20, no proxy, no pause.
-contract Escrow is Ownable, ReentrancyGuard {
-    // ──────────────────────────── Errors ────────────────────────────
-
-    /// @notice Caller is not the designated operator.
-    error NotOperator();
-
-    /// @notice Supplied amount is zero.
-    error ZeroAmount();
-
-    /// @notice Account balance is too low for the requested operation.
-    error InsufficientBalance();
-
-    /// @notice A call record with this ID already exists.
-    error CallAlreadyExists();
-
-    /// @notice The call record is not in Reserved status.
-    error CallNotReserved();
-
-    /// @notice Provided address is the zero address.
-    error ZeroAddress();
-
-    /// @notice Native token transfer via call{value}() failed.
-    error TransferFailed();
-
-    /// @notice Direct MON transfers (without calling deposit) are not allowed.
-    error DirectPaymentNotAllowed();
-
-    // ──────────────────────────── Types ─────────────────────────────
-
-    /// @notice Lifecycle status of an API call escrow.
-    enum Status {
-        None,
-        Reserved,
-        Released,
-        Refunded
-    }
-
-    /// @notice On-chain record of a single API call escrow.
-    struct Call {
-        address consumer;
-        address provider;
-        uint256 amount;
-        Status status;
-    }
-
+contract Escrow is Ownable, ReentrancyGuard, IEscrow {
     // ──────────────────────────── State ─────────────────────────────
 
     /// @notice Withdrawable balance per account (consumer or provider).
@@ -64,28 +21,6 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Wallet authorized to reserve, release, and refund.
     address public operator;
-
-    // ──────────────────────────── Events ────────────────────────────
-
-    /// @notice Emitted when an account deposits native token.
-    event Deposited(address indexed account, uint256 amount);
-
-    /// @notice Emitted when an account withdraws native token.
-    event Withdrawn(address indexed account, uint256 amount);
-
-    /// @notice Emitted when the operator reserves funds for an API call.
-    event Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount);
-
-    /// @notice Emitted when the operator releases escrowed funds to the provider.
-    event Released(bytes32 indexed callId, address indexed provider, uint256 amount);
-
-    /// @notice Emitted when the operator refunds escrowed funds to the consumer.
-    event Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount);
-
-    /// @notice Emitted when the owner changes the operator address.
-    /// @dev    Not consumed by Envio indexer (addition beyond SKPL). Envio handles
-    ///         the five events above only.
-    event OperatorUpdated(address indexed oldOperator, address indexed newOperator);
 
     // ──────────────────────── Constructor ───────────────────────────
 
@@ -108,7 +43,7 @@ contract Escrow is Ownable, ReentrancyGuard {
     // ──────────────────────── Functions ─────────────────────────────
 
     /// @notice Deposit native token (MON) into the caller's escrow balance.
-    function deposit() external payable {
+    function deposit() external payable override {
         if (msg.value == 0) revert ZeroAmount();
         balances[msg.sender] += msg.value;
         emit Deposited(msg.sender, msg.value);
@@ -116,7 +51,7 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Withdraw native token from the caller's escrow balance.
     /// @param amount Amount of native token to withdraw (must be > 0).
-    function withdraw(uint256 amount) external nonReentrant {
+    function withdraw(uint256 amount) external override nonReentrant {
         if (amount == 0) revert ZeroAmount();
         if (balances[msg.sender] < amount) revert InsufficientBalance();
 
@@ -132,7 +67,11 @@ contract Escrow is Ownable, ReentrancyGuard {
     /// @param consumer Address of the consumer whose balance is debited.
     /// @param provider Address of the provider who will receive payment on release.
     /// @param amount   Amount of native token to reserve (must be > 0).
-    function reserve(bytes32 callId, address consumer, address provider, uint256 amount) external onlyOperator {
+    function reserve(bytes32 callId, address consumer, address provider, uint256 amount)
+        external
+        override
+        onlyOperator
+    {
         if (amount == 0) revert ZeroAmount();
         if (consumer == address(0) || provider == address(0)) revert ZeroAddress();
         if (calls[callId].status != Status.None) revert CallAlreadyExists();
@@ -146,7 +85,7 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Release reserved funds to the provider after successful API call.
     /// @param callId Identifier of a call in Reserved status.
-    function release(bytes32 callId) external onlyOperator {
+    function release(bytes32 callId) external override onlyOperator {
         Call storage c = calls[callId];
         if (c.status != Status.Reserved) revert CallNotReserved();
 
@@ -158,7 +97,7 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Refund reserved funds to the consumer after a failed API call.
     /// @param callId Identifier of a call in Reserved status.
-    function refund(bytes32 callId) external onlyOperator {
+    function refund(bytes32 callId) external override onlyOperator {
         Call storage c = calls[callId];
         if (c.status != Status.Reserved) revert CallNotReserved();
 
@@ -170,7 +109,7 @@ contract Escrow is Ownable, ReentrancyGuard {
 
     /// @notice Transfer operator role to a new address. Only callable by owner.
     /// @param newOperator The new operator address (must not be zero).
-    function setOperator(address newOperator) external onlyOwner {
+    function setOperator(address newOperator) external override onlyOwner {
         if (newOperator == address(0)) revert ZeroAddress();
         address oldOperator = operator;
         operator = newOperator;
@@ -180,7 +119,7 @@ contract Escrow is Ownable, ReentrancyGuard {
     /// @notice Retrieve the full Call struct for a given call ID.
     /// @param callId The call identifier to look up.
     /// @return The Call struct (consumer, status, provider, amount).
-    function getCall(bytes32 callId) external view returns (Call memory) {
+    function getCall(bytes32 callId) external view override returns (Call memory) {
         return calls[callId];
     }
 
