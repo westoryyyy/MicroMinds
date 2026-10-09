@@ -16,7 +16,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const API_URL = process.env.MICROMINDS_API_URL || "http://localhost:3001";
+const API_URL = process.env.MICROMINDS_BASE_URL || "http://localhost:3001";
 
 const server = new Server(
   {
