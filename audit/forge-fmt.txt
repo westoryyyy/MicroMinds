@@ -1,0 +1,37 @@
+Diff in src/Escrow.sol:
+74  74   |     event Withdrawn(address indexed account, uint256 amount);
+75  75   | 
+76  76   |     /// @notice Emitted when the operator reserves funds for an API call.
+77       |-    event Reserved(
+78       |-        bytes32 indexed callId,
+79       |-        address indexed consumer,
+80       |-        address indexed provider,
+81       |-        uint256 amount
+82       |-    );
+    77   |+    event Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount);
+83  78   | 
+84  79   |     /// @notice Emitted when the operator releases escrowed funds to the provider.
+85  80   |     event Released(bytes32 indexed callId, address indexed provider, uint256 amount);
+--------------------------------------------------------------------------------96  91   | 
+97  92   |     /// @param initialOwner   Address that will own this contract (can change operator).
+98  93   |     /// @param initialOperator Address authorized to reserve / release / refund.
+99       |-    constructor(address initialOwner, address initialOperator)
+100      |-        Ownable(initialOwner)
+101      |-    {
+    94   |+    constructor(address initialOwner, address initialOperator) Ownable(initialOwner) {
+102 95   |         if (initialOperator == address(0)) revert ZeroAddress();
+103 96   |         operator = initialOperator;
+104 97   |         emit OperatorUpdated(address(0), initialOperator);
+--------------------------------------------------------------------------------130 123  |     /// @param consumer Address of the consumer whose balance is debited.
+131 124  |     /// @param provider Address of the provider who will receive payment on release.
+132 125  |     /// @param amount   Amount of native token to reserve (must be > 0).
+133      |-    function reserve(
+134      |-        bytes32 callId,
+135      |-        address consumer,
+136      |-        address provider,
+137      |-        uint256 amount
+138      |-    ) external onlyOperator {
+    126  |+    function reserve(bytes32 callId, address consumer, address provider, uint256 amount) external onlyOperator {
+139 127  |         revert("TODO");
+140 128  |     }
+141 129  | 
