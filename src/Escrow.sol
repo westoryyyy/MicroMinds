@@ -78,7 +78,13 @@ contract Escrow is Ownable, ReentrancyGuard, IEscrow {
         if (balances[consumer] < amount) revert InsufficientBalance();
 
         balances[consumer] -= amount;
-        calls[callId] = Call({consumer: consumer, provider: provider, amount: amount, status: Status.Reserved});
+        calls[callId] = Call({
+            consumer: consumer,
+            provider: provider,
+            amount: amount,
+            status: Status.Reserved,
+            expiry: block.timestamp + 1 days
+        });
 
         emit Reserved(callId, consumer, provider, amount);
     }
@@ -105,6 +111,20 @@ contract Escrow is Ownable, ReentrancyGuard, IEscrow {
         balances[c.consumer] += c.amount;
 
         emit Refunded(callId, c.consumer, c.amount);
+    }
+
+    /// @notice Allows consumer to forcefully refund a reserved call if it exceeds expiry.
+    /// @param callId Identifier of a call in Reserved status.
+    function forceRefund(bytes32 callId) external override {
+        Call storage c = calls[callId];
+        if (c.status != Status.Reserved) revert CallNotReserved();
+        if (msg.sender != c.consumer) revert NotConsumer();
+        if (block.timestamp <= c.expiry) revert CallNotExpired();
+
+        c.status = Status.Refunded;
+        balances[c.consumer] += c.amount;
+
+        emit RefundedForcibly(callId, c.consumer, c.amount);
     }
 
     /// @notice Transfer operator role to a new address. Only callable by owner.

@@ -17,6 +17,7 @@ struct Call {
     address provider;
     uint256 amount;
     Status status;
+    uint256 expiry;
 }
 ```
 
@@ -30,6 +31,9 @@ struct Call {
    - Validasi: `balances[msg.sender] >= amount` (revert dengan `InsufficientBalance()`).
    - Melakukan CEI (Checks-Effects-Interactions) dengan `nonReentrant`.
    - Revert dengan `TransferFailed()` jika `call{value: amount}("")` gagal.
+3. **`forceRefund(bytes32 callId)`**
+   - Hanya dapat dipanggil oleh Consumer (`NotConsumer()`).
+   - Mengembalikan dana yang tersangkut di `Reserved` (`CallNotReserved()`) jika waktu `expiry` sudah lewat (`CallNotExpired()`).
 
 ### Fungsi Operator
 1. **`reserve(bytes32 callId, address consumer, address provider, uint256 amount)`**
@@ -39,7 +43,7 @@ struct Call {
      - `consumer` dan `provider` tidak boleh `address(0)` (`ZeroAddress()`)
      - `calls[callId].status` harus `None` (`CallAlreadyExists()`)
    - Validasi bisnis: Saldo consumer harus >= amount (`InsufficientBalance()`).
-   - Mengurangi saldo consumer, menyimpan struct.
+   - Mengurangi saldo consumer, menyimpan struct, dan men-set `expiry` ke `block.timestamp + 1 days`.
 2. **`release(bytes32 callId)`**
    - Hanya Operator.
    - `calls[callId].status` harus `Reserved` (`CallNotReserved()`).
@@ -65,6 +69,8 @@ Demi menghemat gas, kita menggunakan custom error Solidity daripada require stri
 6. `ZeroAddress()`: Alamat input (operator/consumer/provider) bernilai nol.
 7. `TransferFailed()`: Pengiriman native token saat withdraw gagal.
 8. `DirectPaymentNotAllowed()`: Pengguna mencoba mengirim uang tanpa memanggil `deposit()`.
+9. `CallNotExpired()`: Pengguna mencoba `forceRefund` sebelum waktunya habis (1 hari).
+10. `NotConsumer()`: Pemanggil fungsi yang dilindungi consumer ternyata bukan haknya.
 
 ## 5. Daftar 6 Event
 1. `Deposited(address indexed account, uint256 amount)`
@@ -72,7 +78,8 @@ Demi menghemat gas, kita menggunakan custom error Solidity daripada require stri
 3. `Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount)`
 4. `Released(bytes32 indexed callId, address indexed provider, uint256 amount)`
 5. `Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)`
-6. `OperatorUpdated(address indexed oldOperator, address indexed newOperator)`
+6. `RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)`
+7. `OperatorUpdated(address indexed oldOperator, address indexed newOperator)`
    - *Catatan Tambahan (Bukan bagian SKPL awal):* Event `OperatorUpdated` ditambahkan untuk kemudahan tracking internal, tetapi tidak wajib di-index oleh handler Envio yang berfokus ke 5 event Escrow utama.
 
 ## 6. Pertahanan (Security)
