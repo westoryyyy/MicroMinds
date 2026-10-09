@@ -1,477 +1,73 @@
-[
-  {
-    "type": "constructor",
-    "inputs": [
-      {
-        "name": "initialOwner",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "initialOperator",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "fallback",
-    "stateMutability": "payable"
-  },
-  {
-    "type": "receive",
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "balances",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "calls",
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "consumer",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "provider",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "status",
-        "type": "uint8",
-        "internalType": "enum Escrow.Status"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "deposit",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "getCall",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct Escrow.Call",
-        "components": [
-          {
-            "name": "consumer",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "provider",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "amount",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "status",
-            "type": "uint8",
-            "internalType": "enum Escrow.Status"
-          }
-        ]
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "operator",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "owner",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "refund",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "release",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "renounceOwnership",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "reserve",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "consumer",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "provider",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setOperator",
-    "inputs": [
-      {
-        "name": "newOperator",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "transferOwnership",
-    "inputs": [
-      {
-        "name": "newOwner",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "withdraw",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "event",
-    "name": "Deposited",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "OperatorUpdated",
-    "inputs": [
-      {
-        "name": "oldOperator",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "newOperator",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "OwnershipTransferred",
-    "inputs": [
-      {
-        "name": "previousOwner",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "newOwner",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Refunded",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "consumer",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Released",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "provider",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Reserved",
-    "inputs": [
-      {
-        "name": "callId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "consumer",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "provider",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "Withdrawn",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "error",
-    "name": "CallAlreadyExists",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "CallNotReserved",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "DirectPaymentNotAllowed",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InsufficientBalance",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NotOperator",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "OwnableInvalidOwner",
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "OwnableUnauthorizedAccount",
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ReentrancyGuardReentrantCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "TransferFailed",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ZeroAddress",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ZeroAmount",
-    "inputs": []
-  }
-]
+
+╭-------------+----------------------------------------------------------------------+--------------------------------------------------------------------╮
+| Type        | Signature                                                            | Selector                                                           |
++=========================================================================================================================================================+
+| event       | Deposited(address,uint256)                                           | 0x2da466a7b24304f47e87fa2e1e5a81b9831ce54fec19055ce277ca2f39ba42c4 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | OperatorUpdated(address,address)                                     | 0xfbe5b6cbafb274f445d7fed869dc77a838d8243a22c460de156560e8857cad03 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | OwnershipTransferred(address,address)                                | 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | Refunded(bytes32,address,uint256)                                    | 0xf552ca82e113ac3c539c3d617f29fcd19c172a0c75dad017555c9e109f7fe183 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | Released(bytes32,address,uint256)                                    | 0xc8fa66dff4b9073528c3f1bf21a8dc9a18fdf09847e88e96188bc953aef519f0 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | Reserved(bytes32,address,address,uint256)                            | 0xa98b816ec2e93d5a5bcd26d6eeb170315a2fdaac6409ee69c9381ef5c9b67bd8 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| event       | Withdrawn(address,uint256)                                           | 0x7084f5476618d8e60b11ef0d7d3f06914655adb8793e28ff7f018d4c76d505d5 |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | CallAlreadyExists()                                                  | 0x15d64c28                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | CallNotReserved()                                                    | 0x7b7b4c10                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | DirectPaymentNotAllowed()                                            | 0x4d5b349b                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | InsufficientBalance()                                                | 0xf4d678b8                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | NotOperator()                                                        | 0x7c214f04                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | OwnableInvalidOwner(address)                                         | 0x1e4fbdf7                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | OwnableUnauthorizedAccount(address)                                  | 0x118cdaa7                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | ReentrancyGuardReentrantCall()                                       | 0x3ee5aeb5                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | TransferFailed()                                                     | 0x90b8ec18                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | ZeroAddress()                                                        | 0xd92e233d                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| error       | ZeroAmount()                                                         | 0x1f2a2005                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | balances(address) view returns (uint256)                             | 0x27e235e3                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | calls(bytes32) view returns (address,address,uint256,IEscrow.Status) | 0xcff10265                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | deposit() payable                                                    | 0xd0e30db0                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | getCall(bytes32) view returns (IEscrow.Call)                         | 0x0af301e8                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | operator() view returns (address)                                    | 0x570ca735                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | owner() view returns (address)                                       | 0x8da5cb5b                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | refund(bytes32) nonpayable                                           | 0x7249fbb6                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | release(bytes32) nonpayable                                          | 0x67d42a8b                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | renounceOwnership() nonpayable                                       | 0x715018a6                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | reserve(bytes32,address,address,uint256) nonpayable                  | 0x6b547b64                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | setOperator(address) nonpayable                                      | 0xb3ab15fb                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | transferOwnership(address) nonpayable                                | 0xf2fde38b                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| function    | withdraw(uint256) nonpayable                                         | 0x2e1a7d4d                                                         |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| constructor | constructor(address,address) nonpayable                              |                                                                    |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| fallback    | fallback() payable                                                   |                                                                    |
+|-------------+----------------------------------------------------------------------+--------------------------------------------------------------------|
+| receive     | receive() payable                                                    |                                                                    |
+╰-------------+----------------------------------------------------------------------+--------------------------------------------------------------------╯
+

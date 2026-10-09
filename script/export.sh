@@ -18,14 +18,22 @@ if [ -z "$ADDRESS" ] || [ "$ADDRESS" == "null" ]; then
   exit 1
 fi
 
+# Extract start block from receipt
+START_BLOCK=$(jq -r --arg tx "$TX_HASH" '.receipts[]? | select(.transactionHash==$tx) | .blockNumber' "$BROADCAST_FILE" | head -n 1)
+if [ -z "$START_BLOCK" ] || [ "$START_BLOCK" == "null" ]; then
+  START_BLOCK=0
+fi
+
 # Extract ABI from forge compilation output
 jq -n \
   --arg addr "$ADDRESS" \
   --arg tx "$TX_HASH" \
+  --arg block "$START_BLOCK" \
   --slurpfile abi out/Escrow.sol/Escrow.json \
   '{
     address: $addr,
     transactionHash: $tx,
+    startBlock: ($block | tonumber),
     abi: $abi[0].abi
   }' > "$OUTPUT_FILE"
 
