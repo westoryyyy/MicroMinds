@@ -30,6 +30,12 @@ interface IEscrow {
     /// @notice Direct MON transfers (without calling deposit) are not allowed.
     error DirectPaymentNotAllowed();
 
+    /// @notice The call has not reached its expiry time yet.
+    error CallNotExpired();
+
+    /// @notice Caller is not the consumer of this call.
+    error NotConsumer();
+
     // ──────────────────────────── Types ─────────────────────────────
 
     /// @notice Lifecycle status of an API call escrow.
@@ -46,6 +52,7 @@ interface IEscrow {
         address provider;
         uint256 amount;
         Status status;
+        uint256 expiry; // Timestamp when the consumer can forcefully refund
     }
 
     // ──────────────────────────── Events ────────────────────────────
@@ -65,6 +72,9 @@ interface IEscrow {
     /// @notice Emitted when the operator refunds escrowed funds to the consumer.
     event Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount);
 
+    /// @notice Emitted when a consumer forcefully refunds after expiry.
+    event RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount);
+
     /// @notice Emitted when the owner changes the operator address.
     event OperatorUpdated(address indexed oldOperator, address indexed newOperator);
 
@@ -75,6 +85,7 @@ interface IEscrow {
     function reserve(bytes32 callId, address consumer, address provider, uint256 amount) external;
     function release(bytes32 callId) external;
     function refund(bytes32 callId) external;
+    function forceRefund(bytes32 callId) external;
     function setOperator(address newOperator) external;
     function getCall(bytes32 callId) external view returns (Call memory);
 }

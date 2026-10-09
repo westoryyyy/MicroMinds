@@ -105,6 +105,8 @@ const withdrawTx = await walletClient.writeContract({
 - `ZeroAmount()` → "Please enter an amount greater than 0."
 - `InsufficientBalance()` → "Your escrow balance is insufficient for this withdrawal."
 - `TransferFailed()` → "The withdrawal failed to be processed by the network."
+- `CallNotExpired()` → "The timeout period has not ended yet; you cannot force a refund."
+- `NotConsumer()` → "You are not authorized to perform a refund for this call ID."
 
 ## 3. Indexer (Envio)
 
@@ -127,6 +129,8 @@ To index events reliably on Monad testnet, use the following `config.yaml` param
    - Entity logic: Update Call entity status.
 5. `event Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)`
    - Entity logic: Update Call entity status.
+6. `event RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)`
+   - Entity logic: Update Call entity status to Refunded (same as standard Refund).
 
 ## 4. Deployments Output
 

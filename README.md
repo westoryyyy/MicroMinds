@@ -40,9 +40,10 @@ sequenceDiagram
 |----------|--------|---------|------------|
 | `deposit()` | Public | Increases `balances[msg.sender]` by `msg.value`. | N/A |
 | `withdraw(uint256 amount)` | Public | Decreases `balances[msg.sender]` by `amount`, sends native token. | `ZeroAmount()`, `InsufficientBalance()`, `TransferFailed()` |
-| `reserve(bytes32 callId, address consumer, address provider, uint256 amount)` | Operator | Decreases `balances[consumer]`, creates a `Call` struct with status `Reserved`. | `NotOperator()`, `ZeroAmount()`, `ZeroAddress()`, `CallAlreadyExists()`, `InsufficientBalance()` |
+| `reserve(bytes32 callId, address consumer, address provider, uint256 amount)` | Operator | Decreases `balances[consumer]`, creates a `Call` struct with status `Reserved` and sets `expiry`. | `NotOperator()`, `ZeroAmount()`, `ZeroAddress()`, `CallAlreadyExists()`, `InsufficientBalance()` |
 | `release(bytes32 callId)` | Operator | Sets call status to `Released`, increases `balances[provider]`. | `NotOperator()`, `CallNotReserved()` |
 | `refund(bytes32 callId)` | Operator | Sets call status to `Refunded`, increases `balances[consumer]`. | `NotOperator()`, `CallNotReserved()` |
+| `forceRefund(bytes32 callId)` | Consumer | Sets call status to `Refunded`, increases `balances[consumer]`. Callable only after expiry. | `CallNotReserved()`, `NotConsumer()`, `CallNotExpired()` |
 | `setOperator(address newOperator)` | Owner | Updates the operator address. | `OwnableUnauthorizedAccount()`, `ZeroAddress()` |
 
 ### Events
@@ -54,6 +55,7 @@ sequenceDiagram
 | `Reserved` | `callId`, `consumer`, `provider`, `amount` | `callId`, `consumer`, `provider` |
 | `Released` | `callId`, `provider`, `amount` | `callId`, `provider` |
 | `Refunded` | `callId`, `consumer`, `amount` | `callId`, `consumer` |
+| `RefundedForcibly` | `callId`, `consumer`, `amount` | `callId`, `consumer` |
 | `OperatorUpdated` | `oldOperator`, `newOperator` | `oldOperator`, `newOperator` |
 
 ## Call State Machine
@@ -64,6 +66,7 @@ stateDiagram-v2
     None --> Reserved : reserve()
     Reserved --> Released : release()
     Reserved --> Refunded : refund()
+    Reserved --> Refunded : forceRefund() (after expiry)
     Released --> [*]
     Refunded --> [*]
 ```
@@ -84,6 +87,7 @@ stateDiagram-v2
 - **Pull Payments**: The contract uses a pull-over-push model. Funds are never pushed automatically; users must initiate withdrawals.
 - **Direct Payment Rejection**: The contract safely rejects arbitrary native token transfers utilizing `receive()` and `fallback()` reverting mechanisms.
 - **Custom Errors**: Usage of custom errors to minimize gas usage over standard require statements.
+- **Timeout/Expiry**: To prevent funds from being permanently stuck if the Operator goes offline, every reserved call automatically receives a 1-day expiry. Consumers can call `forceRefund()` after this period to reclaim their funds.
 
 ### Monad-Specific Considerations
 - **Gas Deductions via Limit**: Monad deducts gas based on `gas_limit` rather than `gas_used`. When interacting with the contract, ensure the gas limit is set accurately to avoid over-paying MON.

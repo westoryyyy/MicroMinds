@@ -17,6 +17,7 @@ struct Call {
     address provider;
     uint256 amount;
     Status status;
+    uint256 expiry;
 }
 ```
 
@@ -30,6 +31,9 @@ struct Call {
    - Validation: `balances[msg.sender] >= amount` (reverts with `InsufficientBalance()`).
    - Applies CEI (Checks-Effects-Interactions) pattern guarded by `nonReentrant`.
    - Reverts with `TransferFailed()` if `call{value: amount}("")` fails.
+3. **`forceRefund(bytes32 callId)`**
+   - Can only be called by the Consumer (`NotConsumer()`).
+   - Returns stuck funds in `Reserved` status (`CallNotReserved()`) if the `expiry` time has passed (`CallNotExpired()`).
 
 ### Operator Functions
 1. **`reserve(bytes32 callId, address consumer, address provider, uint256 amount)`**
@@ -39,7 +43,7 @@ struct Call {
      - `consumer` and `provider` must not be `address(0)` (`ZeroAddress()`)
      - `calls[callId].status` must be `None` (`CallAlreadyExists()`)
    - Business validation: Consumer's balance must be >= amount (`InsufficientBalance()`).
-   - Deducts consumer's balance, stores the struct.
+   - Deducts consumer's balance, stores the struct, and sets `expiry` to `block.timestamp + 1 days`.
 2. **`release(bytes32 callId)`**
    - Operator only.
    - `calls[callId].status` must be `Reserved` (`CallNotReserved()`).
@@ -65,6 +69,8 @@ To optimize gas costs, custom Solidity errors are utilized instead of require st
 6. `ZeroAddress()`: The input address (operator/consumer/provider) is the zero address.
 7. `TransferFailed()`: Native token transfer failed during withdrawal.
 8. `DirectPaymentNotAllowed()`: A user attempted to send funds without calling `deposit()`.
+9. `CallNotExpired()`: A user attempted to call `forceRefund` before the expiry time elapsed (1 day).
+10. `NotConsumer()`: The caller of a consumer-protected function is not the authorized consumer.
 
 ## 5. Events
 1. `Deposited(address indexed account, uint256 amount)`
@@ -72,7 +78,8 @@ To optimize gas costs, custom Solidity errors are utilized instead of require st
 3. `Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount)`
 4. `Released(bytes32 indexed callId, address indexed provider, uint256 amount)`
 5. `Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)`
-6. `OperatorUpdated(address indexed oldOperator, address indexed newOperator)`
+6. `RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)`
+7. `OperatorUpdated(address indexed oldOperator, address indexed newOperator)`
    - *Note:* The `OperatorUpdated` event was added for internal tracking convenience and is not strictly required to be indexed by Envio handlers.
 
 ## 6. Security Defenses
