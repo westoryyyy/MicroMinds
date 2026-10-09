@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IEscrow} from "./interfaces/IEscrow.sol";
@@ -10,7 +11,7 @@ import {IEscrow} from "./interfaces/IEscrow.sol";
 ///         reserve funds per API call, then release to provider or refund to consumer.
 ///         Consumers and providers withdraw their own balances (pull-over-push).
 /// @dev    Deployed on Monad testnet (chain 10143). No ERC-20, no proxy, no pause.
-contract Escrow is Ownable, ReentrancyGuard, IEscrow {
+contract Escrow is Ownable2Step, ReentrancyGuard, IEscrow {
     // ──────────────────────────── State ─────────────────────────────
 
     /// @notice Withdrawable balance per account (consumer or provider).
