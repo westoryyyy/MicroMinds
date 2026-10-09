@@ -47,13 +47,11 @@ contract Escrow is Ownable, ReentrancyGuard {
     }
 
     /// @notice On-chain record of a single API call escrow.
-    /// @dev    `consumer` (address, 20 bytes) and `status` (uint8, 1 byte) are packed
-    ///         into a single storage slot for gas efficiency.
     struct Call {
         address consumer;
-        Status status;
         address provider;
         uint256 amount;
+        Status status;
     }
 
     // ──────────────────────────── State ─────────────────────────────

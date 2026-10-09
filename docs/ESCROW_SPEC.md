@@ -14,12 +14,11 @@ Escrow berbasis *Pull-over-Push* yang menerima native token (MON). Kontrak ini m
 ```solidity
 struct Call {
     address consumer;
-    Status status;     // Uint8
     address provider;
     uint256 amount;
+    Status status;
 }
 ```
-*Catatan Desain:* Penempatan `Status` yang merupakan `uint8` langsung setelah `address consumer` secara alami memungkinkan compiler mem-pack slot.
 
 ## 3. Fungsi & Validasi Input
 

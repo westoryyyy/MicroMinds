@@ -59,11 +59,6 @@
         "internalType": "address"
       },
       {
-        "name": "status",
-        "type": "uint8",
-        "internalType": "enum Escrow.Status"
-      },
-      {
         "name": "provider",
         "type": "address",
         "internalType": "address"
@@ -72,6 +67,11 @@
         "name": "amount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "status",
+        "type": "uint8",
+        "internalType": "enum Escrow.Status"
       }
     ],
     "stateMutability": "view"
@@ -105,11 +105,6 @@
             "internalType": "address"
           },
           {
-            "name": "status",
-            "type": "uint8",
-            "internalType": "enum Escrow.Status"
-          },
-          {
             "name": "provider",
             "type": "address",
             "internalType": "address"
@@ -118,6 +113,11 @@
             "name": "amount",
             "type": "uint256",
             "internalType": "uint256"
+          },
+          {
+            "name": "status",
+            "type": "uint8",
+            "internalType": "enum Escrow.Status"
           }
         ]
       }
