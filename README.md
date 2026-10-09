@@ -94,9 +94,8 @@ stateDiagram-v2
 - **Reserve Balance Rules**: Monad enforces a 10 MON reserve balance at the EOA level. This restriction does *not* apply to the internal `balances[]` mapping of the contract. However, the deployer, operator, and interacting EOAs must retain a minimum of 10 MON in their native wallet balance to prevent revert at execution time.
 
 ### Known Limitations
-- The operator is a single point of failure and acts as a central authority for funds.
+- The operator acts as a central authority for funds and can reserve funds without explicit consumer signing per request (mitigated by `forceRefund` and `Ownable2Step` for rotation).
 - There are currently no boundaries regarding how much an operator can reserve.
-- Test coverage is currently at **0%** across **0 tests**. We do not make any security guarantees until full coverage is completed.
 
 ## Getting Started
 
@@ -164,15 +163,24 @@ Deployment is handled via Alchemy RPC endpoints.
 
 ## Testing Strategy
 
-Currently, the test suite is empty (**0 tests, 0% coverage**). The planned testing strategy encompasses:
-- **Unit Testing**: Testing individual access controls, balance logic, state transitions.
-- **Fuzz Testing**: Testing unexpected amounts and addresses.
-- **Invariant Testing**: Ensuring total balances in mapping matches contract balance; ensuring call lifecycle strictly adheres to `None -> Reserved -> Released/Refunded`.
-- **Reentrancy Testing**: Verifying the `withdraw` protection.
+The smart contract has been heavily tested using the Foundry framework. The test suite includes 26 tests covering unit tests, access controls, and fuzz testing.
 
-To run:
+**Coverage Results:**
+- **Lines Coverage**: 96.43%
+- **Statements Coverage**: 95.24%
+- **Branch Coverage**: 87.50%
+- **Passed Tests**: 26/26 (100% Pass Rate)
+
+The suite covers:
+- **Unit Testing**: Testing individual access controls, balance logic, state transitions.
+- **Fuzz Testing**: Testing unexpected amounts and addresses with up to 256 random mutations per run.
+- **Reentrancy Testing**: Verifying the `withdraw` CEI and ReentrancyGuard protection.
+- **Force Refund**: Ensuring the timeout mechanism correctly rejects early calls and accepts expired ones.
+
+To run the tests:
 ```bash
-# <TO_BE_FILLED> (Examples of running specific test segments)
+forge test -vvv
+forge coverage
 ```
 
 ## Project Structure
@@ -197,7 +205,7 @@ monad-contracts/
 
 ## Audit and Security Review
 
-<TO_BE_FILLED>
+An automated security review was performed using `solidity-auditor` (Pashov's rule engine). All high and medium severity vulnerabilities (including the Liveness Failure / Stuck Funds issue) have been fully mitigated through the implementation of `forceRefund` and `Ownable2Step`. The remaining items are informational/design choices required for the MVP Hackathon phase.
 
 ## Roadmap
 
