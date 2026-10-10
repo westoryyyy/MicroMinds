@@ -13,6 +13,9 @@ const LINES = [
   'Bird: "Tweet! I pick words out of anything."',
   'Frog: "Ribbit. Give me a link and I will hop there."',
   'Sun: "Monad is fast, so the coins barely wait."',
+  'Croc: "Chomp! I eat messy JSON and spit it out clean."',
+  'Beetle: "Buzz... Sometimes I simulate HTTP errors."',
+  'Cloud: "Just floating here... observing the marketplace."',
 ];
 
 const TICKER: [string, string, string][] = [
@@ -56,8 +59,8 @@ export default function Home() {
     setBusy(false);
   }
 
-  const Friend = ({ i, id, w, style }: { i: number; id: "bird" | "monkey" | "cat" | "frog"; w: number; style: Record<string, string | number> }) => (
-    <button className="fl" style={st(style)} onClick={() => setBubble(LINES[i])} aria-label={`Talk to ${id}`}>
+  const Friend = ({ i, id, w, style, className = "fl" }: { i: number; id: "bird" | "monkey" | "cat" | "frog" | "croc" | "bug" | "sun" | "cloud"; w: number; style: Record<string, string | number>; className?: string }) => (
+    <button className={className} style={st(style)} onClick={() => setBubble(LINES[i])} aria-label={`Talk to ${id}`}>
       <Sv id={id} w={w} />
     </button>
   );
@@ -82,15 +85,15 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative w-full h-[360px] md:h-[400px] mt-8 md:mt-0">
-          <div className="fl sun" style={st({ right: '5%', top: 0 })}><Sv id="sun" w={110} /></div>
-          <div className="fl" style={st({ left: '2%', top: 20, "--d": ".5s" })}><Sv id="cloud" w={120} /></div>
-          <Friend i={2} id="bird" w={80} style={{ left: "42%", top: 0, "--d": "1s" }} />
-          <Friend i={0} id="monkey" w={100} style={{ left: "5%", top: 100, "--d": ".2s" }} />
-          <Friend i={1} id="cat" w={130} style={{ left: "38%", top: 110, "--d": ".8s" }} />
-          <Friend i={3} id="frog" w={100} style={{ right: "8%", top: 110, "--d": "1.4s" }} />
-          <div className="fl" style={st({ left: "12%", top: 220, "--d": ".3s" })}><Sv id="croc" w={180} /></div>
-          <div className="fl" style={st({ right: "32%", top: 240 })}><Sv id="bug" w={55} /></div>
+          <div className="relative w-full h-[360px] md:h-[400px] mt-8 md:mt-0">
+            <Friend i={4} id="sun" w={110} style={{ right: '5%', top: 0 }} className="fl sun" />
+            <Friend i={7} id="cloud" w={120} style={{ left: '2%', top: 20, "--d": ".5s" }} />
+            <Friend i={2} id="bird" w={80} style={{ left: "42%", top: 0, "--d": "1s" }} />
+            <Friend i={0} id="monkey" w={100} style={{ left: "5%", top: 100, "--d": ".2s" }} />
+            <Friend i={1} id="cat" w={130} style={{ left: "38%", top: 110, "--d": ".8s" }} />
+            <Friend i={3} id="frog" w={100} style={{ right: "8%", top: 110, "--d": "1.4s" }} />
+            <Friend i={5} id="croc" w={180} style={{ left: "12%", top: 220, "--d": ".3s" }} />
+            <Friend i={6} id="bug" w={55} style={{ right: "32%", top: 240 }} />
           <div id="bub" className="card !p-3 !text-sm absolute left-1/2 bottom-0 md:bottom-4 -translate-x-1/2 w-[90%] max-w-[320px] mx-auto z-10" role="status">{bubble}</div>
         </div>
       </header>
