@@ -30,8 +30,8 @@ export default function DocsPage() {
   const cfg = JSON.stringify({
     mcpServers: {
       microminds: {
-        command: "node",
-        args: ["packages/mcp-server/dist/index.js"],
+        command: "npx",
+        args: ["-y", "microminds-mcp"],
         env: {
           MICROMINDS_API_KEY: k,
           MICROMINDS_BASE_URL: CFG.apiBase
@@ -121,30 +121,11 @@ export default function DocsPage() {
                 <p className="text-lg text-mut font-sans text-center mb-8">
                   Use MCP to let your AI Agents automatically discover, negotiate, and pay for APIs on your behalf.
                 </p>
-                
+
                 {/* Step 1 */}
                 <div className="flex gap-6 md:gap-8">
                   <div className="shrink-0 flex flex-col items-center">
-                    <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-3">1</div>
-                    <div className="w-[3px] h-full bg-ink opacity-20 border-l-[3px] border-dashed border-ink mt-4"></div>
-                  </div>
-                  <div className="flex-1 min-w-0 pb-16">
-                    <h3 className="text-3xl m-0 mb-2">Get the Server</h3>
-                    <p className="text-lg text-mut mb-4 mt-0 font-sans">Clone the repository and build the MCP server package locally.</p>
-                    <div className="relative">
-                      <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
-{`git clone <your repo>
-cd microminds/packages/mcp-server
-npm i && npm run build`}
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="flex gap-6 md:gap-8">
-                  <div className="shrink-0 flex flex-col items-center">
-                    <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm rotate-2">2</div>
+                    <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm rotate-2">1</div>
                     <div className="w-[3px] h-full bg-ink opacity-20 border-l-[3px] border-dashed border-ink mt-4"></div>
                   </div>
                   <div className="flex-1 min-w-0 pb-16">
@@ -155,7 +136,7 @@ npm i && npm run build`}
                       </button>
                     </div>
                     <p className="text-lg text-mut mb-4 mt-0 font-sans">
-                      {key ? "Filled with your API key." : <><Link href="/dashboard" className="text-blu font-bold">Log in and create a key</Link> to fill it in automatically.</>}
+                      No installation needed! Just paste this into your Cursor MCP settings. {key ? "It's already filled with your API key." : <><Link href="/dashboard" className="text-blu font-bold">Log in and create a key</Link> to fill it in automatically.</>}
                     </p>
                     <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
                       {cfg}
@@ -163,10 +144,10 @@ npm i && npm run build`}
                   </div>
                 </div>
 
-                {/* Step 3 */}
+                {/* Step 2 */}
                 <div className="flex gap-6 md:gap-8">
                   <div className="shrink-0 flex flex-col items-center">
-                    <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-2">3</div>
+                    <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-2">2</div>
                   </div>
                   <div className="flex-1 min-w-0 pb-4">
                     <h3 className="text-3xl m-0 mb-2">Restart & Test</h3>
@@ -177,7 +158,7 @@ npm i && npm run build`}
                       <span className="font-sans text-ink font-medium md:text-lg">"Find an API that tidies JSON, then use it on <code className="bg-card text-blu px-2 py-1 border border-solid border-mut rounded text-sm md:text-base">{`{a:1,b:[2,3]}`}</code>"</span>
                     </div>
                     <p className="text-lg text-mut m-0 font-sans">
-                      The agent will automatically map tools: it calls <b className="text-ink">search_api</b> to find a provider, then <b className="text-ink">call_api</b>, and will report back the status and transaction hash.
+                      The agent will automatically download the MCP server via <code>npx</code>, map the tools, and report back the status and transaction hash.
                     </p>
                   </div>
                 </div>
