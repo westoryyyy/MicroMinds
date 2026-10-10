@@ -10,6 +10,7 @@ export type Listing = {
   outputSchema: Record<string, any>;
   timeoutMs: number;
   providerAddress: Hex;
+  endpoint?: string;
   successRate?: number; // 0-100, opsional (Lampiran F)
   avgLatencyMs?: number;
 };

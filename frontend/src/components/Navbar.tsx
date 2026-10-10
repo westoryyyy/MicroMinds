@@ -23,8 +23,8 @@ export default function Navbar() {
       <div className="wrap !py-4 flex flex-wrap items-center justify-between gap-y-4">
         
         {/* Logo */}
-        <Link className="logo group mr-auto" href="/">
-          <span className="group-hover:rotate-12 transition-transform inline-block origin-bottom-right">🖍️</span> 
+        <Link className="logo group mr-auto flex items-center gap-2" href="/">
+          <img src="/microminds_logo.PNG" alt="MicroMinds Logo" className="w-8 h-8 md:w-10 md:h-10 object-contain group-hover:rotate-12 transition-transform origin-bottom-right" /> 
           MicroMinds
         </Link>
         

@@ -64,6 +64,20 @@ export async function createApiKey(privyToken: string | null, walletAddress: str
   return r.apiKey;
 }
 
+export async function createListing(privyToken: string | null, payload: Omit<Listing, "id" | "providerAddress">): Promise<Listing> {
+  if (MOCK) {
+    await sleep(500);
+    const newL = { ...payload, id: "list_" + Date.now(), providerAddress: "0xMockAddress" } as Listing;
+    MOCK_LISTINGS.push(newL);
+    return newL;
+  }
+  if (!privyToken) throw new ApiError("NO_TOKEN", "Sesi login habis. Login ulang.");
+  return req<Listing>("/listings",
+    { method: "POST", body: JSON.stringify(payload) },
+    { Authorization: `Bearer ${privyToken}` }
+  );
+}
+
 export async function getMe(apiKey: string): Promise<{ address: string; balance: string }> {
   if (MOCK) return { address: "0x1111111111111111111111111111111111111111", balance: mockDb.balance.toString() };
   return req("/me", {}, { [API_KEY_HEADER]: apiKey });
