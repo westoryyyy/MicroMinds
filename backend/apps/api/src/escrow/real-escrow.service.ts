@@ -4,17 +4,19 @@ import {
   createPublicClient,
   createWalletClient,
   http,
+  parseEther,
   type Address,
   type Hash,
   type LocalAccount,
-  ContractFunctionRevertedError,
   BaseError,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { nonceManager } from 'viem';
 import { monadTestnet } from './chains';
 import { ESCROW_ABI } from './escrow.abi';
-import { loadDeployedEscrow, DeploymentData } from './deployment-loader';
+import { loadDeployedEscrow } from './deployment-loader';
 import { ApiException } from '../common/exceptions/api.exception';
+import { toHttpException } from '../common/viem-error.util';
 
 /**
  * Real EscrowService — talks to Monad testnet via Alchemy RPC (viem).
@@ -36,7 +38,16 @@ export class RealEscrowService implements OnModuleInit {
   private walletClient!: ReturnType<typeof createWalletClient>;
   private escrowAbi!: any;
 
-  constructor(private readonly config: ConfigService) {}
+  // Gas balance cache — refresh at most every 10 seconds to avoid RPC spam
+  private cachedGasBalance: bigint = 0n;
+  private gasCacheTs: number = 0;
+  private readonly GAS_CACHE_TTL_MS = 10_000;
+  private readonly MIN_GAS_BALANCE: bigint;
+
+  constructor(private readonly config: ConfigService) {
+    const minBalStr = this.config.get<string>('OPERATOR_MIN_BALANCE') ?? '0.05';
+    this.MIN_GAS_BALANCE = parseEther(minBalStr);
+  }
 
   onModuleInit(): void {
     const rpcUrl = this.config.getOrThrow<string>('ALCHEMY_RPC_URL');
@@ -46,7 +57,8 @@ export class RealEscrowService implements OnModuleInit {
 
     // Resolve contract address: deployment file > env var
     const deployment = loadDeployedEscrow();
-    const address = deployment?.address ?? this.config.get<string>('ESCROW_ADDRESS');
+    const address =
+      deployment?.address ?? this.config.get<string>('ESCROW_ADDRESS');
     this.escrowAbi = deployment?.abi ?? ESCROW_ABI;
 
     if (!address) {
@@ -67,10 +79,10 @@ export class RealEscrowService implements OnModuleInit {
       transport,
     });
 
-    this.operatorAccount = privateKeyToAccount(privateKey);
+    // nonceManager prevents nonce collisions on fast Monad blocks
+    this.operatorAccount = privateKeyToAccount(privateKey, { nonceManager });
     this.logger.log(`Operator wallet: ${this.operatorAccount.address}`);
 
-    // viem v2: walletClient holds transport + chain; account passed per-call
     this.walletClient = createWalletClient({
       chain: monadTestnet,
       transport,
@@ -91,12 +103,12 @@ export class RealEscrowService implements OnModuleInit {
       });
       return balance as bigint;
     } catch (err) {
-      throw this.wrapError('getBalance', err);
+      throw this.wrapLegacyError('getBalance', err);
     }
   }
 
   /**
-   * Call reserve() on-chain and wait for confirmation.
+   * Call reserve() on-chain: gas guard → simulate → write → receipt.
    * Returns the confirmed transaction hash.
    */
   async reserve(
@@ -105,21 +117,28 @@ export class RealEscrowService implements OnModuleInit {
     provider: string,
     amount: bigint,
   ): Promise<Hash> {
+    await this.assertOperatorHasGas();
     try {
-      const hash = await this.walletClient.writeContract({
+      const { request } = await this.publicClient.simulateContract({
         account: this.operatorAccount,
-        chain: monadTestnet,
         address: this.escrowAddress,
         abi: this.escrowAbi,
         functionName: 'reserve',
         args: [callId, consumer as Address, provider as Address, amount],
       });
-
+      const hash = await this.walletClient.writeContract({
+        ...request,
+        account: this.operatorAccount,
+        chain: monadTestnet,
+      });
       this.logger.log(`reserve() submitted: callId=${callId} tx=${hash}`);
       await this.waitForTx(hash, 'reserve');
       return hash;
     } catch (err) {
-      throw this.wrapError('reserve', err);
+      this.logger.error(
+        `[RealEscrowService] reserve() error: ${err instanceof BaseError ? err.walk().message : String(err)}`,
+      );
+      throw toHttpException(err);
     }
   }
 
@@ -127,21 +146,28 @@ export class RealEscrowService implements OnModuleInit {
    * Call release() on-chain and wait for confirmation.
    */
   async release(callId: `0x${string}`): Promise<Hash> {
+    await this.assertOperatorHasGas();
     try {
-      const hash = await this.walletClient.writeContract({
+      const { request } = await this.publicClient.simulateContract({
         account: this.operatorAccount,
-        chain: monadTestnet,
         address: this.escrowAddress,
         abi: this.escrowAbi,
         functionName: 'release',
         args: [callId],
       });
-
+      const hash = await this.walletClient.writeContract({
+        ...request,
+        account: this.operatorAccount,
+        chain: monadTestnet,
+      });
       this.logger.log(`release() submitted: callId=${callId} tx=${hash}`);
       await this.waitForTx(hash, 'release');
       return hash;
     } catch (err) {
-      throw this.wrapError('release', err);
+      this.logger.error(
+        `[RealEscrowService] release() error: ${err instanceof BaseError ? err.walk().message : String(err)}`,
+      );
+      throw toHttpException(err);
     }
   }
 
@@ -149,46 +175,58 @@ export class RealEscrowService implements OnModuleInit {
    * Call refund() on-chain and wait for confirmation.
    */
   async refund(callId: `0x${string}`): Promise<Hash> {
+    await this.assertOperatorHasGas();
     try {
-      const hash = await this.walletClient.writeContract({
+      const { request } = await this.publicClient.simulateContract({
         account: this.operatorAccount,
-        chain: monadTestnet,
         address: this.escrowAddress,
         abi: this.escrowAbi,
         functionName: 'refund',
         args: [callId],
       });
-
+      const hash = await this.walletClient.writeContract({
+        ...request,
+        account: this.operatorAccount,
+        chain: monadTestnet,
+      });
       this.logger.log(`refund() submitted: callId=${callId} tx=${hash}`);
       await this.waitForTx(hash, 'refund');
       return hash;
     } catch (err) {
-      throw this.wrapError('refund', err);
+      this.logger.error(
+        `[RealEscrowService] refund() error: ${err instanceof BaseError ? err.walk().message : String(err)}`,
+      );
+      throw toHttpException(err);
     }
   }
 
   /**
-   * Fetch Call struct from chain.
+   * Fetch Call struct from chain (for idempotency checks).
    */
-  async getCall(callId: `0x${string}`): Promise<{ consumer: string; provider: string; amount: bigint; status: number; expiry: bigint }> {
+  async getCall(
+    callId: `0x${string}`,
+  ): Promise<{
+    consumer: string;
+    provider: string;
+    amount: bigint;
+    status: number;
+    expiry: bigint;
+  }> {
     try {
-      const data = await this.publicClient.readContract({
+      const data = (await this.publicClient.readContract({
         address: this.escrowAddress,
         abi: this.escrowAbi,
         functionName: 'getCall',
         args: [callId],
-      }) as any;
-      
-      // data is a tuple or struct. viem usually returns an object if fields are named.
-      // If it's a tuple: [consumer, provider, amount, status, expiry]
-      // Wait, in solidity it's a struct. Viem returns an object for structs.
+      })) as any;
+
       if (Array.isArray(data)) {
         return {
           consumer: data[0],
           provider: data[1],
           amount: data[2],
           status: Number(data[3]),
-          expiry: data[4]
+          expiry: data[4],
         };
       }
       return {
@@ -196,19 +234,64 @@ export class RealEscrowService implements OnModuleInit {
         provider: data.provider,
         amount: data.amount,
         status: Number(data.status),
-        expiry: data.expiry
+        expiry: data.expiry,
       };
     } catch (err) {
-      throw this.wrapError('getCall', err);
+      throw this.wrapLegacyError('getCall', err);
     }
+  }
+
+  /**
+   * Get operator wallet address (for health endpoint).
+   */
+  getOperatorAddress(): string {
+    return this.operatorAccount?.address ?? '';
+  }
+
+  /**
+   * Get operator gas balance (cached, for health endpoint).
+   */
+  async getOperatorBalance(): Promise<bigint> {
+    return this.getCachedGasBalance();
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────────
 
+  /**
+   * Proactive gas guard — throws 503 if operator balance is below threshold.
+   * Result is cached for GAS_CACHE_TTL_MS to avoid RPC spam.
+   */
+  private async assertOperatorHasGas(): Promise<void> {
+    const bal = await this.getCachedGasBalance();
+    if (bal < this.MIN_GAS_BALANCE) {
+      this.logger.error(
+        `Operator wallet low on gas: ${bal} < ${this.MIN_GAS_BALANCE}`,
+      );
+      throw toHttpException(
+        Object.assign(new Error('insufficient funds for gas'), {
+          shortMessage: 'insufficient funds for gas',
+          details: 'Operator had insufficient balance',
+          message: 'insufficient balance',
+        }),
+      );
+    }
+  }
+
+  private async getCachedGasBalance(): Promise<bigint> {
+    const now = Date.now();
+    if (now - this.gasCacheTs > this.GAS_CACHE_TTL_MS) {
+      this.cachedGasBalance = await this.publicClient.getBalance({
+        address: this.operatorAccount.address,
+      });
+      this.gasCacheTs = now;
+    }
+    return this.cachedGasBalance;
+  }
+
   private async waitForTx(hash: Hash, label: string): Promise<void> {
     const receipt = await this.publicClient.waitForTransactionReceipt({
       hash,
-      timeout: 30_000, // 30 s
+      timeout: 30_000,
     });
 
     if (receipt.status === 'reverted') {
@@ -225,26 +308,11 @@ export class RealEscrowService implements OnModuleInit {
   }
 
   /**
-   * Convert viem errors into structured ApiExceptions with clear messages.
+   * Legacy wrapError — kept for getBalance / getCall which don't need gas guard.
    */
-  private wrapError(fn: string, err: unknown): ApiException {
+  private wrapLegacyError(fn: string, err: unknown): ApiException {
     if (err instanceof ApiException) return err;
-
-    // Contract revert with reason string or custom error
     if (err instanceof BaseError) {
-      const revert = err.walk((e) => e instanceof ContractFunctionRevertedError);
-      if (revert instanceof ContractFunctionRevertedError) {
-        const reason =
-          revert.reason ?? revert.data?.errorName ?? 'unknown revert reason';
-        this.logger.error(`Contract reverted in ${fn}(): ${reason}`);
-        return new ApiException(
-          'CONTRACT_REVERTED',
-          `Escrow contract reverted in ${fn}(): ${reason}`,
-          HttpStatus.BAD_GATEWAY,
-        );
-      }
-
-      // RPC / network / timeout errors
       this.logger.error(
         `viem error in ${fn}(): ${err.shortMessage ?? err.message}`,
       );
@@ -254,8 +322,6 @@ export class RealEscrowService implements OnModuleInit {
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
-
-    // Unknown errors
     const msg = err instanceof Error ? err.message : String(err);
     this.logger.error(`Unexpected error in EscrowService.${fn}(): ${msg}`);
     return new ApiException('INTERNAL_ERROR', msg, HttpStatus.INTERNAL_SERVER_ERROR);

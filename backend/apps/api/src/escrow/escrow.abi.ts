@@ -9,6 +9,8 @@
  *   release(bytes32 callId) [onlyOperator]
  *   refund(bytes32 callId)  [onlyOperator]
  *   balances(address account) view -> uint256
+ *   getCall(bytes32 callId) view -> Call struct
+ *   operator() view -> address
  *
  * Events:
  *   Deposited(address indexed account, uint256 amount)
@@ -16,6 +18,12 @@
  *   Reserved(bytes32 indexed callId, address indexed consumer, address indexed provider, uint256 amount)
  *   Released(bytes32 indexed callId, address indexed provider, uint256 amount)
  *   Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)
+ *   RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)
+ *   OperatorUpdated(address indexed oldOperator, address indexed newOperator)
+ *
+ * Custom errors (needed for Viem errorName decoding):
+ *   NotOperator, ZeroAddress, ZeroAmount, InsufficientBalance, TransferFailed,
+ *   CallAlreadyExists, CallNotReserved, NotConsumer, CallNotExpired, DirectPaymentNotAllowed
  */
 export const ESCROW_ABI = [
   // ── State-changing (operator) ───────────────────────────────────────────────
@@ -53,6 +61,32 @@ export const ESCROW_ABI = [
     inputs: [{ name: 'account', type: 'address' }],
     outputs: [{ name: '', type: 'uint256' }],
   },
+  {
+    name: 'getCall',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'callId', type: 'bytes32' }],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        components: [
+          { name: 'consumer', type: 'address' },
+          { name: 'provider', type: 'address' },
+          { name: 'amount', type: 'uint256' },
+          { name: 'status', type: 'uint8' },
+          { name: 'expiry', type: 'uint256' },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'operator',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ name: '', type: 'address' }],
+  },
   // ── Events ──────────────────────────────────────────────────────────────────
   {
     name: 'Reserved',
@@ -83,6 +117,15 @@ export const ESCROW_ABI = [
     ],
   },
   {
+    name: 'RefundedForcibly',
+    type: 'event',
+    inputs: [
+      { name: 'callId', type: 'bytes32', indexed: true },
+      { name: 'consumer', type: 'address', indexed: true },
+      { name: 'amount', type: 'uint256', indexed: false },
+    ],
+  },
+  {
     name: 'Deposited',
     type: 'event',
     inputs: [
@@ -98,4 +141,23 @@ export const ESCROW_ABI = [
       { name: 'amount', type: 'uint256', indexed: false },
     ],
   },
+  {
+    name: 'OperatorUpdated',
+    type: 'event',
+    inputs: [
+      { name: 'oldOperator', type: 'address', indexed: true },
+      { name: 'newOperator', type: 'address', indexed: true },
+    ],
+  },
+  // ── Custom errors (required for Viem errorName decoding) ────────────────────
+  { name: 'NotOperator', type: 'error', inputs: [] },
+  { name: 'ZeroAddress', type: 'error', inputs: [] },
+  { name: 'ZeroAmount', type: 'error', inputs: [] },
+  { name: 'InsufficientBalance', type: 'error', inputs: [] },
+  { name: 'TransferFailed', type: 'error', inputs: [] },
+  { name: 'CallAlreadyExists', type: 'error', inputs: [] },
+  { name: 'CallNotReserved', type: 'error', inputs: [] },
+  { name: 'NotConsumer', type: 'error', inputs: [] },
+  { name: 'CallNotExpired', type: 'error', inputs: [] },
+  { name: 'DirectPaymentNotAllowed', type: 'error', inputs: [] },
 ] as const;

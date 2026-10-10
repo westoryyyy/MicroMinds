@@ -1,3 +1,8 @@
 .env
 dist/
 node_modules/
+
+# Scratch scripts (prevent committing temp debug files)
+scripts/scratch/
+dist/
+*.tsbuildinfo

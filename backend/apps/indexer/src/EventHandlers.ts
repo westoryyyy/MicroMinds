@@ -130,3 +130,13 @@ Escrow.RefundedForcibly.handler(async ({ event, context }) => {
     amount: consumerBalance ? consumerBalance.amount + amount : amount,
   });
 });
+
+Escrow.OperatorUpdated.handler(async ({ event, context }) => {
+  context.OperatorChange.set({
+    id: `${event.transaction.hash}-${event.logIndex}`,
+    oldOperator: event.params.oldOperator.toLowerCase(),
+    newOperator: event.params.newOperator.toLowerCase(),
+    timestamp: event.block.timestamp,
+    txHash: event.transaction.hash,
+  });
+});

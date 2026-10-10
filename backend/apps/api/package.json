@@ -9,7 +9,8 @@
     "db:migrate": "node -r ts-node/register node_modules/node-pg-migrate/bin/node-pg-migrate.js up -f database.json",
     "db:seed": "ts-node scripts/seed.ts",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "test": "jest"
+    "test": "jest",
+    "script": "tsx --env-file=.env"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.10",
@@ -40,6 +41,7 @@
     "axios-mock-adapter": "^2.1.0",
     "dotenv": "^18.0.6",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "^5.4.5"
   }
 }

@@ -28,3 +28,11 @@ type Withdrawal @entity {
   amount: BigInt!
   timestamp: Int!
 }
+
+type OperatorChange @entity {
+  id: ID!
+  oldOperator: String!
+  newOperator: String!
+  timestamp: Int!
+  txHash: String!
+}

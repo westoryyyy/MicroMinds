@@ -65,3 +65,12 @@ Dalam file `.env` di folder `apps/api/`, terdapat 2 konfigurasi penting untuk ke
 - `POST /call` : Endpoint utama Gateway. Menahan (reserve) saldo tMON, meneruskan request ke AI, menghitung token usage, dan memotong saldo (finalize).
 
 > ⚠️ **JANGAN COMMIT `.env` ATAU PRIVATE KEY**
+
+## Trust Model & Security
+
+Aplikasi ini menggunakan model hybrid Web2.5 (Escrow Contract + Backend Operator) dengan jaminan keamanan sebagai berikut:
+
+- **Peran Operator (Backend):** Backend bertindak sebagai Operator yang memiliki hak untuk memanggil `reserve`, `release`, dan `refund`. Namun, dana **TIDAK BISA** dicuri oleh Operator. Fungsi `release` dan `refund` di Smart Contract terikat pada alamat `provider` dan `consumer` yang dikunci saat `reserve`. Operator tidak bisa membelokkan dana ke alamatnya sendiri.
+- **Perlindungan Consumer (Force Refund):** Jika server Backend mati atau Operator tidak merespons, dana Consumer tidak akan stuck. Setelah tenggat waktu 1 hari (expiry), Consumer dapat memanggil `forceRefund()` langsung di blockchain untuk menarik dananya kembali.
+- **Batasan Saat Ini:** Operator saat ini memilih `consumer` dan `provider` saat memanggil `reserve` tanpa tanda tangan kriptografis dari Consumer. Roadmap ke depan: Menggunakan otorisasi EIP-712 yang di-sign oleh Consumer, atau mendaftarkan provider secara on-chain.
+- **Pemisahan Peran:** Untuk keamanan, kunci private *Owner* (Deployer) dan *Operator* dipisah. Backend hanya memegang kunci Operator dengan saldo terbatas untuk biaya gas. Untuk environment produksi yang sebenarnya, akan digunakan sistem Key Management Service (KMS) atau Paymaster (ERC-4337).

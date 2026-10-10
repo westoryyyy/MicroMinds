@@ -5,7 +5,7 @@ networks:
     start_block: 69485029
     contracts:
       - name: Escrow
-        abi_file_path: ../../smart-contract/deployments/EscrowABI.json
+        abi_file_path: ../../../smart-contract/deployments/EscrowABI.json
         address:
           - "0x5c7141ab4d637915858ee97881fd613af468c76a"
         handler: src/EventHandlers.ts
@@ -16,3 +16,4 @@ networks:
           - event: Refunded(bytes32 indexed callId, address indexed consumer, uint256 amount)
           - event: RefundedForcibly(bytes32 indexed callId, address indexed consumer, uint256 amount)
           - event: Withdrawn(address indexed account, uint256 amount)
+          - event: OperatorUpdated(address indexed oldOperator, address indexed newOperator)
