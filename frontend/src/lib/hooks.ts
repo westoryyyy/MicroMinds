@@ -26,7 +26,9 @@ export function useCalls(role: "consumer" | "provider") {
   const { address } = useSession();
   return useQuery({
     queryKey: ["calls", role, address], enabled: !!address,
-    queryFn: () => fetchCalls(address!, role), refetchInterval: 4000, // polling 3-5 dtk (SKPL 7.3)
+    queryFn: () => fetchCalls(address!, role),
+    refetchInterval: (q) => (q.state.error ? false : 4000), // stop polling if error
+    retry: false, // jangan retry berkali-kali jika server mati
   });
 }
 
@@ -49,15 +51,27 @@ function useRefresh() {
 
 export function useDeposit() {
   const s = useSession(), refresh = useRefresh();
-  return useMutation({ mutationFn: (wei: bigint) => escrow.deposit(s, wei), onSuccess: refresh });
+  return useMutation({ 
+    mutationFn: (wei: bigint) => escrow.deposit(s, wei), 
+    onSuccess: refresh,
+    onError: (e: any) => alert("Error Deposit: " + (e.message || String(e)))
+  });
 }
 export function useWithdraw() {
   const s = useSession(), refresh = useRefresh();
-  return useMutation({ mutationFn: (wei: bigint) => escrow.withdraw(s, wei), onSuccess: refresh });
+  return useMutation({ 
+    mutationFn: (wei: bigint) => escrow.withdraw(s, wei), 
+    onSuccess: refresh,
+    onError: (e: any) => alert("Error Withdraw: " + (e.message || String(e)))
+  });
 }
 export function useForceRefund() {
   const s = useSession(), refresh = useRefresh();
-  return useMutation({ mutationFn: (callId: Hex) => escrow.forceRefund(s, callId), onSuccess: refresh });
+  return useMutation({ 
+    mutationFn: (callId: Hex) => escrow.forceRefund(s, callId), 
+    onSuccess: refresh,
+    onError: (e: any) => alert("Error Force Refund: " + (e.message || String(e)))
+  });
 }
 export function useCallApi() {
   const { address } = useSession(), { key } = useApiKey(), refresh = useRefresh();

@@ -59,7 +59,8 @@ export function PrivySessionProvider({ children }: { children: ReactNode }) {
 }
 
 export function useSession(): Session {
-  const ctx = useContext(MOCK ? MockCtx : PrivyCtx);
+  // Always use PrivyCtx for login, even if MOCK is true (we only mock escrow, not login)
+  const ctx = useContext(PrivyCtx);
   if (!ctx) throw new Error("useSession harus di dalam <Providers>");
   return ctx;
 }

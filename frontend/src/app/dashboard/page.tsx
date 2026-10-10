@@ -20,6 +20,12 @@ export default function DashboardPage() {
   const forceRefund = useForceRefund();
 
   const [amt, setAmt] = useState("0.05");
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(address || "");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Hitung hold berdasarkan panggilan yang masih 'reserved'
   const heldByCat = calls.filter(c => c.status === "reserved").reduce((sum, c) => sum + c.amount, 0n);
@@ -44,12 +50,12 @@ export default function DashboardPage() {
   }
 
   const handleDeposit = () => {
-    const v = parseFloat(amt);
+    const v = parseFloat(amt.replace(",", "."));
     if (v > 0) deposit.mutate(BigInt(Math.round(v * 1e18)));
   };
 
   const handleWithdraw = () => {
-    const v = parseFloat(amt);
+    const v = parseFloat(amt.replace(",", "."));
     if (v > 0) withdraw.mutate(BigInt(Math.round(v * 1e18)));
   };
 
@@ -57,7 +63,15 @@ export default function DashboardPage() {
     <div className="wrap">
       <section>
         <h2>Dashboard</h2>
-        <p className="mut">Wallet {address} · Monad Testnet</p>
+        <p className="mut">
+          Wallet <code 
+            style={{ cursor: "pointer", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: "4px", color: "var(--ink)" }} 
+            onClick={handleCopy}
+            title="Click to copy"
+          >
+            {address} {copied ? "✅" : "📋"}
+          </code> · Monad Testnet
+        </p>
         <div className="tabs">
           <button className={`btn ${tab === "c" ? "b-b" : ""}`} onClick={() => setTab("c")}>Consumer</button>
           <button className={`btn ${tab === "p" ? "b-b" : ""}`} onClick={() => setTab("p")}>Provider</button>

@@ -11,24 +11,18 @@ export default function Providers({ children }: { children: ReactNode }) {
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 2000, retry: 1 } } })
   );
 
-  if (MOCK) {
-    return (
-      <QueryClientProvider client={qc}>
-        <MockSessionProvider>{children}</MockSessionProvider>
-      </QueryClientProvider>
-    );
-  }
+  // Removed MOCK block so Privy is always used for login
 
   return (
     <PrivyProvider
       appId={CFG.privyAppId}
       config={{
-        loginMethods: ["google", "discord", "twitter", "github"],
+        loginMethods: ["google", "wallet"],
         defaultChain: monadTestnet,
         supportedChains: [monadTestnet],
         embeddedWallets: {
           ethereum: { createOnLogin: "users-without-wallets" },
-          showWalletUIs: false, // tanpa pop-up konfirmasi saat deposit
+          showWalletUIs: true,
         },
         appearance: { theme: "dark", accentColor: "#f6c21c" },
       }}
