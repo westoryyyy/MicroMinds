@@ -14,7 +14,7 @@ const listings = [
   {
     name: 'JSON Formatter',
     description: 'Format unreadable JSON strings into pretty JSON.',
-    endpoint: 'http://localhost:3000/providers/json-format',
+    endpoint: 'http://localhost:3001/providers/json-format',
     price_wei: '100000000000000', // 0.0001 tMON
     schema_input: JSON.stringify({
       type: 'object',
@@ -33,7 +33,7 @@ const listings = [
   {
     name: 'Text Extraction',
     description: 'Extract emails and phone numbers from raw text.',
-    endpoint: 'http://localhost:3000/providers/text-extract',
+    endpoint: 'http://localhost:3001/providers/text-extract',
     price_wei: '100000000000000', // 0.0001 tMON
     schema_input: JSON.stringify({
       type: 'object',
@@ -55,7 +55,7 @@ const listings = [
   {
     name: 'URL Metadata',
     description: 'Get title and description of a web page.',
-    endpoint: 'http://localhost:3000/providers/url-metadata',
+    endpoint: 'http://localhost:3001/providers/url-metadata',
     price_wei: '100000000000000', // 0.0001 tMON
     schema_input: JSON.stringify({
       type: 'object',
@@ -77,7 +77,7 @@ const listings = [
   {
     name: 'Flaky Listing',
     description: 'Simulates failures (500 or bad schema) for testing refunds.',
-    endpoint: 'http://localhost:3000/providers/flaky',
+    endpoint: 'http://localhost:3001/providers/flaky',
     price_wei: '500000000000000', // 0.0005 tMON
     schema_input: JSON.stringify({
       type: 'object',
@@ -96,7 +96,7 @@ const listings = [
   {
     name: 'AI Assistant',
     description: 'LLM-backed AI Assistant.',
-    endpoint: 'http://localhost:3000/providers/ai-assistant',
+    endpoint: 'http://localhost:3001/providers/ai-assistant',
     price_wei: '5000000000000000', // 0.005 tMON
     schema_input: JSON.stringify({
       type: 'object',

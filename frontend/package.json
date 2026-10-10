@@ -29,5 +29,13 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "viem": "^2.56.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@reown/appkit",
+      "bufferutil",
+      "keccak",
+      "utf-8-validate"
+    ]
   }
 }
