@@ -67,8 +67,6 @@ We are targeting the following integrations and bounties for the Metropolis Hack
 3. **Privy / Dynamic**: ✅ (Implemented) For seamless AI-agent wallet onboarding and automated transaction signing.
 4. **Envio**: ✅ (Implemented) Real-time indexing of our Escrow events (Reserve, Release, Refund) for rapid dashboard updates.
 
-## 📜 License
-[MIT License](./LICENSE) - Copyright (c) 2026 Team Ketupat / Metropolis Hackathon
 
 ## 🚀 How to Run Locally
 
@@ -85,7 +83,10 @@ We are targeting the following integrations and bounties for the Metropolis Hack
 3. **Start the Frontend (Next.js):**
    ```bash
    cd MicroMinds/frontend
-   pnpm install
+   npm install
    npm run dev
    ```
 4. Open your browser and navigate to `http://localhost:3000`.
+
+## 📜 License
+[MIT License](./LICENSE) - Copyright (c) 2026 Team Ketupat / Metropolis Hackathon
