@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useListings } from "@/lib/hooks";
 import { fmtMon, fmtIdr } from "@/lib/format";
 import { Sv, type CritterId } from "@/components/Crayon";
+import { useLang } from "@/components/LangProvider";
 
 const ICONS: CritterId[] = ["croc", "bird", "frog", "monkey", "cat", "bug"];
 
@@ -17,6 +18,7 @@ export default function ExplorePage() {
   const [q, setQ] = useState("");
   const [mp, setMp] = useState("");
   const { data, isLoading, isError } = useListings({});
+  const { t } = useLang();
 
   let filtered = data || [];
   if (q) {
@@ -36,9 +38,9 @@ export default function ExplorePage() {
       {/* Header Section */}
       <header className="wrap py-12 md:py-20 flex flex-col md:flex-row gap-8 justify-between items-end border-b-[3px] border-dashed border-mut">
         <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-6xl mb-4">Explore the Shops</h1>
+          <h1 className="text-5xl md:text-6xl mb-4">{t("Explore the Shops", "Eksplor Toko-Toko")}</h1>
           <p className="text-xl text-mut leading-relaxed m-0">
-            Find tiny, single-purpose APIs for your agents. No subscriptions, no API key forms. Just pure on-chain escrow per call.
+            {t("Find tiny, single-purpose APIs for your agents. No subscriptions, no API key forms. Just pure on-chain escrow per call.", "Temukan API mikro sekali pakai untuk agen Anda. Tanpa langganan, tanpa formulir API key. Murni escrow on-chain per panggilan.")}
           </p>
         </div>
         <div className="hidden md:flex gap-6 pb-2">
@@ -62,7 +64,7 @@ export default function ExplorePage() {
           </div>
           <div className="hidden md:block w-[3px] h-10 bg-ink opacity-20"></div>
           <div className="w-full md:w-auto flex items-center gap-4 px-2 bg-card rounded-[14px_4px_12px_4px] border-[3px] border-solid border-ink md:border-none md:bg-transparent p-2 md:p-0">
-            <label htmlFor="price-filter" className="font-bold text-lg whitespace-nowrap hidden md:block">Max Price:</label>
+            <label htmlFor="price-filter" className="font-bold text-lg whitespace-nowrap hidden md:block">{t("Max Price:", "Harga Maks:")}</label>
             <select 
               id="price-filter"
               className="w-full md:w-auto !py-2 !text-lg !bg-transparent !border-none cursor-pointer focus-visible:!outline-none !shadow-none"
@@ -70,7 +72,7 @@ export default function ExplorePage() {
               onChange={(e) => setMp(e.target.value)} 
               aria-label="Max price"
             >
-              <option value="">Any price</option>
+              <option value="">{t("Any price", "Harga berapapun")}</option>
               <option value="0.001">≤ 0.001 tMON</option>
               <option value="0.002">≤ 0.002 tMON</option>
               <option value="0.005">≤ 0.005 tMON</option>
@@ -89,15 +91,15 @@ export default function ExplorePage() {
             {isError && (
               <div className="card mm-empty col-span-full py-16">
                 <div className="flex justify-center mb-6"><Sv id="cat" w={120} /></div>
-                <h3 className="text-3xl mb-2">Error loading shops</h3>
-                <p className="text-red text-lg">Could not connect to the backend to fetch listings.</p>
+                <h3 className="text-3xl mb-2">{t("Error loading shops", "Gagal memuat toko")}</h3>
+                <p className="text-red text-lg">{t("Could not connect to the backend to fetch listings.", "Tidak dapat terhubung ke backend untuk mengambil daftar.")}</p>
               </div>
             )}
             {!isLoading && !isError && filtered.length === 0 && (
               <div className="card mm-empty col-span-full py-16">
                 <div className="flex justify-center mb-6"><Sv id="bug" w={80} /></div>
-                <h3 className="text-3xl mb-2">No shops match</h3>
-                <p className="text-lg text-mut">Clear the search or raise the price limit to find what you need.</p>
+                <h3 className="text-3xl mb-2">{t("No shops match", "Tidak ada toko yang cocok")}</h3>
+                <p className="text-lg text-mut">{t("Clear the search or raise the price limit to find what you need.", "Hapus pencarian atau naikkan batas harga untuk menemukan yang Anda butuhkan.")}</p>
               </div>
             )}
             {!isLoading && !isError && filtered.map((l, idx) => {

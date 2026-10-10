@@ -7,14 +7,16 @@ import { fmtMon, fmtIdr, txUrl, shortHash, canForceRefund } from "@/lib/format";
 import { Sv } from "@/components/Crayon";
 import { Badge, TxLink } from "@/components/ui";
 import CreateListingModal from "@/components/CreateListingModal";
+import { useLang } from "@/components/LangProvider";
 
 export default function DashboardPage() {
   const { authenticated, login, address } = useSession();
   const [tab, setTab] = useState<"c" | "p">("c");
+  const { t } = useLang();
 
   const { data: bal = 0n } = useBalance();
   const { data: calls = [], isLoading: callsLoading } = useCalls(tab === "c" ? "consumer" : "provider");
-  
+
   const { data: allListings = [] } = useListings({});
   const myListings = allListings.filter(l => l.providerAddress.toLowerCase() === address?.toLowerCase());
 
@@ -28,7 +30,7 @@ export default function DashboardPage() {
   const [copied, setCopied] = useState(false);
   const [showKey, setShowKey] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const handleCopy = () => {
     navigator.clipboard.writeText(address || "");
     setCopied(true);
@@ -54,9 +56,9 @@ export default function DashboardPage() {
       <div className="wrap py-24">
         <section className="card flex flex-col items-center justify-center text-center py-16 gap-6 max-w-2xl mx-auto">
           <Sv id="cat" w={140} />
-          <h2 className="text-4xl md:text-5xl m-0">Log in to open your dashboard</h2>
-          <p className="text-xl text-mut m-0">Your embedded wallet and balance appear here.</p>
-          <button className="btn b-b !text-2xl mt-4 !px-8 !py-3" onClick={login}>Log in with Privy</button>
+          <h2 className="text-4xl md:text-5xl m-0">{t("Log in to open your dashboard", "Masuk untuk membuka dasbor")}</h2>
+          <p className="text-xl text-mut m-0">{t("Your embedded wallet and balance appear here.", "Dompet tersemat dan saldo kamu akan muncul di sini.")}</p>
+          <button className="btn b-b !text-2xl mt-4 !px-8 !py-3" onClick={login}>{t("Log in with Privy", "Masuk dengan Privy")}</button>
         </section>
       </div>
     );
@@ -85,11 +87,11 @@ export default function DashboardPage() {
           <div className="flex flex-col md:flex-row gap-8 justify-between items-center text-center md:text-left">
             <div>
               <h1 className="text-5xl md:text-6xl mb-4">
-                {tab === "c" ? "🛒 Consumer Mode" : "🏪 Provider Mode"}
+                {tab === "c" ? t("🛒 Consumer Mode", "🛒 Mode Konsumen") : t("🏪 Provider Mode", "🏪 Mode Penyedia")}
               </h1>
               <div className="flex flex-wrap justify-center md:justify-start items-center gap-3 text-lg text-mut font-sans">
-                <span>Wallet:</span>
-                <button 
+                <span>{t("Wallet:", "Dompet:")}</span>
+                <button
                   onClick={handleCopy}
                   className="bg-ink text-paper px-3 py-1 rounded-[8px_2px_8px_2px] hover:bg-[#3a3a5a] transition-colors flex items-center gap-2 cursor-pointer border-none font-mono text-sm"
                   title="Click to copy"
@@ -100,19 +102,19 @@ export default function DashboardPage() {
                 <span className="hidden sm:inline">Monad Testnet</span>
               </div>
             </div>
-            
+
             <div className="flex bg-card border-[3px] border-solid border-ink p-1.5 rounded-[24px_8px_24px_8px] shadow-crayon shrink-0">
-              <button 
+              <button
                 className={`px-6 md:px-8 py-3 text-2xl font-gochi border-none cursor-pointer rounded-[20px_6px_20px_6px] transition-all flex items-center gap-2 ${tab === "c" ? "bg-yel text-paper border-[3px] border-solid border-ink shadow-sm transform scale-[1.02]" : "bg-transparent text-mut hover:bg-black/5"}`}
                 onClick={() => setTab("c")}
               >
-                Consumer
+                {t("Consumer", "Konsumen")}
               </button>
-              <button 
+              <button
                 className={`px-6 md:px-8 py-3 text-2xl font-gochi border-none cursor-pointer rounded-[20px_6px_20px_6px] transition-all flex items-center gap-2 ${tab === "p" ? "bg-blu text-white border-[3px] border-solid border-ink shadow-sm transform scale-[1.02]" : "bg-transparent text-mut hover:bg-black/5"}`}
                 onClick={() => setTab("p")}
               >
-                Provider
+                {t("Provider", "Penyedia")}
               </button>
             </div>
           </div>
@@ -127,16 +129,16 @@ export default function DashboardPage() {
                 <div className="absolute right-[-20px] top-[-20px] opacity-10 group-hover:opacity-20 transition-opacity">
                   <Sv id="cat" w={150} />
                 </div>
-                <h3 className="text-2xl m-0 relative z-10">Balance</h3>
+                <h3 className="text-2xl m-0 relative z-10">{t("Balance", "Saldo")}</h3>
                 <p className="text-5xl font-gochi text-grn m-0 leading-none mt-2 relative z-10 break-all">{fmtMon(bal)} tMON</p>
                 <div className="mt-auto pt-6 relative z-10">
-                  <p className="text-mut text-sm font-sans m-0">Held by cat: <b>{fmtMon(heldByCat)}</b></p>
-                  <p className="text-mut text-sm font-sans m-0">Est. {fmtIdr(bal)}</p>
+                  <p className="text-mut text-sm font-sans m-0">{t("Held by cat:", "Ditahan kucing:")} <b>{fmtMon(heldByCat)}</b></p>
+                  <p className="text-mut text-sm font-sans m-0">{t("Est.", "Est.")} {fmtIdr(bal)}</p>
                 </div>
               </div>
 
               <div className="card flex flex-col gap-4">
-                <h3 className="text-2xl m-0">Deposit / Withdraw</h3>
+                <h3 className="text-2xl m-0">{t("Deposit / Withdraw", "Isi Saldo / Tarik")}</h3>
                 <div className="flex flex-col gap-4 mt-auto">
                   <div className="w-full relative">
                     <input
@@ -152,17 +154,17 @@ export default function DashboardPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3 shrink-0">
                     <button className="btn b-g !text-lg !py-2 !px-2 w-full text-center whitespace-nowrap" onClick={handleDeposit} disabled={deposit.isPending}>
-                      Deposit
+                      {t("Deposit", "Isi Saldo")}
                     </button>
                     <button className="btn !text-lg !py-2 !px-2 w-full text-center whitespace-nowrap" onClick={handleWithdraw} disabled={withdraw.isPending}>
-                      Withdraw
+                      {t("Withdraw", "Tarik")}
                     </button>
                   </div>
                 </div>
               </div>
 
               <div className="card flex flex-col gap-3">
-                <h3 className="text-2xl m-0">API Key</h3>
+                <h3 className="text-2xl m-0">{t("API Key", "API Key")}</h3>
                 <div className="bg-ink text-paper p-3 rounded-[8px_2px_8px_2px] overflow-hidden min-h-[50px] flex items-center justify-between mt-2 shadow-inner">
                   {key ? (
                     <>
@@ -179,24 +181,24 @@ export default function DashboardPage() {
                       </div>
                     </>
                   ) : (
-                    <span className="text-mut text-sm font-sans">No key yet. It will be tied to your wallet.</span>
+                    <span className="text-mut text-sm font-sans">{t("No key yet. It will be tied to your wallet.", "Belum ada key. Key ini akan terikat dengan dompetmu.")}</span>
                   )}
                 </div>
                 <div className="mt-auto pt-4 flex justify-end">
-                  <button 
-                    className="btn b-b !text-lg !py-2 !px-4 w-full" 
+                  <button
+                    className="btn b-b !text-lg !py-2 !px-4 w-full"
                     onClick={() => {
                       if (key) {
-                        if (window.confirm("Yakin? Aplikasi kamu yang pakai key lama akan langsung error!")) {
+                        if (window.confirm(t("Are you sure? Apps using your old key will break!", "Yakin? Aplikasi kamu yang pakai key lama akan langsung error!"))) {
                           createKey.mutate();
                         }
                       } else {
                         createKey.mutate();
                       }
-                    }} 
+                    }}
                     disabled={createKey.isPending}
                   >
-                    {key ? "Regenerate Key" : "Create API Key"}
+                    {key ? t("Regenerate Key", "Buat Ulang Key") : t("Create API Key", "Buat API Key")}
                   </button>
                 </div>
               </div>
@@ -205,7 +207,7 @@ export default function DashboardPage() {
             <section>
               <h3 className="text-3xl mb-6 flex items-center gap-3">
                 <span className="bg-ink text-paper w-10 h-10 rounded-full flex items-center justify-center font-bold font-sans text-xl shadow-sm rotate-2">📜</span>
-                Riwayat Pemakaian
+                {t("Usage History", "Riwayat Pemakaian")}
               </h3>
               {callsLoading ? (
                 <div className="card flex justify-center py-12"><div className="sk w-1/2"></div></div>
@@ -214,11 +216,11 @@ export default function DashboardPage() {
                   <table className="w-full text-sm font-sans border-collapse">
                     <thead className="bg-paper text-ink font-gochi text-lg">
                       <tr>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Waktu</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Nama API</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Biaya</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Status</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-right">Action</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Time", "Waktu")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("API Name", "Nama API")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Cost", "Biaya")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Status", "Status")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-right">{t("Action", "Aksi")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -237,7 +239,7 @@ export default function DashboardPage() {
                                 onClick={() => forceRefund.mutate(c.callId)}
                                 disabled={forceRefund.isPending}
                               >
-                                Force Refund
+                                {t("Force Refund", "Paksa Refund")}
                               </button>
                             ) : (
                               <TxLink hash={c.finalTx || c.reserveTx} />
@@ -251,8 +253,8 @@ export default function DashboardPage() {
               ) : (
                 <div className="card flex flex-col items-center justify-center text-center py-16 gap-4">
                   <Sv id="monkey" w={100} />
-                  <p className="text-xl text-mut">Belum ada pemakaian.</p>
-                  <Link href="/explore" className="btn b-g !text-xl !px-6 mt-2">Cari API Sekarang</Link>
+                  <p className="text-xl text-mut">{t("No usage yet.", "Belum ada pemakaian.")}</p>
+                  <Link href="/explore" className="btn b-g !text-xl !px-6 mt-2">{t("Search APIs Now", "Cari API Sekarang")}</Link>
                 </div>
               )}
             </section>
@@ -266,59 +268,59 @@ export default function DashboardPage() {
                 <div className="absolute right-[-10px] top-[-10px] opacity-10 group-hover:opacity-20 transition-opacity">
                   <Sv id="croc" w={180} />
                 </div>
-                <h3 className="text-2xl m-0 relative z-10">Total Pendapatan</h3>
+                <h3 className="text-2xl m-0 relative z-10">{t("Total Income", "Total Pendapatan")}</h3>
                 <p className="text-5xl font-gochi text-blu m-0 leading-none mt-2 relative z-10">{fmtMon(bal)} tMON</p>
                 <div className="mt-auto pt-6 relative z-10">
-                  <p className="text-mut text-sm font-sans m-0 mb-4">Pendapatan masuk otomatis ke saldo utama.</p>
+                  <p className="text-mut text-sm font-sans m-0 mb-4">{t("Income automatically goes to main balance.", "Pendapatan masuk otomatis ke saldo utama.")}</p>
                   <button className="btn b-b !text-xl !w-full !py-3" onClick={() => setAmt(fmtMon(bal))}>
-                    Withdraw Semua
+                    {t("Withdraw All", "Withdraw Semua")}
                   </button>
                 </div>
               </div>
 
               <div onClick={() => setIsModalOpen(true)} className="card flex flex-col items-center justify-center gap-4 border-[3px] border-dashed border-mut bg-transparent shadow-none hover:bg-card hover:border-solid hover:border-ink transition-all cursor-pointer py-12 md:py-8">
-                  <span className="text-5xl inline-block origin-bottom-right">➕</span>
-                  <h3 className="text-2xl m-0 hover:text-blu transition-colors">Create New Listing</h3>
-                  <p className="text-mut text-center font-sans m-0 px-4">Mulai jual API mikromu sekarang juga.</p>
+                <span className="text-5xl inline-block origin-bottom-right">➕</span>
+                <h3 className="text-2xl m-0 hover:text-blu transition-colors">{t("Create New Listing", "Buat Listing Baru")}</h3>
+                <p className="text-mut text-center font-sans m-0 px-4">{t("Start selling your micro API right now.", "Mulai jual API mikromu sekarang juga.")}</p>
               </div>
             </section>
 
             <section>
-               <h3 className="text-3xl mb-6 flex items-center gap-3">
-                  <span className="bg-blu text-white w-10 h-10 rounded-full flex items-center justify-center font-bold font-sans text-xl shadow-sm -rotate-2">🏪</span>
-                  Toko / API Milikmu
-               </h3>
-               {myListings.length > 0 ? (
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                   {myListings.map(l => (
-                     <div key={l.id} className="card flex flex-col gap-3 relative overflow-hidden group">
-                        <div className="flex justify-between items-start gap-4">
-                           <h4 className="text-2xl m-0">{l.name}</h4>
-                           <span className="bdg rel !bg-blu shrink-0">{l.category}</span>
+              <h3 className="text-3xl mb-6 flex items-center gap-3">
+                <span className="bg-blu text-white w-10 h-10 rounded-full flex items-center justify-center font-bold font-sans text-xl shadow-sm -rotate-2">🏪</span>
+                {t("Your Shop / APIs", "Toko / API Milikmu")}
+              </h3>
+              {myListings.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {myListings.map(l => (
+                    <div key={l.id} className="card flex flex-col gap-3 relative overflow-hidden group">
+                      <div className="flex justify-between items-start gap-4">
+                        <h4 className="text-2xl m-0">{l.name}</h4>
+                        <span className="bdg rel !bg-blu shrink-0">{l.category}</span>
+                      </div>
+                      <p className="text-mut text-sm font-sans line-clamp-2">{l.description}</p>
+                      <div className="mt-auto pt-4 flex justify-between items-end border-t-2 border-dashed border-mut">
+                        <div>
+                          <span className="text-xs text-mut font-bold uppercase tracking-wider block mb-1">{t("Price", "Harga")}</span>
+                          <span className="font-mono text-grn font-bold">{fmtMon(BigInt(l.priceWei))} tMON</span>
                         </div>
-                        <p className="text-mut text-sm font-sans line-clamp-2">{l.description}</p>
-                        <div className="mt-auto pt-4 flex justify-between items-end border-t-2 border-dashed border-mut">
-                           <div>
-                              <span className="text-xs text-mut font-bold uppercase tracking-wider block mb-1">Harga</span>
-                              <span className="font-mono text-grn font-bold">{fmtMon(BigInt(l.priceWei))} tMON</span>
-                           </div>
-                           <span className="text-xs font-mono bg-ink text-paper px-2 py-1 rounded">Timeout: {l.timeoutMs}s</span>
-                        </div>
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 <div className="card flex justify-center py-16 text-center flex-col items-center gap-6 border-[3px] border-dashed border-mut bg-transparent shadow-none">
-                    <Sv id="croc" w={140} className="opacity-50 grayscale" />
-                    <p className="text-xl text-mut m-0 font-sans font-medium">Belum ada API yang dijual.</p>
-                 </div>
-               )}
+                        <span className="text-xs font-mono bg-ink text-paper px-2 py-1 rounded">Timeout: {l.timeoutMs}s</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="card flex justify-center py-16 text-center flex-col items-center gap-6 border-[3px] border-dashed border-mut bg-transparent shadow-none">
+                  <Sv id="croc" w={140} className="opacity-50 grayscale" />
+                  <p className="text-xl text-mut m-0 font-sans font-medium">{t("No APIs listed yet.", "Belum ada API yang dijual.")}</p>
+                </div>
+              )}
             </section>
 
             <section>
               <h3 className="text-3xl mb-6 flex items-center gap-3">
                 <span className="bg-ink text-paper w-10 h-10 rounded-full flex items-center justify-center font-bold font-sans text-xl shadow-sm rotate-2">💰</span>
-                Riwayat Pendapatan
+                {t("Income History", "Riwayat Pendapatan")}
               </h3>
               {callsLoading ? (
                 <div className="card flex justify-center py-12"><div className="sk w-1/2"></div></div>
@@ -327,10 +329,10 @@ export default function DashboardPage() {
                   <table className="w-full text-sm font-sans border-collapse">
                     <thead className="bg-paper text-ink font-gochi text-lg">
                       <tr>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Waktu</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">API Terjual</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Konsumen</th>
-                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">Pemasukan</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Time", "Waktu")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("API Sold", "API Terjual")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Consumer", "Konsumen")}</th>
+                        <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-left">{t("Income", "Pemasukan")}</th>
                         <th className="!py-4 !px-6 border-b-[3px] border-dashed border-ink text-right">Tx</th>
                       </tr>
                     </thead>
@@ -341,10 +343,10 @@ export default function DashboardPage() {
                             {new Date(Number(c.reservedAt) * 1000).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                           </td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-medium text-ink">
-                             {c.listingName || "Unknown API"}
+                            {c.listingName || "Unknown API"}
                           </td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono opacity-80">
-                             {shortHash(c.consumer)}
+                            {shortHash(c.consumer)}
                           </td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono text-grn">+{fmtMon(c.amount)} tMON</td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] text-right"><TxLink hash={c.finalTx || c.reserveTx} /></td>
@@ -355,7 +357,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="card flex flex-col items-center justify-center text-center py-16 gap-4 border-[3px] border-dashed border-mut bg-transparent shadow-none">
-                  <p className="text-xl text-mut m-0">Belum ada pemasukan.</p>
+                  <p className="text-xl text-mut m-0">{t("No income yet.", "Belum ada pemasukan.")}</p>
                 </div>
               )}
             </section>
