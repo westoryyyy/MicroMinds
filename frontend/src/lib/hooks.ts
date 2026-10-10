@@ -87,3 +87,15 @@ export function useCreateApiKey() {
     onSuccess: (k) => save(k),
   });
 }
+
+export function useCreateListing() {
+  const { getToken } = useSession();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: Omit<import("./types").Listing, "id" | "providerAddress">) => {
+      const token = await getToken();
+      return api.createListing(token, payload);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["listings"] }),
+  });
+}

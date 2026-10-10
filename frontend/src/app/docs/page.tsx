@@ -85,7 +85,7 @@ export default function DocsPage() {
                 <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-3">1</div>
                 <div className="w-[3px] h-full bg-ink opacity-20 border-l-[3px] border-dashed border-ink mt-4"></div>
               </div>
-              <div className="flex-1 pb-16">
+              <div className="flex-1 min-w-0 pb-16">
                 <h3 className="text-3xl m-0 mb-2">Get the Server</h3>
                 <p className="text-lg text-mut mb-4 mt-0 font-sans">Clone the repository and build the MCP server package locally.</p>
                 <div className="relative">
@@ -125,7 +125,7 @@ npm i && npm run build`}
               <div className="shrink-0 flex flex-col items-center">
                 <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-2">3</div>
               </div>
-              <div className="flex-1 pb-4">
+              <div className="flex-1 min-w-0 pb-4">
                 <h3 className="text-3xl m-0 mb-2">Restart & Test</h3>
                 <p className="text-lg text-mut mb-4 mt-0 font-sans">
                   Restart your IDE, open the chat, and type a prompt like:
