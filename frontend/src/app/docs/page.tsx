@@ -3,12 +3,14 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useApiKey } from "@/lib/hooks";
 import { CFG } from "@/lib/config";
+import { Sv } from "@/components/Crayon";
 
 export default function DocsPage() {
   const { key } = useApiKey();
   const [sw, setSw] = useState(false);
   const [swt, setSwt] = useState("0.0");
   const [swi, setSwi] = useState<NodeJS.Timeout | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const k = key || "mm_log_in_to_get_your_key";
   const cfg = JSON.stringify({
@@ -27,7 +29,8 @@ export default function DocsPage() {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(cfg);
-      alert("Config copied");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       alert("Select the text and copy it by hand.");
     }
@@ -53,82 +56,113 @@ export default function DocsPage() {
   }, [swi]);
 
   return (
-    <div className="wrap">
-      <section>
-        <h2>Connect your agent in under 2 minutes</h2>
-        <div className="card">
-          <h3>1. Get the MCP server</h3>
-          <pre>
-            git clone &lt;your microminds repo&gt;{`\n`}
-            cd microminds/packages/mcp-server && npm i && npm run build
-          </pre>
-
-          <h3>2. Copy your config</h3>
-          <p className="mut">
-            {key ? "Filled with your API key." : <><Link href="/dashboard">Log in and create a key</Link> to fill it in automatically.</>}
-          </p>
-          <pre id="cfg">{cfg}</pre>
-          <button className="btn b-b" onClick={handleCopy}>Copy config</button>
-
-          <h3 style={{ marginTop: 24 }}>3. Restart Cursor and try it</h3>
-          <pre>Find an API that tidies JSON, then use it on {`{a:1,b:[2,3]}`}</pre>
-          <p>The agent calls <b>search_api</b>, then <b>call_api</b>, and reports the payment status and tx hash.</p>
-          
-          <p style={{ marginTop: 24 }}>
-            Test with a friend:{" "}
-            <button className="btn" onClick={handleSw}>
-              {sw ? "Stop stopwatch" : "Start stopwatch"}
-            </button>{" "}
-            <b>{swt}s</b> (goal: under 120s)
-          </p>
+    <>
+      <header className="wrap py-12 md:py-20 border-b-[3px] border-dashed border-mut">
+        <div className="flex flex-col md:flex-row gap-8 justify-between items-start md:items-center">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl mb-4">Connect MCP in 2 minutes</h1>
+            <p className="text-xl text-mut leading-relaxed m-0">
+              Give your AI agent access to the MicroMinds Escrow protocol via the Model Context Protocol (MCP). Cursor, Claude Desktop, and others are supported.
+            </p>
+          </div>
+          <div className="hidden md:block shrink-0">
+            <div className="bg-yel border-[3px] border-solid border-ink rounded-full w-24 h-24 flex items-center justify-center rotate-12 shadow-sm animate-bob">
+              <span className="text-4xl">🔌</span>
+            </div>
+          </div>
         </div>
-      </section>
+      </header>
 
-      <section style={{ marginTop: 40 }}>
-        <h2>User Guide: How to actually use this? (The GoFood Way)</h2>
-        <div className="card">
-          <p>Confused about how this works? Think of MicroMinds like ordering GoFood using GoPay, but for AI Agents!</p>
-          
-          <h3 style={{ marginTop: 24 }}>Step 1: Top-up your GoPay (Deposit)</h3>
-          <p>You log in to the MicroMinds website, go to your Dashboard, and <b>Deposit tMON</b> into the Escrow contract. You will automatically receive a secret <b>API Key</b> (your PIN).</p>
+      <main className="wrap py-12 flex flex-col gap-12">
+        
+        {/* Timeline Steps */}
+        <section className="max-w-4xl mx-auto w-full">
+          <div className="card !p-6 md:!p-12 relative">
+            
+            {/* Step 1 */}
+            <div className="flex gap-6 md:gap-8">
+              <div className="shrink-0 flex flex-col items-center">
+                <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-3">1</div>
+                <div className="w-[3px] h-full bg-ink opacity-20 border-l-[3px] border-dashed border-ink mt-4"></div>
+              </div>
+              <div className="flex-1 pb-16">
+                <h3 className="text-3xl m-0 mb-2">Get the Server</h3>
+                <p className="text-lg text-mut mb-4 mt-0 font-sans">Clone the repository and build the MCP server package locally.</p>
+                <div className="relative">
+                  <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
+{`git clone <your repo>
+cd microminds/packages/mcp-server
+npm i && npm run build`}
+                  </pre>
+                </div>
+              </div>
+            </div>
 
-          <h3 style={{ marginTop: 24 }}>Step 2: Plug into your Cursor Editor</h3>
-          <p>Copy the JSON configuration from Step 2 above. Open your <b>Cursor</b> application (or Windsurf), go to <i>Settings &gt; Features &gt; MCP</i>, and paste the JSON there. This connects your AI code editor directly to MicroMinds.</p>
+            {/* Step 2 */}
+            <div className="flex gap-6 md:gap-8">
+              <div className="shrink-0 flex flex-col items-center">
+                <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm rotate-2">2</div>
+                <div className="w-[3px] h-full bg-ink opacity-20 border-l-[3px] border-dashed border-ink mt-4"></div>
+              </div>
+              <div className="flex-1 pb-16">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                  <h3 className="text-3xl m-0">Add Config to Cursor</h3>
+                  <button className="btn b-b !py-2 !px-5 !text-lg shrink-0 w-full sm:w-auto" onClick={handleCopy}>
+                    {copied ? "Copied! ✅" : "Copy config"}
+                  </button>
+                </div>
+                <p className="text-lg text-mut mb-4 mt-0 font-sans">
+                  {key ? "Filled with your API key." : <><Link href="/dashboard" className="text-blu font-bold">Log in and create a key</Link> to fill it in automatically.</>}
+                </p>
+                <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
+                  {cfg}
+                </pre>
+              </div>
+            </div>
 
-          <h3 style={{ marginTop: 24 }}>Step 3: Tell your AI to order! (Prompting)</h3>
-          <p>You do NOT type commands in a terminal or click buttons on a website anymore. Instead, open the chat inside Cursor and just tell your AI (like Claude) what you need in plain English!</p>
-          <pre>
-            "Hey Claude, can you use MicroMinds to format this messy JSON file for me?"
-          </pre>
-          
-          <h3 style={{ marginTop: 24 }}>Step 4: The Magic happens in the background</h3>
-          <p>
-            Claude (inside Cursor) will secretly talk to the MicroMinds Backend using your API Key. The Backend deducts (reserves) 0.0001 tMON from your balance, tells the JSON Formatter provider to do the job, pays them, and sends the beautiful formatted JSON straight back into your Cursor chat. <b>Magic! ✨</b>
-          </p>
-        </div>
-      </section>
+            {/* Step 3 */}
+            <div className="flex gap-6 md:gap-8">
+              <div className="shrink-0 flex flex-col items-center">
+                <div className="w-14 h-14 rounded-full bg-yel border-[3px] border-solid border-ink text-ink flex items-center justify-center font-bold text-3xl font-gochi z-10 shadow-sm -rotate-2">3</div>
+              </div>
+              <div className="flex-1 pb-4">
+                <h3 className="text-3xl m-0 mb-2">Restart & Test</h3>
+                <p className="text-lg text-mut mb-4 mt-0 font-sans">
+                  Restart your IDE, open the chat, and type a prompt like:
+                </p>
+                <div className="bg-paper border-[3px] border-dashed border-mut p-4 md:p-6 rounded-[12px_4px_12px_4px] text-center mb-4">
+                  <span className="font-sans text-ink font-medium md:text-lg">"Find an API that tidies JSON, then use it on <code className="bg-card text-blu px-2 py-1 border border-solid border-mut rounded text-sm md:text-base">{`{a:1,b:[2,3]}`}</code>"</span>
+                </div>
+                <p className="text-lg text-mut m-0 font-sans">
+                  The agent will automatically map tools: it calls <b className="text-ink">search_api</b> to find a provider, then <b className="text-ink">call_api</b>, and will report back the status and transaction hash.
+                </p>
+              </div>
+            </div>
 
-      <section style={{ marginTop: 40 }}>
-        <h2>Developer Guide: Escrow Smart Contract Flow</h2>
-        <div className="card">
-          <p>This is a quick explanation of how payments flow in the MicroMinds Smart Contract so you don't get lost debugging!</p>
-          
-          <h3 style={{ marginTop: 24 }}>The Three Roles</h3>
-          <ul>
-            <li><strong>Consumer (User):</strong> You! You deposit tMON into the Escrow contract via the website.</li>
-            <li><strong>Provider (AI/API):</strong> The seller who registers their API and gets paid in tMON for every successful call.</li>
-            <li><strong>Operator (Backend):</strong> The trusted referee (our backend API). The backend holds the <i>Deployer's Private Key</i> to securely execute transactions on behalf of users without needing users to sign MetaMask popups every 2 seconds.</li>
-          </ul>
+          </div>
+        </section>
 
-          <h3 style={{ marginTop: 24 }}>The Transaction Flow</h3>
-          <ol>
-            <li><strong>1. Reserve (Lock):</strong> When a Consumer's AI requests a service, the Backend calls <code>reserve()</code> on the smart contract. This locks the exact amount of tMON from the Consumer's balance for this specific API request.</li>
-            <li><strong>2. Call API:</strong> The Backend calls the Provider's actual AI/API endpoint (like OpenRouter).</li>
-            <li><strong>3. Release (Success):</strong> If the AI responds successfully, the Backend calls <code>release()</code> on the smart contract. The locked tMON is immediately transferred to the Provider's balance.</li>
-            <li><strong>4. Refund (Failure):</strong> If the AI is down, times out, or returns a 500 error, the Backend automatically calls <code>refund()</code> to return the locked tMON back to the Consumer.</li>
-          </ol>
-        </div>
-      </section>
-    </div>
+        {/* Stopwatch Challenge */}
+        <section className="bg-yel border-[3px] border-solid border-ink p-8 md:p-12 rounded-[30px_8px_30px_8px] shadow-sm transform -rotate-1 mx-auto max-w-4xl w-full flex flex-col md:flex-row items-center justify-between gap-8 mt-4 relative overflow-hidden">
+          <div className="absolute right-[-20px] bottom-[-40px] opacity-20 pointer-events-none">
+            <Sv id="monkey" w={220} />
+          </div>
+          <div className="relative z-10 text-center md:text-left max-w-lg">
+            <h2 className="text-4xl md:text-5xl mb-2 text-[#2a2a4a]">Speedrun Challenge</h2>
+            <p className="text-xl text-[#2a2a4a] m-0 font-sans font-medium opacity-80">
+              We claim you can connect your agent in under 2 minutes. Prove us wrong!
+            </p>
+          </div>
+          <div className="bg-paper border-[3px] border-solid border-ink p-6 rounded-[16px_4px_16px_4px] flex flex-col items-center justify-center min-w-[220px] relative z-10 rotate-2 shadow-crayon">
+            <div className="font-mono text-5xl font-bold text-red mb-4">{swt}s</div>
+            <button className={`btn !text-xl !w-full !py-3 ${sw ? "b-r" : "b-g"}`} onClick={handleSw}>
+              {sw ? "Stop" : "Start clock"}
+            </button>
+            <p className="text-sm font-sans font-bold text-mut m-0 mt-3">Goal: &lt; 120s</p>
+          </div>
+        </section>
+
+      </main>
+    </>
   );
 }

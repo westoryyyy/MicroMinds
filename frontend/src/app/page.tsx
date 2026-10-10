@@ -15,7 +15,6 @@ const LINES = [
   'Sun: "Monad is fast, so the coins barely wait."',
 ];
 
-// Contoh aktivitas statis untuk suasana. Lampiran F: ganti dengan data Envio bila sempat.
 const TICKER: [string, string, string][] = [
   ["Mimi → Croc: JSON tidied,", "Released", "0.001"],
   ["Mimi → Beetle: tripped,", "Refunded", "0.001"],
@@ -65,123 +64,200 @@ export default function Home() {
 
   return (
     <>
-      <div className="wrap mm-hero">
-        <div>
-          <h1>The little city where AI agents shop for tiny APIs.</h1>
-          <p className="lead">
+      <header className="wrap mm-hero pb-20 pt-10">
+        <div className="flex flex-col gap-6">
+          <div className="inline-flex">
+            <span className="chip uppercase tracking-widest text-xs font-bold shadow-sm">Monad Testnet MVP</span>
+          </div>
+          <h1 className="leading-[1.1] text-5xl md:text-6xl lg:text-7xl">
+            The little city where AI agents shop for tiny APIs.
+          </h1>
+          <p className="lead text-mut max-w-xl">
             Pay per call, not per month. A sleepy Escrow Cat on a Monad rooftop holds your coins and
             only hands them over when the work comes back right.
           </p>
-          <div className="mm-row">
+          <div className="mm-row mt-4">
             <Link className="btn b-g" href="/explore">Explore APIs</Link>
             <Link className="btn" href="/docs">Connect in 2 minutes</Link>
           </div>
         </div>
 
-        <div className="scene">
-          <div className="fl sun" style={st({ right: 0, top: 0 })}><Sv id="sun" w={130} /></div>
-          <div className="fl" style={st({ left: 0, top: 20, "--d": ".5s" })}><Sv id="cloud" w={130} /></div>
-          <Friend i={2} id="bird" w={90} style={{ left: "36%", top: 0, "--d": "1s" }} />
-          <Friend i={0} id="monkey" w={110} style={{ left: "2%", top: 110, "--d": ".2s" }} />
-          <Friend i={1} id="cat" w={130} style={{ left: "36%", top: 130, "--d": ".8s" }} />
-          <Friend i={3} id="frog" w={110} style={{ right: "6%", top: 170, "--d": "1.4s" }} />
-          <div className="fl" style={st({ left: "4%", bottom: 40, "--d": ".3s" })}><Sv id="croc" w={200} /></div>
-          <div className="fl" style={st({ right: "30%", bottom: 20 })}><Sv id="bug" w={60} /></div>
-          <div id="bub" className="card" role="status">{bubble}</div>
+        <div className="relative w-full h-[360px] md:h-[400px] mt-8 md:mt-0">
+          <div className="fl sun" style={st({ right: '5%', top: 0 })}><Sv id="sun" w={110} /></div>
+          <div className="fl" style={st({ left: '2%', top: 20, "--d": ".5s" })}><Sv id="cloud" w={120} /></div>
+          <Friend i={2} id="bird" w={80} style={{ left: "42%", top: 0, "--d": "1s" }} />
+          <Friend i={0} id="monkey" w={100} style={{ left: "5%", top: 100, "--d": ".2s" }} />
+          <Friend i={1} id="cat" w={130} style={{ left: "38%", top: 110, "--d": ".8s" }} />
+          <Friend i={3} id="frog" w={100} style={{ right: "8%", top: 110, "--d": "1.4s" }} />
+          <div className="fl" style={st({ left: "12%", top: 220, "--d": ".3s" })}><Sv id="croc" w={180} /></div>
+          <div className="fl" style={st({ right: "32%", top: 240 })}><Sv id="bug" w={55} /></div>
+          <div id="bub" className="card !p-3 !text-sm absolute left-1/2 bottom-0 md:bottom-4 -translate-x-1/2 w-[90%] max-w-[320px] mx-auto z-10" role="status">{bubble}</div>
         </div>
-      </div>
+      </header>
 
-      <div className="tick" aria-label="Example activity">
+      <div className="tick shadow-sm" aria-label="Example activity">
         <div>
           {[0, 1, 2, 3].flatMap((k) => TICKER.map(([a, b, c], j) => (
-            <span key={`${k}-${j}`} aria-hidden={k > 0}>{a} <b>{b}</b> {c}</span>
+            <span key={`${k}-${j}`} aria-hidden={k > 0}>{a} <b className={b === 'Released' ? 'text-grn' : 'text-red'}>{b}</b> {c} tMON</span>
           )))}
         </div>
       </div>
 
-      <div className="wrap">
-        <section>
-          <h2>The problem: subscription fatigue</h2>
-          <div className="card">
-            <p>Your agent needs a JSON tidier for <b>five</b> calls. The service wants a monthly plan and a
-              credit card. For a few coins&apos; worth of work, that is a silly deal. Cards cannot move tiny
-              amounts, and agents do not have cards.</p>
+      <main className="wrap flex flex-col gap-32 py-24">
+        
+        {/* Anti-Slop: Asymmetric alignment, clear hierarchy */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-4xl md:text-5xl mb-6">The problem:<br/>Subscription fatigue</h2>
+            <p className="text-xl leading-relaxed text-mut mb-6">
+              Your agent needs a JSON tidier for exactly <b>five</b> calls. The service wants a monthly plan and a
+              credit card. 
+            </p>
+            <p className="text-xl leading-relaxed text-mut">
+              For a few coins&apos; worth of work, that is a silly deal. Cards cannot move tiny
+              amounts efficiently, and AI agents certainly do not have credit cards.
+            </p>
           </div>
-        </section>
-
-        <section>
-          <h2>The idea</h2>
-          <p className="lead">Deposit once. Every call pays only for itself. Good result: the provider gets
-            paid. Bad result: your coins come back.</p>
-          <div className="panel">
-            {STEPS.map(([t, d]) => <div className="card" key={t}><h3>{t}</h3><p>{d}</p></div>)}
-          </div>
-        </section>
-
-        <section>
-          <h2>Try it: send Mimi shopping</h2>
-          <div className="card">
-            <div className="stage">
-              <div className="coin" style={{ left: `${coin}%` }} aria-hidden="true">¢</div>
-              <div style={{ textAlign: "center" }}><Sv id="monkey" w={90} /><br />Mimi</div>
-              <div style={{ textAlign: "center" }}><Sv id="cat" w={100} /><br />Escrow Cat</div>
-              <div style={{ textAlign: "center" }}><Sv id={prov} w={prov === "croc" ? 150 : 80} /><br />Provider</div>
+          <div className="card rotate-1 hover:rotate-0 transition-transform">
+            <div className="flex flex-col gap-4 p-8 text-center items-center justify-center min-h-[250px]">
+               <span className="text-6xl mb-2">🚫💳</span>
+               <h3 className="text-3xl font-gochi">Access Denied</h3>
+               <p className="text-mut text-lg">Please upgrade to Pro ($29/mo) to make 5 API calls.</p>
             </div>
-            <p role="status">{log}</p>
-            <div className="mm-row">
+          </div>
+        </section>
+
+        {/* Anti-Slop: Bento Grid / Panels */}
+        <section>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl mb-4">The MicroMinds Idea</h2>
+            <p className="text-xl text-mut">Deposit once. Every call pays only for itself. Good result: the provider gets paid. Bad result: your coins come back automatically.</p>
+          </div>
+          <div className="panel">
+            {STEPS.map(([t, d], idx) => (
+              <div className="card flex flex-col gap-3" key={t}>
+                <div className="w-10 h-10 rounded-full bg-ink text-paper flex items-center justify-center font-bold text-xl">{idx + 1}</div>
+                <h3 className="text-2xl mt-2">{t.substring(3)}</h3>
+                <p className="text-mut text-lg">{d}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Interactive Demo */}
+        <section className="max-w-3xl mx-auto w-full">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl md:text-5xl">Try it: Send Mimi Shopping</h2>
+            <p className="text-lg text-mut mt-2">Simulate an on-chain escrow transaction right now.</p>
+          </div>
+          <div className="card !p-8">
+            <div className="stage mb-8 border-b-[3px] border-dashed border-ink pb-4">
+              <div className="coin flex items-center justify-center" style={{ left: `${coin}%` }} aria-hidden="true">¢</div>
+              <div className="flex flex-col items-center gap-2"><Sv id="monkey" w={100} /><span className="font-bold text-lg">Mimi</span><span className="text-sm text-mut">Consumer</span></div>
+              <div className="flex flex-col items-center gap-2"><Sv id="cat" w={110} /><span className="font-bold text-lg">Escrow Cat</span><span className="text-sm text-mut">Contract</span></div>
+              <div className="flex flex-col items-center gap-2"><Sv id={prov} w={prov === "croc" ? 160 : 90} /><span className="font-bold text-lg">{prov === "croc" ? "Croc" : "Beetle"}</span><span className="text-sm text-mut">Provider</span></div>
+            </div>
+            
+            <div className="bg-paper border-[3px] border-dashed border-mut p-4 rounded-[12px] mb-8 min-h-[80px] flex items-center justify-center text-center">
+              <p className="text-xl m-0" role="status">{log}</p>
+            </div>
+            
+            <div className="flex justify-center gap-6 flex-wrap">
               <button className="btn b-g" disabled={busy} onClick={() => play(true)}>Good response</button>
               <button className="btn b-r" disabled={busy} onClick={() => play(false)}>Beetle trips</button>
             </div>
           </div>
         </section>
 
+        {/* Characters Grid */}
         <section>
-          <h2>Meet the neighbourhood</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl">Meet the Neighbourhood</h2>
+          </div>
           <div className="mm-grid">
             {([
               ["monkey", "Mimi", "Your AI agent. Curious, small pockets, big errands.", 100],
-              ["cat", "Escrow Cat", "Sits on the Monad rooftop. Only the operator whistle can tell her release or refund.", 100],
+              ["cat", "Escrow Cat", "Sits on the rooftop. Only she can release or refund.", 100],
               ["croc", "Croc, Bird & Frog", "Honest providers. Croc formats, Bird picks words, Frog fetches links.", 170],
               ["bug", "Beetle", "Deliberately flaky, so you can see a refund for real.", 100],
             ] as const).map(([id, n, d, w]) => (
-              <div className="card who" key={n}><div><Sv id={id} w={w} /></div><h3>{n}</h3><p>{d}</p></div>
+              <div className="card who flex flex-col items-center justify-center text-center gap-4" key={n}>
+                <div className="h-[120px] flex items-center justify-center"><Sv id={id} w={w as number} /></div>
+                <h3 className="text-2xl m-0">{n}</h3>
+                <p className="text-mut m-0">{d}</p>
+              </div>
             ))}
           </div>
         </section>
 
-        <section>
-          <h2>A short story</h2>
-          <div className="panel">{STORY.map((t) => <div className="card" key={t}><p>{t}</p></div>)}</div>
-        </section>
-
-        <section>
-          <h2>Honest trust model</h2>
-          <div className="card">
-            <p>In this MVP, validation happens off-chain in a trusted gateway, and only the operator wallet
-              can reserve, release or refund. Every decision is an on-chain event. You can withdraw your
-              remaining balance any time. Next: multi-party validation, optimistic verification, or TEE.</p>
-            <p>Securing AI-to-AI micro-economies with EVM-compatible speed and sub-cent gas fees on Monad Testnet.</p>
-            <p><b>Built with</b> Privy (login + embedded wallet), Envio (real-time Escrow indexing), Alchemy (RPC
-              infrastructure), on Monad Testnet.</p>
+        {/* A Short Story */}
+        <section className="max-w-4xl mx-auto text-center w-full">
+          <div className="mb-12">
+            <h2 className="text-4xl md:text-5xl">A Short Story</h2>
           </div>
-          <details><summary>Why blockchain, not a card?</summary>
-            <p>Tiny per-call amounts make card fees uneconomic, agents need a wallet instead of a card, and the pay/refund rule is public.</p></details>
-          <details><summary>Why Monad?</summary>
-            <p>EVM tooling, fast finality and very low gas fit microtransactions.</p></details>
-          <details><summary>What if a provider sends junk that matches the schema?</summary>
-            <p>Schemas catch structure only. Ratings, on-chain reputation and provider stake are on the roadmap,
-              along with QA agents and a platform fee of 2-5%.</p></details>
-        </section>
-
-        <section className="cta">
-          <div className="fl sun" style={{ position: "static", display: "inline-block" }}><Sv id="sun" w={120} /></div>
-          <h2>Ready to give your agent a pocket?</h2>
-          <div className="mm-row" style={{ justifyContent: "center" }}>
-            <Link className="btn b-g" href="/explore">Explore APIs</Link>
-            <Link className="btn b-b" href="/docs">Connect MCP</Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STORY.map((t, idx) => (
+              <div className={`card flex items-center justify-center min-h-[160px] ${idx % 2 === 0 ? 'rotate-1' : '-rotate-1'} hover:rotate-0 transition-transform duration-300`} key={idx}>
+                <p className="text-lg text-ink font-sans m-0">{t}</p>
+              </div>
+            ))}
           </div>
         </section>
-      </div>
+
+        {/* Trust Model / Under the Hood */}
+        <section className="bg-ink text-paper p-10 md:p-16 rounded-[40px_10px_40px_10px] transform -rotate-1 relative mt-10 shadow-crayon">
+          <div className="absolute top-[-20px] right-4 md:right-10 transform rotate-12 bg-yel text-ink px-6 py-2 border-[3px] border-ink font-bold text-xl rounded-[20px_4px_20px_4px]">
+            Under the hood 🔧
+          </div>
+          <h2 className="text-4xl md:text-5xl mb-12 text-paper border-b-[3px] border-dashed border-[#444466] pb-6">Honest Trust Model</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="flex flex-col gap-8">
+              <div>
+                <h3 className="text-2xl text-yel font-gochi">How it works today (MVP)</h3>
+                <p className="text-lg opacity-90 leading-relaxed font-sans">
+                  Validation happens off-chain in a trusted gateway. Only the operator wallet
+                  can reserve, release, or refund. Every decision is an on-chain event on the Monad Testnet.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-2xl text-yel font-gochi">Tech Stack</h3>
+                <p className="text-lg opacity-90 leading-relaxed font-sans">
+                  Built with Privy (embedded wallets), Envio (real-time Escrow indexing), Alchemy (RPC infrastructure), and NestJS.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-8">
+              <div>
+                <h3 className="text-2xl text-yel font-gochi">Why Monad & Blockchain?</h3>
+                <p className="text-lg opacity-90 leading-relaxed font-sans">
+                  Tiny per-call amounts make credit card fees uneconomic. AI agents need a wallet instead of a card. Monad provides EVM tooling, fast finality, and sub-cent gas fees.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-2xl text-yel font-gochi">What if a provider sends junk?</h3>
+                <p className="text-lg opacity-90 leading-relaxed font-sans">
+                  Currently, JSON schemas catch structural errors. On the roadmap: ratings, on-chain reputation, provider staking, and QA agents.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="cta py-16 flex flex-col items-center gap-8">
+          <div className="fl sun" style={{ position: "static", display: "inline-block", animation: "spin 20s linear infinite" }}>
+            <Sv id="sun" w={140} />
+          </div>
+          <h2 className="text-5xl md:text-6xl max-w-2xl text-center">Ready to give your agent a pocket?</h2>
+          <div className="mm-row justify-center mt-4">
+            <Link className="btn b-g !text-2xl !px-8 !py-4" href="/explore">Explore APIs</Link>
+            <Link className="btn b-b !text-2xl !px-8 !py-4" href="/docs">Connect MCP</Link>
+          </div>
+        </section>
+        
+      </main>
     </>
   );
 }

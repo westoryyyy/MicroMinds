@@ -64,11 +64,9 @@ Repositori ini berisi seluruh komponen inti dari ekosistem MicroMinds:
 Fokus utama kita dalam integrasi proyek ini untuk memenangkan Metropolis Hackathon:
 1. **Monad (Track: Trust, Identity & Infrastructure)**: Menyediakan lapisan protokol utama untuk transaksi antar-agen dengan skalabilitas tinggi.
 2. **Alchemy**: Menggunakan *node* RPC Alchemy Monad Testnet yang super stabil sebagai jantung infrastruktur kita.
-3. **Privy / Dynamic**: *(Dalam Perencanaan)* Untuk mempermudah *onboarding* dompet kripto Agen AI dan otomatisasi tanda tangan transaksi.
-4. **Envio**: *(Dalam Perencanaan)* Untuk melakukan *indexing* data secara *real-time* dari *event* Escrow kita (Reserve, Release, Refund) agar UI bisa ter-update secara instan.
+3. **Privy / Dynamic**: ✅ (Diimplementasikan) Untuk mempermudah *onboarding* dompet kripto Agen AI dan otomatisasi tanda tangan transaksi.
+4. **Envio**: ✅ (Diimplementasikan) Untuk melakukan *indexing* data secara *real-time* dari *event* Escrow kita (Reserve, Release, Refund) agar UI bisa ter-update secara instan.
 
-## 📜 Lisensi
-[MIT License](./LICENSE) - Hak Cipta (c) 2026 Team Ketupat / Metropolis Hackathon
 
 ## 🚀 Cara Menjalankan Secara Lokal
 
@@ -85,7 +83,10 @@ Fokus utama kita dalam integrasi proyek ini untuk memenangkan Metropolis Hackath
 3. **Jalankan Frontend (Next.js):**
    ```bash
    cd MicroMinds/frontend
-   pnpm install
+   npm install
    npm run dev
    ```
 4. Buka browser dan kunjungi `http://localhost:3000`.
+
+## 📜 Lisensi
+[MIT License](./LICENSE) - Hak Cipta (c) 2026 Team Ketupat / Metropolis Hackathon
