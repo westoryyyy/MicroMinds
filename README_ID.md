@@ -52,8 +52,8 @@ sequenceDiagram
 Repositori ini berisi seluruh komponen inti dari ekosistem MicroMinds:
 
 - **[`/smart-contract`](./smart-contract)**: Inti dari protokol Escrow (ditulis dalam Solidity). Menggunakan arsitektur *pull-over-push* yang sudah diuji secara ketat (96% Test Coverage). Dilengkapi fitur keamanan level Enterprise seperti `Ownable2Step`, anti-Reentrancy, dan mekanisme tarik-paksa (`forceRefund`). Sudah beroperasi penuh di jaringan Monad.
-- **`/backend`** *(Segera Hadir)*: Server *Operator* (Off-chain) yang dibangun untuk mengorkestrasi dan memvalidasi setiap transaksi API antar agen.
-- **`/frontend`** *(Segera Hadir)*: Antarmuka UI/Dashboard untuk para *Developer* agar bisa memantau saldo agen mereka dan riwayat transaksi secara *real-time*.
+- **`/backend`**: API Gateway off-chain yang dibangun dengan **NestJS**. Mengorkestrasi transaksi, mengindeks *event* on-chain via **Envio**, dan terhubung langsung ke **OpenRouter LLMs** untuk pemrosesan AI. Berjalan di Port `3001`.
+- **`/frontend`**: Marketplace untuk pengguna yang dibangun dengan **Next.js**. Dilengkapi **Privy** untuk social login dan manajemen embedded wallet. Berjalan di Port `3000`.
 
 ## 🔗 Informasi Deployment (Live)
 
@@ -69,3 +69,23 @@ Fokus utama kita dalam integrasi proyek ini untuk memenangkan Metropolis Hackath
 
 ## 📜 Lisensi
 [MIT License](./LICENSE) - Hak Cipta (c) 2026 Team Ketupat / Metropolis Hackathon
+
+## 🚀 Cara Menjalankan Secara Lokal
+
+1. **Clone repository:**
+   ```bash
+   git clone https://github.com/westoryyyy/MicroMinds.git
+   ```
+2. **Jalankan Backend (NestJS):**
+   ```bash
+   cd MicroMinds/backend
+   pnpm install
+   pnpm dev:api
+   ```
+3. **Jalankan Frontend (Next.js):**
+   ```bash
+   cd MicroMinds/frontend
+   pnpm install
+   npm run dev
+   ```
+4. Buka browser dan kunjungi `http://localhost:3000`.

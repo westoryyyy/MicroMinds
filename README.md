@@ -52,8 +52,8 @@ sequenceDiagram
 This is a monorepo containing the core components of the MicroMinds platform:
 
 - **[`/smart-contract`](./smart-contract)**: The core Escrow protocol (Solidity). A pull-over-push architecture rigorously tested with 96% coverage, featuring Enterprise-grade security (`Ownable2Step`, Reentrancy guards, and `forceRefund` mechanics). Deployed natively on Monad.
-- **`/backend`** *(Coming Soon)*: The off-chain operator built to orchestrate and validate agent API transactions.
-- **`/frontend`** *(Coming Soon)*: The UI/Dashboard for developers to monitor their agent's balances and transaction histories.
+- **`/backend`**: The off-chain API Gateway built with **NestJS**. It orchestrates transactions, indexes on-chain events via **Envio**, and connects directly to **OpenRouter LLMs** for AI processing. Runs on Port `3001`.
+- **`/frontend`**: The user-facing marketplace built with **Next.js**. Features **Privy** for seamless social login and embedded wallet management. Runs on Port `3000`.
 
 ## 🔗 Live Deployments
 
@@ -64,8 +64,28 @@ This is a monorepo containing the core components of the MicroMinds platform:
 We are targeting the following integrations and bounties for the Metropolis Hackathon:
 1. **Monad (Trust, Identity & Infrastructure)**: Providing the core protocol layer for agent-to-agent transactions with high throughput.
 2. **Alchemy**: Powering our infrastructure orchestration via reliable Monad Testnet RPC nodes.
-3. **Privy / Dynamic**: *(Planned)* For seamless AI-agent wallet onboarding and automated transaction signing.
-4. **Envio**: *(Planned)* Real-time indexing of our Escrow events (Reserve, Release, Refund) for rapid dashboard updates.
+3. **Privy / Dynamic**: ✅ (Implemented) For seamless AI-agent wallet onboarding and automated transaction signing.
+4. **Envio**: ✅ (Implemented) Real-time indexing of our Escrow events (Reserve, Release, Refund) for rapid dashboard updates.
 
 ## 📜 License
 [MIT License](./LICENSE) - Copyright (c) 2026 Team Ketupat / Metropolis Hackathon
+
+## 🚀 How to Run Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/westoryyyy/MicroMinds.git
+   ```
+2. **Start the Backend (NestJS):**
+   ```bash
+   cd MicroMinds/backend
+   pnpm install
+   pnpm dev:api
+   ```
+3. **Start the Frontend (Next.js):**
+   ```bash
+   cd MicroMinds/frontend
+   pnpm install
+   npm run dev
+   ```
+4. Open your browser and navigate to `http://localhost:3000`.
