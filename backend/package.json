@@ -12,6 +12,9 @@
     "typescript": "^5.4.5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@nestjs/core"]
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "esbuild"
+    ]
   }
 }
