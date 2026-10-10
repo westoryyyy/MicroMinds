@@ -2,68 +2,66 @@
 
 Monorepo backend untuk marketplace micro-API di Monad testnet.
 
-## Struktur
+## Struktur Direktori
 
 ```
 backend/
   apps/
-    api/          # NestJS gateway (port 3000)
-    indexer/      # Envio HyperIndex (Phase 6)
-  packages/
-    mcp-server/   # MCP Server (Phase 5)
+    api/          # NestJS gateway (berjalan di port 3001)
+  package.json    # Berisi script untuk menjalankan aplikasi via pnpm workspaces
 ```
 
 ## Prasyarat
 
 - Node.js v18+
 - pnpm v8+
-- PostgreSQL (atau Supabase)
+- PostgreSQL (Jalankan via Docker atau layanan cloud seperti Supabase)
 
-## Setup Lokal
+## Setup & Instalasi Lokal
 
-```bash
-# 1. Copy env
-cp .env.example apps/api/.env
+Lakukan langkah-langkah berikut di folder `backend/`:
 
-# 2. Edit apps/api/.env dengan kredensial kamu
-#    (DATABASE_URL, ALCHEMY_RPC_URL, dll)
+1. **Install Dependencies**
+   ```bash
+   pnpm install
+   ```
 
-# 3. Install dependencies
-cd apps/api && pnpm install
+2. **Setup Environment Variables**
+   Masuk ke folder `apps/api/` dan buat file `.env`:
+   ```bash
+   cd apps/api
+   cp .env.example .env
+   ```
+   Isi file `.env` dengan kredensial yang tepat (DATABASE_URL, ALCHEMY_RPC_URL, dll).
 
-# 4. Jalankan migration DB
-pnpm db:migrate
+3. **Jalankan Migrasi Database & Seed Data Demo**
+   Kembali ke root folder `backend/` dan jalankan:
+   ```bash
+   pnpm db:migrate
+   pnpm db:seed
+   ```
 
-# 5. Seed data demo
-pnpm db:seed
+4. **Jalankan Server Development**
+   Untuk menyalakan API Server, gunakan command ini dari folder root `backend/`:
+   ```bash
+   pnpm dev:api
+   ```
+   Server akan berjalan di `http://localhost:3001`.
 
-# 6. Jalankan dev server
-pnpm dev
-```
+## Penjelasan Mode "MOCK" (Penting untuk Testing)
 
-## Environment Variables
+Dalam file `.env` di folder `apps/api/`, terdapat 2 konfigurasi penting untuk keperluan testing/Hackathon tanpa harus terblokir oleh kendala jaringan blockchain atau biaya API pihak ketiga:
 
-Lihat [.env.example](.env.example) untuk daftar lengkap.
+- `ESCROW_MOCK=true` : Menggunakan saldo bohongan (simulasi). Sangat berguna saat jaringan Monad Testnet sedang mahal gas fee-nya. Jika di set `false`, Gateway akan benar-benar membaca saldo dari Smart Contract asli.
+- `LLM_MOCK=true` : Mengembalikan balasan AI simulasi (mock string) tanpa memanggil OpenRouter sungguhan. Set ke `false` jika Anda sudah memasukkan `LLM_API_KEY` (OpenRouter) yang valid.
 
-> ⚠️ **JANGAN COMMIT `.env` atau PRIVATE KEY**
+> ⚠️ **Catatan:** Jika mengubah variabel `.env`, Anda HARUS me-restart server (`pnpm dev:api`).
 
-## API Endpoints
+## API Endpoints Utama
 
-| Method | Path | Auth | Keterangan |
-|--------|------|------|------------|
-| GET | /health | - | Health check |
-| GET | /listings | - | Daftar API listing |
-| GET | /listings/:id | - | Detail listing |
-| POST | /api-keys | - | Buat API key |
-| POST | /call | API key | Panggil API + bayar escrow |
-| GET | /calls?consumer=0x | API key | Riwayat panggilan |
-| GET | /me | API key | Info wallet + saldo |
+- `GET /health` : Mengecek status Gateway.
+- `GET /listings` : Mendapatkan daftar API (shop) yang tersedia.
+- `POST /api-keys` : Generate API Key baru. Membutuhkan Auth Token dari Privy.
+- `POST /call` : Endpoint utama Gateway. Menahan (reserve) saldo tMON, meneruskan request ke AI, menghitung token usage, dan memotong saldo (finalize).
 
-## Fase Pengembangan
-
-- [x] **Fase 1**: Scaffold (listings, auth, DB migration)
-- [ ] **Fase 2**: Escrow Service (viem, Monad testnet)
-- [ ] **Fase 3**: Gateway (POST /call, 10 langkah)
-- [ ] **Fase 4**: Dummy Provider
-- [ ] **Fase 5**: MCP Server
-- [ ] **Fase 6**: Envio Indexer
+> ⚠️ **JANGAN COMMIT `.env` ATAU PRIVATE KEY**
