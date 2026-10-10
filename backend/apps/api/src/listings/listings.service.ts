@@ -110,4 +110,73 @@ export class ListingsService {
 
     return ListingRowSchema.parse(rows[0]);
   }
+
+  async findByProvider(providerAddress: string): Promise<ListingSummary[]> {
+    const { rows } = await this.pool.query<ListingRow & { success_rate: string; avg_latency: string }>(
+      `SELECT l.id, l.name, l.description, l.price_wei, l.category,
+              COALESCE(
+                ROUND(100.0 * SUM(CASE WHEN c.status = 'released' THEN 1 ELSE 0 END) / NULLIF(COUNT(c.call_id),0)),
+                100
+              )::int AS success_rate,
+              COALESCE(AVG(CASE WHEN c.latency_ms IS NOT NULL THEN c.latency_ms END), 0)::int AS avg_latency
+       FROM listings l
+       LEFT JOIN calls c ON c.listing_id = l.id
+       WHERE l.provider_address = $1 AND l.is_active = true
+       GROUP BY l.id
+       ORDER BY l.created_at DESC`,
+      [providerAddress]
+    );
+
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      description: r.description,
+      priceWei: r.price_wei,
+      category: r.category,
+      successRate: Number(r.success_rate),
+      avgLatencyMs: Number(r.avg_latency),
+    }));
+  }
+
+  async create(data: {
+    name: string;
+    description: string;
+    endpoint: string;
+    price_wei: string;
+    schema_input: string;
+    schema_output: string;
+    timeout_ms: number;
+    provider_address: string;
+    category?: string;
+  }): Promise<{ id: string }> {
+    let parsedInput: Record<string, unknown> = {};
+    let parsedOutput: Record<string, unknown> = {};
+    try {
+      parsedInput = JSON.parse(data.schema_input);
+      parsedOutput = JSON.parse(data.schema_output);
+    } catch (e) {
+      throw new Error('Invalid JSON schema');
+    }
+
+    const { rows } = await this.pool.query<{ id: string }>(
+      `INSERT INTO listings (
+         name, description, endpoint, price_wei, schema_input, schema_output, timeout_ms, provider_address, category, is_active
+       ) VALUES (
+         $1, $2, $3, $4, $5, $6, $7, $8, $9, true
+       ) RETURNING id`,
+      [
+        data.name,
+        data.description,
+        data.endpoint,
+        data.price_wei,
+        parsedInput,
+        parsedOutput,
+        data.timeout_ms,
+        data.provider_address,
+        data.category || 'general'
+      ]
+    );
+
+    return { id: rows[0].id };
+  }
 }

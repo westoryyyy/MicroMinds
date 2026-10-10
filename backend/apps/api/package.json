@@ -22,6 +22,8 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "axios": "^1.20.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
     "node-pg-migrate": "^7.5.1",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
