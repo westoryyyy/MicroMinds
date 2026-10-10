@@ -38,7 +38,7 @@ export class PrivyAuthGuard implements CanActivate {
       address = '0x1234567890123456789012345678901234567890';
     } else if (this.privy) {
       try {
-        const user = await this.privy.getUser(userId);
+        const user = await (this.privy as any).getUserById(userId);
         const wallet = user.linkedAccounts?.find((a: any) => a.type === 'wallet');
         if (wallet && 'address' in wallet) {
           address = wallet.address;

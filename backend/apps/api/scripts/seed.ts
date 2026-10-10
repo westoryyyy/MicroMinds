@@ -12,67 +12,70 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 const listings = [
   {
-    name: 'JSON Formatter',
-    description: 'Format unreadable JSON strings into pretty JSON.',
-    endpoint: 'http://localhost:3001/providers/json-format',
-    price_wei: '100000000000000', // 0.0001 tMON
+    name: 'x402 Fund Audit Agent',
+    description: 'A paid AI audit service for crypto funds with x402-gated intake, reports, receipts, and settlement records.',
+    endpoint: 'http://localhost:3001/providers/x402-audit',
+    price_wei: '50000000000000000', // 0.05 tMON
     schema_input: JSON.stringify({
       type: 'object',
-      properties: { raw: { type: 'string' } },
-      required: ['raw'],
+      properties: { contract_code: { type: 'string' } },
+      required: ['contract_code'],
     }),
     schema_output: JSON.stringify({
       type: 'object',
-      properties: { formatted: { type: 'string' } },
-      required: ['formatted'],
+      properties: { 
+        vulnerabilities_found: { type: 'number' },
+        audit_report: { type: 'string' } 
+      },
+      required: ['vulnerabilities_found', 'audit_report'],
     }),
-    timeout_ms: 5000,
+    timeout_ms: 25000,
     provider_address: '0x0000000000000000000000000000000000000001',
-    category: 'utility',
+    category: 'security',
   },
   {
-    name: 'Text Extraction',
-    description: 'Extract emails and phone numbers from raw text.',
-    endpoint: 'http://localhost:3001/providers/text-extract',
-    price_wei: '100000000000000', // 0.0001 tMON
+    name: 'Wallet Portfolio Cleaner',
+    description: 'A wallet cleanup app for low-value and suspicious tokens with thresholds, simulations, and safe actions.',
+    endpoint: 'http://localhost:3001/providers/wallet-cleaner',
+    price_wei: '2000000000000000', // 0.002 tMON
     schema_input: JSON.stringify({
       type: 'object',
-      properties: { text: { type: 'string' } },
-      required: ['text'],
+      properties: { wallet_address: { type: 'string' } },
+      required: ['wallet_address'],
     }),
     schema_output: JSON.stringify({
       type: 'object',
-      properties: {
-        emails: { type: 'array', items: { type: 'string' } },
-        phones: { type: 'array', items: { type: 'string' } },
+      properties: { 
+        scam_tokens_detected: { type: 'number' },
+        cleanup_instructions: { type: 'string' } 
       },
-      required: ['emails', 'phones'],
+      required: ['scam_tokens_detected', 'cleanup_instructions'],
     }),
-    timeout_ms: 5000,
+    timeout_ms: 10000,
     provider_address: '0x0000000000000000000000000000000000000002',
     category: 'utility',
   },
   {
-    name: 'URL Metadata',
-    description: 'Get title and description of a web page.',
-    endpoint: 'http://localhost:3001/providers/url-metadata',
-    price_wei: '100000000000000', // 0.0001 tMON
+    name: 'Social Trade Agent',
+    description: 'An X-tagged trading bot with linked identities, scoped wallet permissions, simulations, and audit trails.',
+    endpoint: 'http://localhost:3001/providers/social-trade',
+    price_wei: '10000000000000000', // 0.01 tMON
     schema_input: JSON.stringify({
       type: 'object',
-      properties: { url: { type: 'string' } },
-      required: ['url'],
+      properties: { twitter_intent: { type: 'string' } },
+      required: ['twitter_intent'],
     }),
     schema_output: JSON.stringify({
       type: 'object',
-      properties: {
-        title: { type: 'string' },
-        description: { type: 'string' },
+      properties: { 
+        trade_executed: { type: 'boolean' },
+        tx_hash: { type: 'string' } 
       },
-      required: ['title', 'description'],
+      required: ['trade_executed', 'tx_hash'],
     }),
-    timeout_ms: 5000,
+    timeout_ms: 15000,
     provider_address: '0x0000000000000000000000000000000000000003',
-    category: 'utility',
+    category: 'finance',
   },
   {
     name: 'Flaky Listing',
@@ -108,7 +111,7 @@ const listings = [
       properties: { answer: { type: 'string' } },
       required: ['answer'],
     }),
-    timeout_ms: 25000, // AI listings ~25000 ms
+    timeout_ms: 25000,
     provider_address: '0x0000000000000000000000000000000000000005',
     category: 'ai',
   },

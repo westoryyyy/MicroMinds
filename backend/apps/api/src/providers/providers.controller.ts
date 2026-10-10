@@ -87,4 +87,37 @@ export class ProvidersController {
       description: `Mock description for the requested URL.` 
     };
   }
+
+  @Post('x402-audit')
+  x402Audit(@Body() body: { contract_code: string }) {
+    if (!body.contract_code) {
+      throw new HttpException('Missing contract_code', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      vulnerabilities_found: 2,
+      audit_report: 'Found 1 reentrancy issue and 1 unchecked low-level call. Recommended action: use ReentrancyGuard and check return values.',
+    };
+  }
+
+  @Post('wallet-cleaner')
+  walletCleaner(@Body() body: { wallet_address: string }) {
+    if (!body.wallet_address) {
+      throw new HttpException('Missing wallet_address', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      scam_tokens_detected: 4,
+      cleanup_instructions: 'Revoke approvals for 0xBAD..., 0xDEAD..., and execute burn payload for dust tokens.',
+    };
+  }
+
+  @Post('social-trade')
+  socialTrade(@Body() body: { twitter_intent: string }) {
+    if (!body.twitter_intent) {
+      throw new HttpException('Missing twitter_intent', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      trade_executed: true,
+      tx_hash: '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(''),
+    };
+  }
 }
