@@ -20,9 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className={`${gochi.variable} ${patrick.variable}`}>
                 <CrayonDefs />
                 <Providers>
-                    <Navbar />
-                    <main>{children}</main>
-                    <Footer />
+                    <>
+                        <Navbar />
+                        <main>{children}</main>
+                        <Footer />
+                    </>
                 </Providers>
             </body>
         </html>
