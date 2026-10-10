@@ -25,6 +25,7 @@ export interface ListingSummary {
   category: string | null;
   successRate: number;
   avgLatencyMs: number;
+  providerAddress: string;
 }
 
 export interface ListingDetail extends ListingSummary {

@@ -6,17 +6,7 @@ import axios from 'axios';
 export class ProvidersController {
   constructor(private configService: ConfigService) {}
 
-  @Post('ai-assistant')
-  async aiAssistant(@Body() body: { prompt: string }) {
-    if (!body.prompt || body.prompt.length > 1000) {
-      throw new HttpException('Invalid prompt length', HttpStatus.BAD_REQUEST);
-    }
-    
-    const mock = this.configService.get<string>('LLM_MOCK') === 'true';
-    if (mock) {
-      return { answer: 'This is a mock answer from the AI assistant.' };
-    }
-
+  private async callLlm(prompt: string, formatAsJson: boolean = false): Promise<string> {
     const apiKey = this.configService.get<string>('LLM_API_KEY');
     if (!apiKey) {
       throw new HttpException('LLM_API_KEY not configured', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -27,7 +17,8 @@ export class ProvidersController {
         'https://openrouter.ai/api/v1/chat/completions',
         {
           model: 'google/gemini-flash-1.5',
-          messages: [{ role: 'user', content: body.prompt }]
+          messages: [{ role: 'user', content: prompt }],
+          response_format: formatAsJson ? { type: 'json_object' } : undefined,
         },
         {
           timeout: 25000,
@@ -38,24 +29,19 @@ export class ProvidersController {
           }
         }
       );
-      
-      const content = response.data?.choices?.[0]?.message?.content || '';
-      return { answer: content };
+      return response.data?.choices?.[0]?.message?.content || '';
     } catch (error) {
-      // Return 500 so the Gateway treats it as an error and triggers refund()
       throw new HttpException('LLM API error or timeout', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @Post('flaky')
-  flaky(@Body() body: { trigger: string }) {
-    if (body.trigger === '500') {
-      throw new HttpException('Simulated internal error', HttpStatus.INTERNAL_SERVER_ERROR);
+  @Post('ai-assistant')
+  async aiAssistant(@Body() body: { prompt: string }) {
+    if (!body.prompt || body.prompt.length > 1000) {
+      throw new HttpException('Invalid prompt length', HttpStatus.BAD_REQUEST);
     }
-    if (body.trigger === 'bad_schema') {
-      return { wrong_key: 'this does not match { result: string }' };
-    }
-    return { result: 'Flaky call succeeded' };
+    const answer = await this.callLlm(body.prompt);
+    return { answer };
   }
 
   @Post('json-format')
@@ -72,7 +58,6 @@ export class ProvidersController {
   textExtract(@Body() body: { text: string }) {
     const text = body.text || '';
     const emails = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi) || [];
-    // Basic phone number extraction
     const phones = text.match(/(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}/g) || [];
     return { 
       emails: [...new Set(emails)], 
@@ -89,35 +74,66 @@ export class ProvidersController {
   }
 
   @Post('x402-audit')
-  x402Audit(@Body() body: { contract_code: string }) {
+  async x402Audit(@Body() body: { contract_code: string }) {
     if (!body.contract_code) {
       throw new HttpException('Missing contract_code', HttpStatus.BAD_REQUEST);
     }
-    return {
-      vulnerabilities_found: 2,
-      audit_report: 'Found 1 reentrancy issue and 1 unchecked low-level call. Recommended action: use ReentrancyGuard and check return values.',
-    };
+    
+    const prompt = `You are a strict Web3 Smart Contract Auditor. Analyze this Solidity code and return ONLY a valid JSON object with exactly two keys: "vulnerabilities_found" (integer) and "audit_report" (string summary of issues). Do not include markdown codeblocks, just raw JSON.\n\nCode:\n${body.contract_code}`;
+    
+    const result = await this.callLlm(prompt, true);
+    try {
+      // Remove any potential markdown wrappers the LLM might still add
+      const cleanJson = result.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
+      const parsed = JSON.parse(cleanJson);
+      return {
+        vulnerabilities_found: parsed.vulnerabilities_found || 0,
+        audit_report: parsed.audit_report || 'No report generated.',
+      };
+    } catch (e) {
+      return { vulnerabilities_found: 0, audit_report: 'Failed to parse AI response: ' + result };
+    }
   }
 
   @Post('wallet-cleaner')
-  walletCleaner(@Body() body: { wallet_address: string }) {
+  async walletCleaner(@Body() body: { wallet_address: string }) {
     if (!body.wallet_address) {
       throw new HttpException('Missing wallet_address', HttpStatus.BAD_REQUEST);
     }
-    return {
-      scam_tokens_detected: 4,
-      cleanup_instructions: 'Revoke approvals for 0xBAD..., 0xDEAD..., and execute burn payload for dust tokens.',
-    };
+    
+    const prompt = `You are an AI wallet portfolio analyzer. Analyze this wallet address: ${body.wallet_address}. Since you don't have real-time chain access, creatively simulate finding 1 to 5 scam tokens and write a short cleanup instruction. Return ONLY valid JSON with keys: "scam_tokens_detected" (integer) and "cleanup_instructions" (string).`;
+    
+    const result = await this.callLlm(prompt, true);
+    try {
+      const cleanJson = result.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
+      const parsed = JSON.parse(cleanJson);
+      return {
+        scam_tokens_detected: parsed.scam_tokens_detected || 0,
+        cleanup_instructions: parsed.cleanup_instructions || 'No instructions.',
+      };
+    } catch (e) {
+      return { scam_tokens_detected: 0, cleanup_instructions: 'Analysis failed.' };
+    }
   }
 
   @Post('social-trade')
-  socialTrade(@Body() body: { twitter_intent: string }) {
+  async socialTrade(@Body() body: { twitter_intent: string }) {
     if (!body.twitter_intent) {
       throw new HttpException('Missing twitter_intent', HttpStatus.BAD_REQUEST);
     }
-    return {
-      trade_executed: true,
-      tx_hash: '0x' + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(''),
-    };
+    
+    const prompt = `You are an AI trading bot parsing intents from Twitter. The user tweeted: "${body.twitter_intent}". Determine if this is a buy/sell trade. Return ONLY valid JSON with keys: "trade_executed" (boolean, true if it looks like a trade intent, false if just chit-chat) and "tx_hash" (string, generate a random 0x hex string if executed, otherwise empty string).`;
+    
+    const result = await this.callLlm(prompt, true);
+    try {
+      const cleanJson = result.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
+      const parsed = JSON.parse(cleanJson);
+      return {
+        trade_executed: !!parsed.trade_executed,
+        tx_hash: parsed.tx_hash || 'N/A',
+      };
+    } catch (e) {
+      return { trade_executed: false, tx_hash: '' };
+    }
   }
 }

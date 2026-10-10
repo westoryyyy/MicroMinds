@@ -34,7 +34,7 @@ export class ListingsService {
 
     const where = conditions.join(' AND ');
     const { rows } = await this.pool.query<ListingRow & { success_rate: string; avg_latency: string }>(
-      `SELECT l.id, l.name, l.description, l.price_wei, l.category,
+      `SELECT l.id, l.name, l.description, l.price_wei, l.category, l.provider_address,
               COALESCE(
                 ROUND(100.0 * SUM(CASE WHEN c.status = 'released' THEN 1 ELSE 0 END) / NULLIF(COUNT(c.call_id),0)),
                 100
@@ -56,6 +56,7 @@ export class ListingsService {
       category: r.category,
       successRate: Number(r.success_rate),
       avgLatencyMs: Number(r.avg_latency),
+      providerAddress: r.provider_address,
     }));
   }
 
@@ -113,7 +114,7 @@ export class ListingsService {
 
   async findByProvider(providerAddress: string): Promise<ListingSummary[]> {
     const { rows } = await this.pool.query<ListingRow & { success_rate: string; avg_latency: string }>(
-      `SELECT l.id, l.name, l.description, l.price_wei, l.category,
+      `SELECT l.id, l.name, l.description, l.price_wei, l.category, l.provider_address,
               COALESCE(
                 ROUND(100.0 * SUM(CASE WHEN c.status = 'released' THEN 1 ELSE 0 END) / NULLIF(COUNT(c.call_id),0)),
                 100
@@ -135,6 +136,7 @@ export class ListingsService {
       category: r.category,
       successRate: Number(r.success_rate),
       avgLatencyMs: Number(r.avg_latency),
+      providerAddress: r.provider_address,
     }));
   }
 
