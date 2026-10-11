@@ -1,5 +1,7 @@
 # MicroMinds 🧠⚡️
 
+[![CI Pipeline](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml/badge.svg)](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml)
+
 *[Baca dalam Bahasa Indonesia](./README_ID.md)*
 
 **"The Trust Layer for AI Micro-Economies."**

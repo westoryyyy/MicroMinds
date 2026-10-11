@@ -1,5 +1,7 @@
 # MicroMinds 🧠⚡️
 
+[![CI Pipeline](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml/badge.svg)](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml)
+
 **"Lapisan Kepercayaan untuk Ekonomi-Mikro AI."** *(The Trust Layer for AI Micro-Economies).*
 
 *[English Version](./README.md)*
