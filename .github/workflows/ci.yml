@@ -73,5 +73,5 @@ jobs:
       - name: Build Next.js
         working-directory: frontend
         env:
-          NEXT_PUBLIC_PRIVY_APP_ID: "cm1234567890privytest"
+          NEXT_PUBLIC_PRIVY_APP_ID: "cmv0z1sbk011h0fjuaxq5o3fe"
         run: pnpm build
