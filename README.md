@@ -6,41 +6,111 @@
 ![MCP](https://img.shields.io/badge/MCP-Compatible-orange?style=flat-square)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
 
-> **The Decentralized Pay-per-Call API Marketplace & Smart Contract Escrow Protocol for the Autonomous AI Agent Economy.**
+> **The Decentralized Tool Gateway & Smart Contract Escrow Marketplace for Autonomous AI Agents.**  
+> *Inspired by the universal routing paradigm of OpenRouter, but purpose-built for AI Agent Micro-APIs, dynamic tool discovery, and trustless escrow micropayments on Monad.*
 
 Built for the **Monad Metropolis Hackathon** (Track: *Trust, Identity & Infrastructure*).
 
----
-
-## 📌 Executive Summary
-
-As AI agents become increasingly autonomous, they need to transact machine-to-machine (M2M)—purchasing datasets, paying for compute, or executing specialized micro-tasks. However, existing Web2 payment rails are fundamentally built for humans and credit cards, creating **Subscription Fatigue** and a massive **Trust Gap**.
-
-**MicroMinds** is an on-chain trust and payment layer that enables AI agents to discover, consume, and monetize micro-services on a strictly **pay-per-call** basis. Secured by an automated **Escrow Smart Contract on Monad**, funds are only released to providers when API responses are verified, with guaranteed 100% automatic refunds if an API fails.
+**Live Deployments:**
+* **Frontend Web:** [https://microminds-monad.vercel.app](https://microminds-monad.vercel.app)
+* **API Gateway (Railway):** [https://microminds-production.up.railway.app](https://microminds-production.up.railway.app)
+* **Escrow Contract (Monad Testnet):** [`0x5c7141ab4d637915858ee97881fd613af468c76a`](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
 
 ---
 
-## ❌ The Problem: Subscription Fatigue & The Trust Gap
+## 📖 The Developer's Story: The Broken Agent Economy
 
-1. **Subscription Fatigue:** If an AI agent only needs 5 API calls to complete an ad-hoc task, the developer is forced to sign up for a $20–$50/month recurring subscription.
-2. **The Trust Dilemma:** 
-   - If the Consumer Agent pays upfront, a malicious or crashing provider can take the money without delivering a response.
-   - If the Provider delivers first, a malicious consumer might refuse to pay.
-3. **Execution Bottleneck:** Asking a human to approve a MetaMask transaction popup for every $0.001 micro-service destroys true agent autonomy.
-4. **Blockchain Scalability:** Traditional L1 blockchains are too slow and expensive for high-frequency micro-payments.
+Meet **Alex**, an AI engineer building an autonomous multi-agent assistant in Cursor and Claude Desktop. Alex's agent is capable of deep reasoning, but to deliver real-world value, it needs specialized external tools: extracting data from messy URLs, formatting unreadable JSON blobs, executing on-chain contract audits, and querying niche financial signals.
+
+Every time Alex wants the agent to accomplish an ad-hoc task, Alex hits four insurmountable friction walls:
+
+### 1. The Credit Card & SaaS Subscription Trap
+To give the agent access to 6 different niche utilities, Alex is forced to subscribe to 6 separate SaaS platforms at $20–$50/month each ($200+/month in fixed recurring overhead). The agent might only need to run a JSON formatter 5 times a week, but Alex pays full monthly subscription prices anyway.
+
+### 2. API Key Sprawl & Maintenance Nightmare
+Alex now has to register on 6 different developer portals, store 6 different API keys in `.env` files, monitor 6 separate rate-limit quotas, and manually update configs whenever a provider changes their endpoints.
+
+### 3. The Broken Autonomy Loop (Zero Agent Commerce)
+True autonomy means the agent should be able to solve novel problems independently. When Alex's agent encounters a task requiring a tool it doesn't currently possess, it cannot buy it on its own. AI agents do not have credit cards, cannot fill out Web2 checkout carts, and cannot ask Alex to approve a MetaMask popup for every $0.001 micro-service without destroying the unattended execution loop.
+
+### 4. The Two-Sided Trust Dilemma
+* If the agent pre-pays an unverified third-party microservice, the server might crash or fail, taking the money with zero recourse.
+* If the service provider delivers output first, malicious consumers can scrape the results and refuse to pay.
 
 ---
 
-## 💡 The MicroMinds Solution
+## 💡 The MicroMinds Paradigm: One Key, One Escrow, Autonomous Discovery
 
-* **Zero-Subscription Microtransactions:** Pay eceran (as low as $0.001) per API call using native Monad tokens (`MON`).
-* **Trustless Escrow Guarantee:** Funds are temporarily "Reserved" on-chain. If the API returns `200 OK`, funds are **Released**. If it fails, times out, or returns bad data, funds are instantly **Refunded**.
-* **High-Throughput on Monad:** Sub-second block times and sub-cent gas fees allow true high-frequency agentic micropayments without overhead.
-* **Native Model Context Protocol (MCP):** Compatible with Anthropic's MCP standard. AI agents in Cursor, Claude Desktop, or LangChain can plug into MicroMinds with a single configuration line.
+**MicroMinds** eliminates human friction from the agent commerce loop entirely.
+
+```
++-----------------------------------------------------------------------------------+
+|                            THE MICROMINDS WORKFLOW                                |
+|                                                                                   |
+|  [ Alex (Human Developer) ]                                                       |
+|        │                                                                          |
+|        ├─ 1. Connects Monad Wallet once at microminds-monad.vercel.app            |
+|        ├─ 2. Deposits MON into the non-custodial Escrow.sol Smart Contract        |
+|        ├─ 3. Generates 1 Universal API Key (x-api-key)                            |
+|        └─ 4. Installs MicroMinds MCP Server / Skill into their Agent              |
+|                                                                                   |
+|  [ The Autonomous AI Agent ] (Zero Human Intervention Required)                   |
+|        │                                                                          |
+|        ├─ 1. Needs a tool? Agent calls search_api("data extraction")              |
+|        ├─ 2. Evaluates live listings, pricing (wei), and performance latency     |
+|        ├─ 3. Calls call_api(listingId, input) autonomously                        |
+|        └─ 4. Gateway locks escrow -> verifies output -> releases MON on-chain     |
++-----------------------------------------------------------------------------------+
+```
+
+### Key Principles:
+1. **Zero E-Commerce Cart Friction:** There is **NO manual shopping or item checkout on the website**. The website is strictly a setup and control panel: connect wallet, deposit MON, generate API key, and view the public catalog showcase.
+2. **Autonomous Tool Discovery:** The agent itself discovers available tools by querying the live registry (`GET /listings` or via MCP `search_api`).
+3. **Pay-per-Call Micropayments:** Every tool costs pennies or fractions of a cent (e.g. 0.0001 MON), deducted per call directly from the user's escrow deposit.
+4. **Guaranteed Escrow Protection on Monad:** Sub-second block times and sub-cent gas fees on Monad enable real-time on-chain fund reservation. If the API returns valid data, funds are **Released** to the provider. If it errors, times out, or returns corrupted payloads, funds are **100% automatically Refunded** to the consumer.
 
 ---
 
-## 🔄 How It Works: System Architecture & Lifecycle
+## 🔄 Interaction Flow 1: Developer Setup & Autonomous Agent Discovery (MCP)
+
+This diagram shows how a human sets up once, and how the AI Agent autonomously discovers and consumes tools via MCP without any manual human purchasing:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Developer (Alex)
+    participant Web as MicroMinds Web App (Vercel)
+    participant Escrow as Monad Escrow Contract
+    actor Agent as Autonomous AI Agent (Cursor / Claude)
+    participant MCP as MicroMinds MCP Server
+    participant Gateway as MicroMinds API Gateway (Railway)
+
+    Note over Dev,Escrow: Phase 1: One-Time Human Setup
+    Dev->>Web: Connect Wallet (Privy) & Deposit MON
+    Web->>Escrow: deposit{value: 0.5 MON}()
+    Escrow-->>Web: Balance credited on Monad Testnet
+    Dev->>Web: Generate 1 Universal API Key (x-api-key)
+    Dev->>Agent: Add MicroMinds MCP configuration
+
+    Note over Agent,Gateway: Phase 2: Autonomous Agent Discovery & Execution Loop
+    Dev->>Agent: "Fetch latest market data & format to JSON"
+    Agent->>MCP: search_api(q: "formatter")
+    MCP->>Gateway: GET /listings?q=formatter
+    Gateway-->>MCP: [ { id: "2150cf...", name: "JSON Formatter", price: "0.0001 MON" } ]
+    MCP-->>Agent: Available tools, schemas, and live pricing
+
+    Agent->>MCP: call_api(listingId: "2150cf...", input: { raw: "..." })
+    MCP->>Gateway: POST /call (with x-api-key + payload)
+    Gateway-->>MCP: 200 OK + Formatted JSON Result
+    MCP-->>Agent: Output ingested directly into context window
+    Agent-->>Dev: Final formatted report delivered!
+```
+
+---
+
+## 🔐 Interaction Flow 2: On-Chain Escrow Lifecycle & Settlement on Monad
+
+This diagram shows how the off-chain Gateway Operator and on-chain `Escrow.sol` contract protect funds with atomic reservation, verification, and instant refunds:
 
 MicroMinds uses a high-performance **Pull-over-Push** escrow architecture coordinated by an off-chain Gateway Operator.
 
@@ -50,49 +120,42 @@ sequenceDiagram
     actor Consumer as Consumer / AI Agent
     participant Escrow as Escrow.sol (Monad Testnet)
     participant Gateway as MicroMinds Gateway (NestJS)
-    participant Provider as API Provider / LLM
+    participant Provider as API Provider / Micro-Service
 
+    Note over Consumer,Escrow: One-time setup: Deposit MON on website
     Consumer->>Escrow: deposit{value: 0.1 MON}()
-    Note over Consumer,Escrow: Balance credited in on-chain ledger
-    
-    Consumer->>Gateway: POST /providers/:id (with API Key & Payload)
+    Escrow-->>Consumer: Balance credited in on-chain ledger
+
+    Note over Consumer,Gateway: Autonomous Agent Execution Loop
+    Consumer->>Gateway: POST /call (with x-api-key, listingId, input)
     Gateway->>Escrow: reserve(callId, consumer, provider, amount)
     Escrow-->>Gateway: Event Reserved (Status = Reserved)
-    
-    Gateway->>Provider: Forward API Request
-    
-    alt Happy Flow (Provider Responds 200 OK)
-        Provider-->>Gateway: Return Valid JSON Response
+
+    Gateway->>Provider: Forward payload to microservice
+
+    alt Success Case (Provider Responds 200 OK)
+        Provider-->>Gateway: Valid JSON Response
         Gateway->>Escrow: release(callId)
         Escrow-->>Provider: Balance credited on-chain (Status = Released)
-        Gateway-->>Consumer: Return API Results to Agent
-    else Protection Flow (Provider Error / 400 / 500 / Timeout)
-        Provider-->>Gateway: HTTP 400 Bad Request / Timeout
+        Gateway-->>Consumer: Return data output to AI Agent
+    else Error Case (Provider 400 / 500 / Timeout)
+        Provider-->>Gateway: HTTP Error / Timeout
         Gateway->>Escrow: refund(callId)
-        Escrow-->>Consumer: 100% Funds restored to Consumer (Status = Refunded)
+        Escrow-->>Consumer: 100% Funds restored on-chain (Status = Refunded)
         Gateway-->>Consumer: Return Error + Refund Tx Hash
     end
 
-    Note over Consumer,Escrow: Fallback: If Gateway stalls past 24h expiry,<br/>Consumer invokes forceRefund(callId) directly.
+    Note over Consumer,Escrow: Non-Custodial Guarantee: If Gateway stalls past 24h,<br/>Consumer can call forceRefund(callId) directly on-chain.
 ```
-
-### Detailed Lifecycle Steps:
-1. **Deposit:** The consumer deposits native `MON` once into `Escrow.sol`.
-2. **Reservation:** When an API call is initiated, the Gateway Operator calls `reserve()`. The exact cost is deducted from the consumer's escrow balance and assigned to a unique `callId`.
-3. **Execution & Verification:** The Gateway executes the microservice (e.g. running real smart contract audits via OpenRouter LLMs).
-4. **Resolution:**
-   - **Success (Release):** Upon a valid HTTP response, `release(callId)` transfers the reserved amount to the provider's balance.
-   - **Failure (Refund):** If the provider fails, times out, or returns invalid schemas, `refund(callId)` immediately restores the reserved amount to the consumer.
-5. **Withdrawal:** Users and providers can call `withdraw(amount)` at any time to pull their earnings back to their personal wallet.
 
 ---
 
 ## 🤖 For AI Agents: Model Context Protocol (MCP)
 
-MicroMinds is built from the ground up for the agentic era. Any MCP-enabled client (Cursor, Claude Desktop, Windsurf) can connect to our marketplace:
+MicroMinds supports Anthropic's **Model Context Protocol (MCP)** out of the box. Any MCP-compliant client (**Claude Desktop**, **Cursor IDE**, **Zed**, **Windsurf**, or **Antigravity**) can instantly search and invoke MicroMinds tools.
 
-### Quickstart with `npx`:
-Add this to your `claude_desktop_config.json` or Cursor MCP settings:
+### 1. Add Configuration
+Add this to your `claude_desktop_config.json` or Cursor MCP settings (`~/.cursor/mcp.json`):
 
 ```json
 {
@@ -101,43 +164,106 @@ Add this to your `claude_desktop_config.json` or Cursor MCP settings:
       "command": "npx",
       "args": ["-y", "microminds-mcp"],
       "env": {
-        "MICROMINDS_API_KEY": "your_api_key_here",
-        "MICROMINDS_BASE_URL": "http://localhost:3001"
+        "MICROMINDS_API_KEY": "mm_your_api_key_here",
+        "MICROMINDS_BASE_URL": "https://microminds-production.up.railway.app"
       }
     }
   }
 }
 ```
 
-### Available MCP Tools:
-* `search_api`: Search active listings by category or keyword (`security`, `trading`, `data`).
-* `call_api`: Invoke a listing with dynamic payloads, handling on-chain escrow reservation and payout automatically.
-* `get_balance`: Check current escrow balance and API quota.
+### 2. Available Autonomous Agent Tools
+When installed, your AI Agent gains access to two universal primitives:
+* `search_api(q?: string, maxPrice?: string)`: Allows the agent to query the MicroMinds registry dynamically to inspect available tool schemas, pricing, and capabilities.
+* `call_api(listingId: string, input: object)`: Allows the agent to execute any listed tool, with automated escrow reservation, verification, and output ingestion.
 
 ---
 
-## 🛠️ Infra & DevOps Architecture
+## ⚡ Try It Right Now: Terminal & cURL Test
 
-| Component | Technology | Role & Deployment |
-|---|---|---|
-| **Smart Contract** | Solidity `^0.8.24` + Foundry | On-Chain Escrow Protocol on Monad Testnet (`10143`) |
-| **Backend API** | NestJS + TypeScript | Off-chain API Gateway, Operator, LLM Provider Orchestrator |
-| **Frontend Web** | Next.js 16 + React 19 + TailwindCSS | Interactive Marketplace, Web Playground, Docs |
-| **Auth & Wallets** | Privy | Embedded wallets, social logins, automated delegated signing |
-| **Database** | PostgreSQL (Railway) | API keys, listing directory, call execution history |
-| **Event Indexer** | Envio (HyperIndex) | Real-time indexing of on-chain Escrow events |
-| **CI / CD Pipeline** | GitHub Actions | Automated typecheck, build verification, and quality gates |
-| **Cloud Hosting** | Vercel (Frontend), Railway (Backend) | 24/7 Production-grade cloud deployment |
+The MicroMinds production gateway is live globally. You can test it immediately from any terminal on any machine:
+
+### Step 1: Browse Public Listings (No Auth Required)
+```bash
+curl -s https://microminds-production.up.railway.app/listings | jq .
+```
+
+### Step 2: Call an API via the Gateway (Requires API Key)
+```bash
+curl -X POST https://microminds-production.up.railway.app/call \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: mm_PASTE_YOUR_API_KEY" \
+  -d '{
+    "listingId": "2150cfc7-49ed-499b-a3aa-ab291078ef44",
+    "input": {
+      "raw": "{\"name\":\"Alex\",\"role\":\"AI Engineer\",\"network\":\"Monad\"}"
+    }
+  }'
+```
+
+**Expected Response (200 OK):**
+```json
+{
+  "callId": "73c66f5c-897b-480f-90be-d5b7caeb3a48",
+  "status": "released",
+  "txHash": "0x4b78f4...",
+  "output": {
+    "formatted": "{\n  \"name\": \"Alex\",\n  \"role\": \"AI Engineer\",\n  \"network\": \"Monad\"\n}"
+  }
+}
+```
 
 ---
 
-## 🔗 On-Chain Deployments (Monad Testnet)
+## 🌐 Universal Multi-Ecosystem Tech Stack
+
+To ensure MicroMinds can be consumed by any AI agent framework globally, we support three integration tiers:
+
+```text
+                  +-----------------------------------+
+                  |      MicroMinds Gateway API       |
+                  |  https://...railway.app/call      |
+                  +-----------------+-----------------+
+                                    |
+         ┌──────────────────────────┼──────────────────────────┐
+         ▼                          ▼                          ▼
+   [ Tier 1: MCP ]          [ Tier 2: SDK / Skills ]   [ Tier 3: REST API ]
+   Claude Desktop,           LangChain, CrewAI,         cURL, Python requests,
+   Cursor, Windsurf,         AutoGPT, ElizaOS,          Node.js fetch, Go,
+   Antigravity IDE           OpenAPI schemas            Rust, Discord bots
+```
+
+1. **Model Context Protocol (MCP):** Zero-code plugin for desktop coding assistants and IDEs via `npx -y microminds-mcp`.
+2. **AI Agent Framework SDK & Skills:** Python and TypeScript clients for multi-agent frameworks (LangChain, CrewAI, AutoGPT). Compatible with standard OpenAPI 3.0 tool definitions.
+3. **Universal REST / HTTP:** Simple `POST /call` with `x-api-key` header, callable from any programming language or webhook.
+
+---
+
+## 🛠️ Infrastructure & Tech Stack Overview
+
+| Layer | Component | Technology | Role & Deployment |
+|---|---|---|---|
+| **Consensus & Settlement** | Escrow Contract | Solidity `^0.8.24` + Foundry | On-Chain Escrow Protocol on Monad Testnet (`10143`) |
+| **API Gateway & Operator** | Backend API | NestJS + TypeScript | Off-chain API Gateway, Operator Signer, LLM Provider Orchestrator on Railway |
+| **Marketplace & Dashboard**| Frontend Web | Next.js 16 + React 19 + TailwindCSS | Wallet Connection, Escrow Deposit UI, Key Generator, Docs on Vercel |
+| **Identity & Delegation**  | Web3 Auth | Privy | Social logins, embedded wallets, and session validation |
+| **Database**               | Persistence | PostgreSQL (Railway) | API key hashes, tool registry, call audit logs |
+| **Tool Protocol**          | Agent Plugin | `@modelcontextprotocol/sdk` | MCP Server providing `search_api` & `call_api` |
+| **CI / CD Pipeline**       | Quality Gates | GitHub Actions | Automated linting, typechecks, and build validations |
+
+---
+
+## 🔗 On-Chain Escrow Contract Details
 
 * **Network:** Monad Testnet
 * **Chain ID:** `10143`
 * **RPC Endpoint:** `https://testnet-rpc.monad.xyz`
-* **Escrow Contract Address:** [`0x5c7141ab4d637915858ee97881fd613af468c76a`](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
-* **Contract Features:** `Ownable2Step`, `ReentrancyGuard`, zero-token native MON handling, non-custodial pull architecture.
+* **Escrow Address:** [`0x5c7141ab4d637915858ee97881fd613af468c76a`](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
+* **Contract Architecture:**
+  * Native MON balance tracking (zero ERC-20 token wrapper friction).
+  * Automated `reserve()`, `release()`, and `refund()` lifecycle methods.
+  * Non-custodial safety: Users can execute `forceRefund(callId)` if the off-chain operator fails to resolve an expired call.
+  * Hardened with OpenZeppelin `ReentrancyGuard` and `Ownable2Step`.
 
 ---
 
@@ -146,20 +272,19 @@ Add this to your `claude_desktop_config.json` or Cursor MCP settings:
 ```text
 MicroMinds/
 ├── .github/workflows/       # GitHub Actions CI/CD Pipeline
-│   └── ci.yml               # Automated Backend & Frontend build checks
 ├── backend/                 # NestJS API Gateway & MCP Server
-│   ├── apps/api/            # Core REST API Gateway & LLM Orchestrator
+│   ├── apps/api/            # Core REST API Gateway & Escrow Operator
 │   ├── packages/mcp-server/ # Model Context Protocol (MCP) server package
 │   └── package.json         # Workspace scripts & dependencies
-├── frontend/                # Next.js 16 Web Marketplace & Playground
+├── frontend/                # Next.js 16 Web Marketplace & Dashboard
 │   ├── src/app/             # App Router pages (Dashboard, Explore, Docs, Dev)
-│   ├── src/components/      # UI Components, Navbar, Wallet Connectors
+│   ├── src/components/      # UI Components, Crayon Badges, Wallet Connectors
 │   └── package.json         # Frontend dependencies & Next.js config
 ├── smart-contract/          # Escrow protocol reference (Solidity)
 │   ├── src/Escrow.sol       # Core Escrow contract
 │   └── test/Escrow.t.sol    # 26 Foundry unit & fuzz tests (100% passing)
 ├── LICENSE                  # MIT License
-└── README.md                # Project documentation
+└── README.md                # Flagship project documentation
 ```
 
 ---
@@ -169,7 +294,7 @@ MicroMinds/
 ### Prerequisites
 * Node.js `>= 20.0.0`
 * `pnpm >= 9.0.0`
-* [Foundry](https://getfoundry.sh/) (optional, for contract testing)
+* [Foundry](https://getfoundry.sh/) (optional, for contract unit tests)
 
 ### 1. Clone & Install
 ```bash
@@ -197,38 +322,16 @@ pnpm dev
 
 ---
 
-## 🧪 Testing Scenarios (Video Demo Cheatsheet)
+## 🏆 Monad Metropolis Hackathon Track Fit
 
-To demonstrate the power of zero-trust blockchain escrow during recordings:
-
-### Scenario 1: The Happy Flow (Release)
-```bash
-curl -X POST http://localhost:3001/providers/x402-audit \
-  -H "Content-Type: application/json" \
-  -d '{"contract_code": "contract Store { uint256 val; function set(uint256 x) external { val = x; } }"}'
-```
-* **Result:** Provider returns `200 OK` with real LLM vulnerability analysis. Gateway invokes `release(callId)` on Monad Testnet. Provider is credited.
-
-### Scenario 2: The Protection Flow (Automatic Refund)
-```bash
-curl -X POST http://localhost:3001/providers/x402-audit \
-  -H "Content-Type: application/json" \
-  -d '{"contract_code": ""}'
-```
-* **Result:** Gateway detects `400 Bad Request`. Gateway invokes `refund(callId)` on Monad Testnet. Consumer's funds are restored 100%.
-
----
-
-## 🏆 Metropolis Hackathon Bounties & Integrations
-
-1. **Monad (Trust, Identity & Infrastructure):** Primary protocol settlement layer leveraging Monad's 10,000 TPS and 1-second finality to make sub-cent API micro-escrow practical.
-2. **Privy:** Gasless onboarding, social logins, and delegated server-side key management for autonomous AI agent transactions.
-3. **Alchemy:** Low-latency RPC node infrastructure powering operator transaction broadcasts on Monad Testnet.
-4. **Envio:** Real-time event indexing for `Reserved`, `Released`, and `Refunded` on-chain lifecycle tracking.
+* **Trust, Identity & Infrastructure:**
+  * **Trust:** Trustless payment escrow guarantees that neither AI consumers nor tool providers can be cheated.
+  * **Identity:** Privy embedded wallets seamlessly bridge Web2 users and autonomous Web3 agents.
+  * **Infrastructure:** Leverages Monad’s 10,000 TPS, sub-second block times, and microscopic gas fees to make sub-cent machine-to-machine micropayments economically feasible for the first time.
 
 ---
 
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE) - see the LICENSE file for details.  
-Copyright (c) 2026 Team Ketupat / Metropolis Hackathon.
+Copyright (c) 2026 Team Ketupat / Monad Metropolis Hackathon.
