@@ -29,7 +29,7 @@ export async function fetchCalls(address: Hex, role: "consumer" | "provider"): P
     await sleep(250);
     return mockDb.calls.filter((c) => (role === "consumer" ? c.consumer : c.provider).toLowerCase() === address.toLowerCase());
   }
-  if (!CFG.envioUrl) throw new ApiError("NO_ENVIO", "NEXT_PUBLIC_ENVIO_GRAPHQL_URL belum diisi.");
+  if (!CFG.envioUrl) return [];
   let res: Response;
   try {
     res = await fetch(CFG.envioUrl, {
