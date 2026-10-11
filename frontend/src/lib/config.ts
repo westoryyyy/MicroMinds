@@ -2,7 +2,7 @@ export const MOCK = process.env.NEXT_PUBLIC_MOCK === "true";
 
 export const CFG = {
   privyAppId: process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "",
-  rpc: process.env.NEXT_PUBLIC_ALCHEMY_RPC ?? "",
+  rpc: process.env.NEXT_PUBLIC_ALCHEMY_RPC || process.env.NEXT_PUBLIC_MONAD_RPC_URL || "https://testnet-rpc.monad.xyz",
   escrow: (process.env.NEXT_PUBLIC_ESCROW_ADDRESS ?? "") as `0x${string}`,
   apiBase: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001",
   envioUrl: process.env.NEXT_PUBLIC_ENVIO_GRAPHQL_URL ?? "",
