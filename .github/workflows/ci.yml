@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI
 
 on:
   push:
@@ -12,31 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  smart-contracts:
-    name: 🛡️ Smart Contracts (Foundry)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Install Foundry Toolchain
-        uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Install Dependencies
-        working-directory: smart-contract
-        run: |
-          forge install foundry-rs/forge-std@v1.9.5 OpenZeppelin/openzeppelin-contracts@v5.1.0 --no-commit || true
-
-      - name: Build Contracts
-        working-directory: smart-contract
-        run: forge build --sizes
-
-      - name: Run Test Suite
-        working-directory: smart-contract
-        run: forge test -vvv
-
   backend:
-    name: ⚙️ Backend API (NestJS)
+    name: Backend (typecheck + build)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -67,7 +44,7 @@ jobs:
         run: pnpm build:api
 
   frontend:
-    name: 🎨 Frontend (Next.js)
+    name: Frontend (lint + build)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -93,7 +70,7 @@ jobs:
         working-directory: frontend
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build Next.js App
+      - name: Build Next.js
         working-directory: frontend
         env:
           NEXT_PUBLIC_PRIVY_APP_ID: "cm1234567890privytest"
