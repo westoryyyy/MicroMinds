@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./frontend/src/app/icon.png" width="140" alt="MicroMinds Logo" />
+
 # MicroMinds 🧠⚡️
 
 ### The Decentralized Tool Gateway & Smart Contract Escrow Marketplace for Autonomous AI Agents
