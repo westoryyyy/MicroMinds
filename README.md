@@ -1,20 +1,51 @@
+<div align="center">
+
 # MicroMinds 🧠⚡️
 
+### The Decentralized Tool Gateway & Smart Contract Escrow Marketplace for Autonomous AI Agents
+
+*Inspired by the universal routing paradigm of OpenRouter, but purpose-built for AI Agent Micro-APIs, dynamic tool discovery, and trustless escrow micropayments on Monad.*
+
+<br/>
+
 [![CI Pipeline](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml/badge.svg)](https://github.com/westoryyyy/MicroMinds/actions/workflows/ci.yml)
-![Network](https://img.shields.io/badge/Network-Monad%20Testnet%20(10143)-836EF9?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)
-![MCP](https://img.shields.io/badge/MCP-Compatible-orange?style=flat-square)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
+[![Network](https://img.shields.io/badge/Network-Monad%20Testnet%20(10143)-836EF9?style=flat-square)](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](./LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-Anthropic%20Compatible-orange?style=flat-square)](https://modelcontextprotocol.io)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/westoryyyy/MicroMinds/pulls)
 
-> **The Decentralized Tool Gateway & Smart Contract Escrow Marketplace for Autonomous AI Agents.**  
-> *Inspired by the universal routing paradigm of OpenRouter, but purpose-built for AI Agent Micro-APIs, dynamic tool discovery, and trustless escrow micropayments on Monad.*
+<br/>
 
-Built for the **Monad Metropolis Hackathon** (Track: *Trust, Identity & Infrastructure*).
+### 🛠️ Built With & Powered By
+<p align="center">
+  <img src="https://img.shields.io/badge/Monad-836EF9?style=for-the-badge&logo=ethereum&logoColor=white" alt="Monad" />
+  <img src="https://img.shields.io/badge/Solidity_0.8.24-363636?style=for-the-badge&logo=solidity&logoColor=white" alt="Solidity" />
+  <img src="https://img.shields.io/badge/Foundry-black?style=for-the-badge" alt="Foundry" />
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
+  <img src="https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Anthropic_MCP-D97706?style=for-the-badge" alt="MCP" />
+  <img src="https://img.shields.io/badge/Privy-4F46E5?style=for-the-badge" alt="Privy" />
+  <img src="https://img.shields.io/badge/Alchemy-0052FF?style=for-the-badge&logo=alchemy&logoColor=white" alt="Alchemy" />
+  <img src="https://img.shields.io/badge/Envio_HyperIndex-06B6D4?style=for-the-badge" alt="Envio" />
+  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+  <img src="https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Railway" />
+</p>
 
-**Live Deployments:**
-* **Frontend Web:** [https://microminds-monad.vercel.app](https://microminds-monad.vercel.app)
-* **API Gateway (Railway):** [https://microminds-production.up.railway.app](https://microminds-production.up.railway.app)
-* **Escrow Contract (Monad Testnet):** [`0x5c7141ab4d637915858ee97881fd613af468c76a`](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
+<br/>
+
+**Built for the Monad Metropolis Hackathon** (Track: *Trust, Identity & Infrastructure*)  
+By **Team Ketupat** 🫔
+
+<br/>
+
+[🌐 Live App](https://microminds-monad.vercel.app) &nbsp;&bull;&nbsp;
+[⚡ API Gateway](https://microminds-production.up.railway.app) &nbsp;&bull;&nbsp;
+[📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a) &nbsp;&bull;&nbsp;
+[📄 Architecture PDF](./MicroMinds_Architecture_and_Product_Guide.pdf)
+
+</div>
 
 ---
 
