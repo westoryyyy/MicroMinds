@@ -18,6 +18,7 @@
 <br/>
 
 [🌐 Live App](https://www.microminds.tech) &nbsp;&bull;&nbsp;
+[📖 Docs & Playground](https://www.microminds.tech/docs) &nbsp;&bull;&nbsp;
 [⚡ API Gateway](https://microminds-production.up.railway.app) &nbsp;&bull;&nbsp;
 [📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
 
@@ -284,6 +285,8 @@ To ensure MicroMinds can be consumed by any AI agent framework globally, we supp
 | Layer | Component | Technology | Role & Deployment |
 |---|---|---|---|
 | **Consensus & Settlement** | Escrow Contract | Solidity `^0.8.24` + Foundry | On-Chain Escrow Protocol on Monad Testnet (`10143`) |
+| **Real-Time Event Indexing**| Sub-Second Indexer | Envio HyperIndex | Indexing `Escrow.sol` events into GraphQL (`Call`, `Balance`, `Deposit`) |
+| **RPC & Node Infrastructure**| Monad Connection | Alchemy | Enterprise Monad Testnet RPC powering Operator Signer & Viem reads |
 | **API Gateway & Operator** | Backend API | NestJS + TypeScript | Off-chain API Gateway, Operator Signer, LLM Provider Orchestrator on Railway |
 | **Marketplace & Dashboard**| Frontend Web | Next.js 16 + React 19 + TailwindCSS | Wallet Connection, Escrow Deposit UI, Key Generator, Docs on Vercel |
 | **Identity & Delegation**  | Web3 Auth | Privy | Social logins, embedded wallets, and session validation |
@@ -312,13 +315,15 @@ To ensure MicroMinds can be consumed by any AI agent framework globally, we supp
 ```text
 MicroMinds/
 ├── .github/workflows/       # GitHub Actions CI/CD Pipeline
-├── backend/                 # NestJS API Gateway & MCP Server
-│   ├── apps/api/            # Core REST API Gateway & Escrow Operator
+├── backend/                 # NestJS API Gateway, Envio Indexer & MCP Server
+│   ├── apps/api/            # Core REST API Gateway & Escrow Operator (Viem + Alchemy)
+│   ├── apps/indexer/        # Envio HyperIndex real-time event indexer & GraphQL API
 │   ├── packages/mcp-server/ # Model Context Protocol (MCP) server package
 │   └── package.json         # Workspace scripts & dependencies
 ├── frontend/                # Next.js 16 Web Marketplace & Dashboard
 │   ├── src/app/             # App Router pages (Dashboard, Explore, Docs, Dev)
 │   ├── src/components/      # UI Components, Crayon Badges, Wallet Connectors
+│   ├── src/lib/envio.ts     # Declarative Envio GraphQL client integration
 │   └── package.json         # Frontend dependencies & Next.js config
 ├── smart-contract/          # Escrow protocol reference (Solidity)
 │   ├── src/Escrow.sol       # Core Escrow contract
@@ -364,10 +369,15 @@ pnpm dev
 
 ## 🏆 Monad Metropolis Hackathon Track Fit
 
-* **Trust, Identity & Infrastructure:**
-  * **Trust:** Trustless payment escrow guarantees that neither AI consumers nor tool providers can be cheated.
-  * **Identity:** Privy embedded wallets seamlessly bridge Web2 users and autonomous Web3 agents.
-  * **Infrastructure:** Leverages Monad’s 10,000 TPS, sub-second block times, and microscopic gas fees to make sub-cent machine-to-machine micropayments economically feasible for the first time.
+### 🎯 Primary Track: Trust, Identity & Infrastructure
+* **Trust:** Trustless payment escrow (`Escrow.sol`) guarantees that neither AI consumers nor tool providers can be cheated. Funds are programmatically released only upon 200 OK delivery.
+* **Identity:** Privy embedded wallets seamlessly bridge Web2 users and autonomous Web3 agents with single-deposit onboarding.
+* **Infrastructure:** Leverages Monad’s 10,000 TPS, sub-second block times, and microscopic gas fees to make sub-cent machine-to-machine micropayments economically feasible for the first time.
+
+### 💎 Sponsor Integrations & Bounties
+* **⚡ Envio (HyperIndex):** Indexes on-chain `Escrow.sol` events (`Reserved`, `Released`, `Refunded`) in sub-second time on Monad Testnet (`10143`). Eliminates RPC polling lag and directly powers the live Consumer Audit Ledger and Provider Revenue Dashboard via declarative GraphQL queries (`backend/apps/indexer/`).
+* **🔮 Alchemy (RPC Infrastructure):** Provides enterprise-grade node connections on Monad Testnet for our automated NestJS operator signer and Viem clients. Handles high-frequency automated transaction broadcasts with zero dropped nonces or rate-limiting.
+* **🔐 Privy (Embedded Wallets & Auth):** Delivers zero-friction social/wallet onboarding on Monad Testnet. Decouples human identity from autonomous machine execution via `@privy-io/react-auth` on the frontend and `@privy-io/node` on backend API guards.
 
 ---
 
