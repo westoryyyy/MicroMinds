@@ -4,9 +4,9 @@
 
 # MicroMinds
 
-**The Decentralized Tool Gateway & Smart Contract Escrow for Autonomous AI Agents**
+### The Decentralized Tool Gateway & Smart Contract Escrow Protocol for Autonomous AI Agents
 
-*Inspired by OpenRouter, built for AI Agent Micro-APIs & trustless escrow on Monad.*
+*The OpenRouter for AI Agent Tools. Deposit MON, get 1 API key, and let autonomous agents discover, invoke, and settle micro-APIs via trustless on-chain escrow on Monad.*
 
 <br/>
 
@@ -25,30 +25,39 @@
 
 ---
 
-## 📖 The Consumer Story: The Broken Agent Economy
+## ⚡ The Problem: Why Autonomous AI Agents Are Paralyzed & Broke
 
-Meet **Ketupat**, an AI engineer building an autonomous multi-agent assistant in Cursor and Claude Desktop. Ketupat's agent is capable of deep reasoning, but to deliver real-world value, it needs specialized external tools: extracting data from messy URLs, formatting unreadable JSON blobs, executing on-chain contract audits, and querying niche financial signals.
+Meet **Ketupat**, an AI engineer building autonomous multi-agent systems in Cursor and Claude. Ketupat's agents are capable of remarkable multi-step reasoning. But the moment an agent needs to perform real-world tasks—scraping live data, formatting messy JSON, verifying a smart contract, or running specialized financial queries—it hits a brick wall.
 
-Every time Ketupat wants the agent to accomplish an ad-hoc task, Ketupat hits four insurmountable friction walls:
+**Web2 payment rails were built for humans with credit cards, not autonomous machines with code.**
 
-### 1. The Credit Card & SaaS Subscription Trap
-To give the agent access to 6 different niche utilities, Ketupat is forced to subscribe to 6 separate SaaS platforms at $20–$50/month each ($200+/month in fixed recurring overhead). The agent might only need to run a JSON formatter 5 times a week, but Ketupat pays full monthly subscription prices anyway.
+Every time Ketupat's agent needs an external capability, it encounters four major friction points:
 
-### 2. API Key Sprawl & Maintenance Nightmare
-Ketupat now has to register on 6 different developer portals, store 6 different API keys in `.env` files, monitor 6 separate rate-limit quotas, and manually update configs whenever a provider changes their endpoints.
-
-### 3. The Broken Autonomy Loop (Zero Agent Commerce)
-True autonomy means the agent should be able to solve novel problems independently. When Ketupat's agent encounters a task requiring a tool it doesn't currently possess, it cannot buy it on its own. AI agents do not have credit cards, cannot fill out Web2 checkout carts, and cannot ask Ketupat to approve a MetaMask popup for every $0.001 micro-service without destroying the unattended execution loop.
-
-### 4. The Two-Sided Trust Dilemma
-* If the agent pre-pays an unverified third-party microservice, the server might crash or fail, taking the money with zero recourse.
-* If the service provider delivers output first, malicious consumers can scrape the results and refuse to pay.
+```
++-------------------------------------------------------------------------------------------------------+
+|                                    THE TRADITIONAL AGENT BOTTLENECK                                   |
+|                                                                                                       |
+|   1. SaaS Subscription Fatigue                                                                        |
+|      Agent needs 6 niche tools -> Ketupat pays $250+/month across 6 subscriptions, even if used twice. |
+|                                                                                                       |
+|   2. API Key Sprawl                                                                                   |
+|      Juggling 10 developer portals, 10 API keys, and constant rate-limit panics in production.        |
+|                                                                                                       |
+|   3. Zero Agent Autonomy (No Machine Commerce)                                                        |
+|      Agents cannot type CVVs, fill checkout carts, or click MetaMask popups mid-loop.                 |
+|                                                                                                       |
+|   4. The Two-Sided Trust Dilemma                                                                      |
+|      Pre-paying unverified APIs risks rug-pulls; delivering data first invites malicious scraping.    |
++-------------------------------------------------------------------------------------------------------+
+```
 
 ---
 
-## 💡 The MicroMinds Paradigm: One Key, One Escrow, Autonomous Discovery
+## 💡 The Solution: MicroMinds — The OpenRouter for AI Agent Tools
 
-**MicroMinds** eliminates human friction from the agent commerce loop entirely.
+**MicroMinds** removes human friction from the machine commerce loop completely. 
+
+Instead of forcing developers to buy subscriptions or manually approve transactions, MicroMinds introduces a unified **Discovery, Execution & Escrow Protocol** powered by Monad's high-speed consensus:
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -70,35 +79,35 @@ True autonomy means the agent should be able to solve novel problems independent
 +-----------------------------------------------------------------------------------+
 ```
 
-### Key Principles:
-1. **Zero E-Commerce Cart Friction:** There is **NO manual shopping or item checkout on the website**. The website is strictly a setup and control panel: connect wallet, deposit MON, generate API key, and view the public catalog showcase.
-2. **Autonomous Tool Discovery:** The agent itself discovers available tools by querying the live registry (`GET /listings` or via MCP `search_api`).
-3. **Pay-per-Call Micropayments:** Every tool costs pennies or fractions of a cent (e.g. 0.0001 MON), deducted per call directly from the user's escrow deposit.
-4. **Guaranteed Escrow Protection on Monad:** Sub-second block times and sub-cent gas fees on Monad enable real-time on-chain fund reservation. If the API returns valid data, funds are **Released** to the provider. If it errors, times out, or returns corrupted payloads, funds are **100% automatically Refunded** to the consumer.
+### The Three Core Pillars:
+1. **One Universal Key (`x-api-key`):** Access hundreds of community and enterprise micro-APIs through a single credential. No more API key sprawl.
+2. **One On-Chain Escrow Balance:** Deposit native `MON` once. Pay strictly **per call** (as low as $0.001 / call) directly from the smart contract escrow ledger.
+3. **Autonomous Discovery (No Human Shopping Carts):** Humans never shop manually on the website. The website is strictly a setup panel and discovery showcase. The AI Agent itself dynamically queries `/listings`, picks the best tool, and executes it on the fly.
 
 ---
 
-## 🏪 The Seller / Provider Story: Monetizing Microservices in the Agent Economy
+## 🏪 The Provider Opportunity: Monetize Micro-APIs for Machines
 
-The AI agent economy cannot survive on buyers alone—it requires an open, thriving ecosystem of **Service Providers (Sellers)** who build and host specialized micro-utilities, specialized scrapers, and niche AI models.
+The next billion API consumers aren't humans reading documentation—**they are autonomous AI agents executing code 24/7**.
 
-### The Pain Points for Microservice Sellers Today:
-1. **The Web2 Monetization Tax:** If a developer builds a specialized tool (e.g., smart contract vulnerability detector or real-time token cleaner), monetizing it is a nightmare. They must integrate Stripe, handle subscription billing, manage invoicing, and lose 3–5% to payment processor fees. Charging $0.002 per call is economically impossible on traditional payment rails.
-2. **Locked Out of the Agentic Economy:** Human users don't buy small, specialized APIs manually. Autonomous AI agents *desperately need* them, but agents cannot navigate Stripe checkouts or enter credit card billing addresses.
-3. **The Non-Payment & Scraping Risk:** Delivering API outputs before getting paid leaves providers vulnerable to malicious scrapers who consume data and abandon payments.
+Until now, developers building specialized utilities (e.g. smart contract vulnerability scanners, dynamic web scrapers, or token risk analyzers) had no viable way to monetize them:
 
-### The MicroMinds Solution for Sellers:
-* **Instant Listing in Minutes:** Providers simply register their endpoint URL, input/output JSON schemas, and desired price per call in native `MON` (e.g., `0.005 MON`) via the Provider Portal or `POST /listings`.
-* **Zero Trust, Guaranteed Escrow Payouts:** Before any request hits the seller's server, the Gateway verifies that consumer funds are already securely locked (`reserve`) on Monad. Once the seller's endpoint returns a valid `200 OK` response, Monad’s smart contract instantly credits the provider (`release`).
-* **Instant Non-Custodial Earnings Withdrawal:** Providers can call `withdraw(amount)` directly on `Escrow.sol` at any time to pull accumulated MON straight into their personal wallet.
-* **Instant Global Distribution:** Once listed, a provider's microservice is immediately searchable via `search_api` to thousands of autonomous agents running on Claude Desktop, Cursor, and LangChain worldwide.
+* **Stripe & PayPal overhead** is economically impossible for $0.002 micro-transactions.
+* **Human users won't subscribe** to niche utilities they only need occasionally.
+* **Non-payment risk:** Delivering data upfront leaves providers vulnerable to unpaid scraping.
+
+### How MicroMinds Empowers Sellers:
+* **List in 60 Seconds:** Connect your wallet, register your endpoint URL, specify input/output schemas, and set your price in native `MON` (e.g. `0.005 MON / call`).
+* **Guaranteed Settlement (Zero Non-Payment Risk):** Before any payload reaches your server, the Gateway verifies that consumer funds are already securely locked (`reserve`) on Monad. When your API returns `200 OK`, Monad's smart contract instantly credits your balance (`release`).
+* **Non-Custodial Direct Withdrawals:** Providers can invoke `withdraw(amount)` directly on `Escrow.sol` at any time to pull accumulated MON straight into their personal wallet.
+* **Instant Global Distribution:** Once listed, your tool is immediately searchable via `search_api` to thousands of autonomous agents running on Claude Desktop, Cursor, and LangChain worldwide.
 
 ---
 
 ## 🔄 Sequence Diagrams
 
 ### 1. Developer Setup & Autonomous Agent Discovery (MCP)
-How a human sets up once, and how the AI Agent autonomously discovers and consumes tools via MCP without any manual human purchasing:
+How a human configures once, and how the AI Agent autonomously discovers and consumes tools via MCP without any manual human purchasing:
 
 ```mermaid
 sequenceDiagram
@@ -207,7 +216,7 @@ sequenceDiagram
 
 ## 🤖 For AI Agents: Model Context Protocol (MCP)
 
-MicroMinds supports Anthropic's **Model Context Protocol (MCP)** out of the box. Any MCP-compliant client (**Claude Desktop**, **Cursor IDE**, **Zed**, **Windsurf**, or **Antigravity**) can instantly search and invoke MicroMinds tools.
+MicroMinds natively supports Anthropic's **Model Context Protocol (MCP)**. Any MCP-compliant environment (**Claude Desktop**, **Cursor IDE**, **Zed**, **Windsurf**, or **Antigravity**) can instantly discover and invoke tools.
 
 ### 1. Add Configuration
 Add this to your `claude_desktop_config.json` or Cursor MCP settings (`~/.cursor/mcp.json`):
