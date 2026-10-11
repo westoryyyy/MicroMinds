@@ -385,9 +385,9 @@ pnpm dev
 
 | Name | Role | Focus |
 | :--- | :--- | :--- |
-| **Nabilah Aprilia Darwin** | Visual Artist | Product identity, crayon aesthetic design system, custom UI assets & visual direction |
-| **Renatha Amelia Manggala Putri** | Frontend Engineer | Next.js 16 Marketplace UI, Privy embedded wallet integration & Envio GraphQL hooks |
-| **Grace Yoelanda Turnip** | Backend Engineer | NestJS API Gateway, operator signer orchestration, Viem + Alchemy RPC & MCP server |
+| **Nabilah Aprilia Darwin** | UI/UX Designer | User experience design, wireframing, crayon aesthetic design system & custom UI visual assets |
+| **Renatha Amelia Manggala Putri** | Frontend & Backend Engineer | Next.js 16 Marketplace UI, fullstack API integration, Privy embedded wallets & Envio GraphQL hooks |
+| **Grace Yoelanda Turnip** | Backend & AI Engineer | NestJS API Gateway, MCP server orchestration, agent tool execution pipelines & Viem + Alchemy RPC |
 | **Rotua Paulina** | Product Manager & Smart Contract Engineer | Product strategy & roadmap, cross-functional execution, core `Escrow.sol` protocol & Monad deployment |
 
 ---
