@@ -385,10 +385,10 @@ pnpm dev
 
 | Name | Role | Focus |
 | :--- | :--- | :--- |
-| **Rotua Paulina** | Smart Contract Engineer | Core `Escrow.sol` protocol, on-chain state machine, Foundry unit tests & Monad deployment |
-| **Grace Yoelanda Turnip** | Backend Engineer | NestJS API Gateway, operator signer orchestration, Viem + Alchemy RPC & MCP server |
-| **Renatha Amelia Manggala Putri** | Frontend Engineer | Next.js 16 Marketplace UI, Privy embedded wallet integration & Envio GraphQL hooks |
 | **Nabilah Aprilia Darwin** | Visual Artist | Product identity, crayon aesthetic design system, custom UI assets & visual direction |
+| **Renatha Amelia Manggala Putri** | Frontend Engineer | Next.js 16 Marketplace UI, Privy embedded wallet integration & Envio GraphQL hooks |
+| **Grace Yoelanda Turnip** | Backend Engineer | NestJS API Gateway, operator signer orchestration, Viem + Alchemy RPC & MCP server |
+| **Rotua Paulina** | Product Manager & Smart Contract Engineer | Product strategy & roadmap, cross-functional execution, core `Escrow.sol` protocol & Monad deployment |
 
 ---
 
