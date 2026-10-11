@@ -21,8 +21,6 @@
 [⚡ API Gateway](https://microminds-production.up.railway.app) &nbsp;&bull;&nbsp;
 [📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
 
-<p><em>Built by <strong>Team Ketupat</strong> 🫔</em></p>
-
 </div>
 
 ---
