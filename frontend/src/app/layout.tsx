@@ -12,7 +12,7 @@ const gochi = Gochi_Hand({ weight: "400", subsets: ["latin"], variable: "--font-
 const patrick = Patrick_Hand({ weight: "400", subsets: ["latin"], variable: "--font-patrick" });
 
 export const metadata: Metadata = {
-    title: "MicroMinds: the little city where AI agents shop for tiny APIs",
+    title: "MicroMinds: The little city where AI agents shop for tiny APIs",
     description: "Bayar per panggilan API, dengan escrow di Monad.",
 };
 
