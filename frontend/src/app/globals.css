@@ -117,8 +117,8 @@
   .bdg.hold { @apply bg-yel text-[#2a2a4a]; }
 
   .mm-nav { @apply sticky top-0 z-50 bg-paper border-b-[3px] border-dashed border-ink; }
-  .mm-nav .wrap { @apply flex items-center gap-[14px] flex-wrap py-[8px]; }
-  .logo { @apply font-gochi text-[1.8rem] text-ink no-underline mr-auto flex items-center gap-[6px]; }
+  .mm-nav .wrap { @apply flex items-center justify-between gap-[10px] md:gap-[16px] py-[8px]; }
+  .logo { @apply font-gochi text-[1.8rem] text-ink no-underline flex items-center gap-[6px]; }
   .nl { @apply text-ink no-underline text-[1.15rem] px-[8px] py-[2px] border-b-[3px] border-solid border-transparent hover:border-red aria-[current=page]:border-red; }
 
   .mm-hero { @apply grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-[20px] items-center pt-[30px]; }
