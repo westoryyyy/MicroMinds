@@ -18,20 +18,20 @@ Built for the **Monad Metropolis Hackathon** (Track: *Trust, Identity & Infrastr
 
 ---
 
-## 📖 The Developer's Story: The Broken Agent Economy
+## 📖 The Consumer Story: The Broken Agent Economy
 
-Meet **Alex**, an AI engineer building an autonomous multi-agent assistant in Cursor and Claude Desktop. Alex's agent is capable of deep reasoning, but to deliver real-world value, it needs specialized external tools: extracting data from messy URLs, formatting unreadable JSON blobs, executing on-chain contract audits, and querying niche financial signals.
+Meet **Ketupat**, an AI engineer building an autonomous multi-agent assistant in Cursor and Claude Desktop. Ketupat's agent is capable of deep reasoning, but to deliver real-world value, it needs specialized external tools: extracting data from messy URLs, formatting unreadable JSON blobs, executing on-chain contract audits, and querying niche financial signals.
 
-Every time Alex wants the agent to accomplish an ad-hoc task, Alex hits four insurmountable friction walls:
+Every time Ketupat wants the agent to accomplish an ad-hoc task, Ketupat hits four insurmountable friction walls:
 
 ### 1. The Credit Card & SaaS Subscription Trap
-To give the agent access to 6 different niche utilities, Alex is forced to subscribe to 6 separate SaaS platforms at $20–$50/month each ($200+/month in fixed recurring overhead). The agent might only need to run a JSON formatter 5 times a week, but Alex pays full monthly subscription prices anyway.
+To give the agent access to 6 different niche utilities, Ketupat is forced to subscribe to 6 separate SaaS platforms at $20–$50/month each ($200+/month in fixed recurring overhead). The agent might only need to run a JSON formatter 5 times a week, but Ketupat pays full monthly subscription prices anyway.
 
 ### 2. API Key Sprawl & Maintenance Nightmare
-Alex now has to register on 6 different developer portals, store 6 different API keys in `.env` files, monitor 6 separate rate-limit quotas, and manually update configs whenever a provider changes their endpoints.
+Ketupat now has to register on 6 different developer portals, store 6 different API keys in `.env` files, monitor 6 separate rate-limit quotas, and manually update configs whenever a provider changes their endpoints.
 
 ### 3. The Broken Autonomy Loop (Zero Agent Commerce)
-True autonomy means the agent should be able to solve novel problems independently. When Alex's agent encounters a task requiring a tool it doesn't currently possess, it cannot buy it on its own. AI agents do not have credit cards, cannot fill out Web2 checkout carts, and cannot ask Alex to approve a MetaMask popup for every $0.001 micro-service without destroying the unattended execution loop.
+True autonomy means the agent should be able to solve novel problems independently. When Ketupat's agent encounters a task requiring a tool it doesn't currently possess, it cannot buy it on its own. AI agents do not have credit cards, cannot fill out Web2 checkout carts, and cannot ask Ketupat to approve a MetaMask popup for every $0.001 micro-service without destroying the unattended execution loop.
 
 ### 4. The Two-Sided Trust Dilemma
 * If the agent pre-pays an unverified third-party microservice, the server might crash or fail, taking the money with zero recourse.
@@ -47,7 +47,7 @@ True autonomy means the agent should be able to solve novel problems independent
 +-----------------------------------------------------------------------------------+
 |                            THE MICROMINDS WORKFLOW                                |
 |                                                                                   |
-|  [ Alex (Human Developer) ]                                                       |
+|  [ Ketupat (Human Developer) ]                                                    |
 |        │                                                                          |
 |        ├─ 1. Connects Monad Wallet once at microminds-monad.vercel.app            |
 |        ├─ 2. Deposits MON into the non-custodial Escrow.sol Smart Contract        |
@@ -71,14 +71,32 @@ True autonomy means the agent should be able to solve novel problems independent
 
 ---
 
-## 🔄 Interaction Flow 1: Developer Setup & Autonomous Agent Discovery (MCP)
+## 🏪 The Seller / Provider Story: Monetizing Microservices in the Agent Economy
 
-This diagram shows how a human sets up once, and how the AI Agent autonomously discovers and consumes tools via MCP without any manual human purchasing:
+The AI agent economy cannot survive on buyers alone—it requires an open, thriving ecosystem of **Service Providers (Sellers)** who build and host specialized micro-utilities, specialized scrapers, and niche AI models.
+
+### The Pain Points for Microservice Sellers Today:
+1. **The Web2 Monetization Tax:** If a developer builds a specialized tool (e.g., smart contract vulnerability detector or real-time token cleaner), monetizing it is a nightmare. They must integrate Stripe, handle subscription billing, manage invoicing, and lose 3–5% to payment processor fees. Charging $0.002 per call is economically impossible on traditional payment rails.
+2. **Locked Out of the Agentic Economy:** Human users don't buy small, specialized APIs manually. Autonomous AI agents *desperately need* them, but agents cannot navigate Stripe checkouts or enter credit card billing addresses.
+3. **The Non-Payment & Scraping Risk:** Delivering API outputs before getting paid leaves providers vulnerable to malicious scrapers who consume data and abandon payments.
+
+### The MicroMinds Solution for Sellers:
+* **Instant Listing in Minutes:** Providers simply register their endpoint URL, input/output JSON schemas, and desired price per call in native `MON` (e.g., `0.005 MON`) via the Provider Portal or `POST /listings`.
+* **Zero Trust, Guaranteed Escrow Payouts:** Before any request hits the seller's server, the Gateway verifies that consumer funds are already securely locked (`reserve`) on Monad. Once the seller's endpoint returns a valid `200 OK` response, Monad’s smart contract instantly credits the provider (`release`).
+* **Instant Non-Custodial Earnings Withdrawal:** Providers can call `withdraw(amount)` directly on `Escrow.sol` at any time to pull accumulated MON straight into their personal wallet.
+* **Instant Global Distribution:** Once listed, a provider's microservice is immediately searchable via `search_api` to thousands of autonomous agents running on Claude Desktop, Cursor, and LangChain worldwide.
+
+---
+
+## 🔄 Sequence Diagrams
+
+### 1. Developer Setup & Autonomous Agent Discovery (MCP)
+How a human sets up once, and how the AI Agent autonomously discovers and consumes tools via MCP without any manual human purchasing:
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Dev as Developer (Alex)
+    actor Dev as Developer (Ketupat)
     participant Web as MicroMinds Web App (Vercel)
     participant Escrow as Monad Escrow Contract
     actor Agent as Autonomous AI Agent (Cursor / Claude)
@@ -108,11 +126,41 @@ sequenceDiagram
 
 ---
 
-## 🔐 Interaction Flow 2: On-Chain Escrow Lifecycle & Settlement on Monad
+### 2. Provider Lifecycle: Listing, Execution & Non-Custodial Earnings
+How developers list their microservices, earn MON per call, and withdraw revenue non-custodially:
 
-This diagram shows how the off-chain Gateway Operator and on-chain `Escrow.sol` contract protect funds with atomic reservation, verification, and instant refunds:
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Seller as Tool Creator / Provider
+    participant Portal as MicroMinds Provider Portal
+    participant Registry as Listings Database
+    participant Escrow as Monad Escrow Contract
+    actor Agent as Autonomous AI Agent
+    participant Gateway as MicroMinds API Gateway
 
-MicroMinds uses a high-performance **Pull-over-Push** escrow architecture coordinated by an off-chain Gateway Operator.
+    Note over Seller,Registry: Step 1: Provider Lists Tool (Zero Stripe / Billing Setup)
+    Seller->>Portal: Connect Wallet & Register Endpoint
+    Portal->>Registry: POST /listings (URL, JSON Schema, Price: 0.005 MON)
+    Registry-->>Seller: Listing Live & Globally Searchable!
+
+    Note over Agent,Seller: Step 2: Agent Discovers & Pays per Call
+    Agent->>Gateway: POST /call (Invokes Seller's Listing)
+    Gateway->>Escrow: reserve(callId, consumer, seller, 0.005 MON)
+    Gateway->>Seller: Forward Input Payload to Provider Endpoint
+    Seller-->>Gateway: HTTP 200 OK + Valid Output Data
+    Gateway->>Escrow: release(callId)
+    Escrow-->>Seller: 0.005 MON credited on-chain to Provider balance!
+
+    Note over Seller,Escrow: Step 3: Non-Custodial Earnings Withdrawal
+    Seller->>Escrow: withdraw(totalEarnedMON)
+    Escrow-->>Seller: MON transferred directly to Provider's Personal Wallet
+```
+
+---
+
+### 3. On-Chain Escrow Lifecycle & Fault-Tolerant Settlement on Monad
+How the off-chain Gateway Operator and on-chain `Escrow.sol` contract protect funds with atomic reservation, verification, and instant refunds:
 
 ```mermaid
 sequenceDiagram
@@ -196,7 +244,7 @@ curl -X POST https://microminds-production.up.railway.app/call \
   -d '{
     "listingId": "2150cfc7-49ed-499b-a3aa-ab291078ef44",
     "input": {
-      "raw": "{\"name\":\"Alex\",\"role\":\"AI Engineer\",\"network\":\"Monad\"}"
+      "raw": "{\"name\":\"Ketupat\",\"role\":\"AI Engineer\",\"network\":\"Monad\"}"
     }
   }'
 ```
@@ -208,7 +256,7 @@ curl -X POST https://microminds-production.up.railway.app/call \
   "status": "released",
   "txHash": "0x4b78f4...",
   "output": {
-    "formatted": "{\n  \"name\": \"Alex\",\n  \"role\": \"AI Engineer\",\n  \"network\": \"Monad\"\n}"
+    "formatted": "{\n  \"name\": \"Ketupat\",\n  \"role\": \"AI Engineer\",\n  \"network\": \"Monad\"\n}"
   }
 }
 ```
