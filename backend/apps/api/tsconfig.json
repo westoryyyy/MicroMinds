@@ -24,8 +24,7 @@
     }
   },
   "include": [
-    "src/**/*",
-    "migrations/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
