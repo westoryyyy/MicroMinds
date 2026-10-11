@@ -17,7 +17,7 @@
 
 <br/>
 
-[🌐 Live App](https://microminds-monad.vercel.app) &nbsp;&bull;&nbsp;
+[🌐 Live App](https://www.microminds.tech) &nbsp;&bull;&nbsp;
 [⚡ API Gateway](https://microminds-production.up.railway.app) &nbsp;&bull;&nbsp;
 [📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
 
