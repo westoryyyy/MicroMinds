@@ -58,8 +58,8 @@ export default function ExplorePage() {
               className="w-full !border-none !shadow-none !pl-12 !py-2 text-xl bg-transparent outline-none focus-visible:!outline-none !rounded-none"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search: json, text, link…"
-              aria-label="Search"
+              placeholder={t("Search: json, text, link…", "Cari: json, teks, tautan…")}
+              aria-label={t("Search", "Cari")}
             />
           </div>
           <div className="hidden md:block w-[3px] h-10 bg-ink opacity-20"></div>
@@ -70,7 +70,7 @@ export default function ExplorePage() {
               className="w-full md:w-auto !py-2 !text-lg !bg-transparent !border-none cursor-pointer focus-visible:!outline-none !shadow-none"
               value={mp} 
               onChange={(e) => setMp(e.target.value)} 
-              aria-label="Max price"
+              aria-label={t("Max price", "Harga maksimal")}
             >
               <option value="">{t("Any price", "Harga berapapun")}</option>
               <option value="0.001">≤ 0.001 tMON</option>
@@ -132,8 +132,8 @@ export default function ExplorePage() {
                           <span className="text-mut text-sm font-sans font-medium">{fmtIdr(l.priceWei)} (demo)</span>
                         </div>
                         <div className="text-right flex flex-col text-sm font-sans font-bold opacity-60">
-                          <span>{Math.round(l.successRate || 0)}% success</span>
-                          <span>{l.avgLatencyMs || 0}ms avg</span>
+                          <span>{Math.round(l.successRate || 0)}% {t("success", "sukses")}</span>
+                          <span>{l.avgLatencyMs || 0}ms {t("avg", "rata-rata")}</span>
                         </div>
                       </div>
                     </div>

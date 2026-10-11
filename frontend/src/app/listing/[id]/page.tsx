@@ -7,6 +7,7 @@ import { Sv } from "@/components/Crayon";
 import { Badge } from "@/components/ui";
 import { svIdFor } from "@/app/explore/page";
 import { useSession } from "@/lib/session";
+import { useLang } from "@/components/LangProvider";
 
 export default function ListingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -14,6 +15,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
   const callApi = useCallApi();
   const { data: bal = 0n } = useBalance();
   const { authenticated, login } = useSession();
+  const { t } = useLang();
 
   const [inputStr, setInputStr] = useState("");
   const [log, setLog] = useState<{ type: "step" | "error" | "result"; msg: React.ReactNode }[]>([]);
@@ -28,9 +30,9 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
   if (isError || !l) return (
     <div className="wrap">
       <section className="card mm-empty">
-        <h2>That shop is not on the map</h2>
-        <p className="err">Listing &quot;{id}&quot; does not exist.</p>
-        <Link className="btn" href="/explore" style={{ marginTop: 10 }}>Back to Explore</Link>
+        <h2>{t("That shop is not on the map", "Toko itu tidak ada di peta")}</h2>
+        <p className="err">{t(`Listing "${id}" does not exist.`, `Listing "${id}" tidak ditemukan.`)}</p>
+        <Link className="btn" href="/explore" style={{ marginTop: 10 }}>{t("Back to Explore", "Kembali ke Eksplor")}</Link>
       </section>
     </div>
   );
@@ -38,32 +40,33 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
   const sid = svIdFor(l.id);
 
   async function handleCall() {
+    if (!l) return;
     if (!authenticated) { login(); return; }
     let inp;
     try {
       inp = JSON.parse(inputStr);
     } catch {
-      setLog([{ type: "error", msg: "Input is not valid JSON. Fix the braces and quotes, then call again." }]);
+      setLog([{ type: "error", msg: t("Input is not valid JSON. Fix the braces and quotes, then call again.", "Input bukan JSON yang valid. Perbaiki kurung kurawal dan tanda petik, lalu coba lagi.") }]);
       return;
     }
     if (bal < BigInt(l.priceWei)) {
-      setLog([{ type: "error", msg: <>Not enough balance. <Link href="/dashboard">Deposit tMON</Link> first.</> }]);
+      setLog([{ type: "error", msg: <>{t("Not enough balance.", "Saldo tidak mencukupi.")} <Link href="/dashboard">{t("Deposit tMON", "Isi tMON")}</Link> {t("first.", "terlebih dahulu.")}</> }]);
       return;
     }
 
-    setLog([{ type: "step", msg: `The cat holds ${fmtMon(l.priceWei)} tMON in reserve.` }]);
+    setLog([{ type: "step", msg: t(`The cat holds ${fmtMon(l.priceWei)} tMON in reserve.`, `Kucing menahan ${fmtMon(l.priceWei)} tMON sebagai cadangan.`) }]);
     
     callApi.mutate({ listingId: l.id, input: inp }, {
       onSuccess: (res) => {
         const out = res.output ? JSON.stringify(res.output, null, 2) : "";
         const badge = <Badge status={res.status} />;
-        const txt = res.status === "released" ? "Coins moved to the provider." :
-                    res.status === "refunded" ? `Refunded: ${res.reason || "Provider error"}. Your coins came back.` : 
-                    "Failed";
+        const txt = res.status === "released" ? t("Coins moved to the provider.", "Koin diserahkan ke penyedia.") :
+                    res.status === "refunded" ? t(`Refunded: ${res.reason || "Provider error"}. Your coins came back.`, `Dikembalikan: ${res.reason || "Kesalahan penyedia"}. Koin kamu kembali.`) : 
+                    t("Failed", "Gagal");
         
         setLog((prev) => [
           ...prev,
-          { type: "step", msg: "Response received from provider." },
+          { type: "step", msg: t("Response received from provider.", "Respons diterima dari penyedia.") },
           { type: "result", msg: (
             <>
               <p style={{ marginTop: 0 }}>
@@ -76,7 +79,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
         ]);
       },
       onError: (err) => {
-        setLog((prev) => [...prev, { type: "error", msg: `Request failed: ${err.message}` }]);
+        setLog((prev) => [...prev, { type: "error", msg: `${t("Request failed: ", "Permintaan gagal: ")}${err.message}` }]);
       }
     });
   }
@@ -84,7 +87,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
   return (
     <div className="wrap">
       <section>
-        <Link href="/explore">← All shops</Link>
+        <Link href="/explore">← {t("All shops", "Semua toko")}</Link>
         <div className="card" style={{ marginTop: 14 }}>
           <div className="mm-row" style={{ alignItems: "center" }}>
             <Sv id={sid} w={sid === "croc" ? 200 : 110} />
@@ -92,29 +95,29 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
               <h1 style={{ fontSize: "2.4rem" }}>{l.name}</h1>
               <p>{l.description}</p>
               <p>
-                <span className="chip">{l.category}</span> <b>{fmtMon(l.priceWei)} tMON</b> per call<br/>
+                <span className="chip">{l.category}</span> <b>{fmtMon(l.priceWei)} tMON</b> {t("per call", "per panggilan")}<br/>
                 <small className="mut">
-                  {fmtIdr(l.priceWei)} (demo rate) · timeout {l.timeoutMs / 1000}s · {Math.round(l.successRate || 0)}% success · {l.avgLatencyMs || 0}ms avg
+                  {fmtIdr(l.priceWei)} {t("(demo rate)", "(tarif demo)")} · {t("timeout", "batas waktu")} {l.timeoutMs / 1000}s · {Math.round(l.successRate || 0)}% {t("success", "sukses")} · {l.avgLatencyMs || 0}ms {t("avg", "rata-rata")}
                 </small>
               </p>
             </div>
           </div>
 
-          <h3 style={{ marginTop: 24 }}>Schema</h3>
+          <h3 style={{ marginTop: 24 }}>{t("Schema", "Skema")}</h3>
           <pre>
-            input: JSON object{`\n`}
-            output must match schema: {l.outputSchema ? Object.keys(l.outputSchema.properties || {}).join(", ") : "any"}
+            {t("input: JSON object", "input: Objek JSON")}{`\n`}
+            {t("output must match schema: ", "output harus sesuai skema: ")}{l.outputSchema ? Object.keys(l.outputSchema.properties || {}).join(", ") : t("any", "bebas")}
           </pre>
 
-          <h3 style={{ marginTop: 24 }}>Try a call</h3>
+          <h3 style={{ marginTop: 24 }}>{t("Try a call", "Coba Panggil")}</h3>
           <textarea 
             value={inputStr} 
             onChange={(e) => setInputStr(e.target.value)} 
-            aria-label="JSON input"
+            aria-label={t("JSON input", "Input JSON")}
           />
           <div className="mm-row" style={{ marginTop: 10 }}>
             <button className="btn b-g" onClick={handleCall} disabled={callApi.isPending}>
-              {callApi.isPending ? "Calling..." : "Call API"}
+              {callApi.isPending ? t("Calling...", "Memanggil...") : t("Call API", "Panggil API")}
             </button>
           </div>
 

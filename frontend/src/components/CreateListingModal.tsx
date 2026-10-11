@@ -34,7 +34,7 @@ export default function CreateListingModal({ isOpen, onClose }: Props) {
     try {
       priceWei = parseEther(formData.price || "0").toString();
     } catch {
-      alert("Invalid price format");
+      alert(t("Invalid price format", "Format harga tidak valid"));
       return;
     }
 
@@ -43,7 +43,7 @@ export default function CreateListingModal({ isOpen, onClose }: Props) {
       parsedInputSchema = JSON.parse(formData.schemaInput);
       parsedOutputSchema = JSON.parse(formData.schemaOutput);
     } catch {
-      alert("Invalid JSON format in schema");
+      alert(t("Invalid JSON format in schema", "Format JSON pada skema tidak valid"));
       return;
     }
 
@@ -58,12 +58,12 @@ export default function CreateListingModal({ isOpen, onClose }: Props) {
       category: formData.category,
     }, {
       onSuccess: () => {
-        alert("API Listing successfully created!");
+        alert(t("API Listing successfully created!", "Listing API berhasil dibuat!"));
         onClose();
         // Reset form or let it be
       },
       onError: (err: any) => {
-        alert("Failed to create listing: " + (err.message || String(err)));
+        alert(t("Failed to create listing: ", "Gagal membuat listing: ") + (err.message || String(err)));
       }
     });
   };
@@ -99,10 +99,10 @@ export default function CreateListingModal({ isOpen, onClose }: Props) {
               <div className="flex flex-col gap-2">
                 <label className="font-bold text-ink text-sm uppercase tracking-wider">{t("Category", "Kategori")}</label>
                 <select name="category" value={formData.category} onChange={handleChange} className="w-full">
-                  <option value="AI Agent">AI Agent</option>
-                  <option value="Data Processing">Data Processing</option>
-                  <option value="Utility">Utility</option>
-                  <option value="Crypto">Crypto</option>
+                  <option value="AI Agent">{t("AI Agent", "Agen AI")}</option>
+                  <option value="Data Processing">{t("Data Processing", "Pemrosesan Data")}</option>
+                  <option value="Utility">{t("Utility", "Utilitas")}</option>
+                  <option value="Crypto">{t("Crypto", "Kripto")}</option>
                 </select>
               </div>
             </div>

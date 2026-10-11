@@ -39,7 +39,7 @@ export default function DashboardPage() {
 
   const handleCopyKey = () => {
     navigator.clipboard.writeText(key || "");
-    alert("API Key copied to clipboard!");
+    alert(t("API Key copied to clipboard!", "API Key disalin ke papan klip!"));
   };
 
   // Hitung hold berdasarkan panggilan yang masih 'reserved'
@@ -94,7 +94,7 @@ export default function DashboardPage() {
                 <button
                   onClick={handleCopy}
                   className="bg-ink text-paper px-3 py-1 rounded-[8px_2px_8px_2px] hover:bg-[#3a3a5a] transition-colors flex items-center gap-2 cursor-pointer border-none font-mono text-sm"
-                  title="Click to copy"
+                  title={t("Click to copy", "Klik untuk menyalin")}
                 >
                   {address} <span className="text-base">{copied ? "✅" : "📋"}</span>
                 </button>
@@ -172,10 +172,10 @@ export default function DashboardPage() {
                         {showKey ? key : "************************************"}
                       </code>
                       <div className="flex gap-2 shrink-0 ml-2">
-                        <button className="bg-transparent border-none cursor-pointer text-paper opacity-70 hover:opacity-100 text-lg" onClick={() => setShowKey(!showKey)} title="Show/Hide">
+                        <button className="bg-transparent border-none cursor-pointer text-paper opacity-70 hover:opacity-100 text-lg" onClick={() => setShowKey(!showKey)} title={t("Show/Hide", "Tampilkan/Sembunyikan")}>
                           {showKey ? "🙈" : "👁️"}
                         </button>
-                        <button className="bg-transparent border-none cursor-pointer text-paper opacity-70 hover:opacity-100 text-lg" onClick={handleCopyKey} title="Copy Key">
+                        <button className="bg-transparent border-none cursor-pointer text-paper opacity-70 hover:opacity-100 text-lg" onClick={handleCopyKey} title={t("Copy Key", "Salin Key")}>
                           📋
                         </button>
                       </div>
@@ -304,7 +304,7 @@ export default function DashboardPage() {
                           <span className="text-xs text-mut font-bold uppercase tracking-wider block mb-1">{t("Price", "Harga")}</span>
                           <span className="font-mono text-grn font-bold">{fmtMon(BigInt(l.priceWei))} tMON</span>
                         </div>
-                        <span className="text-xs font-mono bg-ink text-paper px-2 py-1 rounded">Timeout: {l.timeoutMs}s</span>
+                        <span className="text-xs font-mono bg-ink text-paper px-2 py-1 rounded">{t("Timeout:", "Batas Waktu:")} {l.timeoutMs}s</span>
                       </div>
                     </div>
                   ))}
@@ -343,7 +343,7 @@ export default function DashboardPage() {
                             {new Date(Number(c.reservedAt) * 1000).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                           </td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-medium text-ink">
-                            {c.listingName || "Unknown API"}
+                            {c.listingName || t("Unknown API", "API Tidak Dikenal")}
                           </td>
                           <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono opacity-80">
                             {shortHash(c.consumer)}
