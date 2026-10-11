@@ -33,23 +33,12 @@ Meet **Ketupat**, an AI engineer building autonomous multi-agent systems in Curs
 
 Every time Ketupat's agent needs an external capability, it encounters four major friction points:
 
-```
-+-------------------------------------------------------------------------------------------------------+
-|                                    THE TRADITIONAL AGENT BOTTLENECK                                   |
-|                                                                                                       |
-|   1. SaaS Subscription Fatigue                                                                        |
-|      Agent needs 6 niche tools -> Ketupat pays $250+/month across 6 subscriptions, even if used twice. |
-|                                                                                                       |
-|   2. API Key Sprawl                                                                                   |
-|      Juggling 10 developer portals, 10 API keys, and constant rate-limit panics in production.        |
-|                                                                                                       |
-|   3. Zero Agent Autonomy (No Machine Commerce)                                                        |
-|      Agents cannot type CVVs, fill checkout carts, or click MetaMask popups mid-loop.                 |
-|                                                                                                       |
-|   4. The Two-Sided Trust Dilemma                                                                      |
-|      Pre-paying unverified APIs risks rug-pulls; delivering data first invites malicious scraping.    |
-+-------------------------------------------------------------------------------------------------------+
-```
+| Friction Point | Traditional Web2 Pain (Today) | Why It Breaks AI Agents |
+| :--- | :--- | :--- |
+| **💳 SaaS Subscription Trap** | Ketupat pays $250+/month across 6 separate SaaS platforms | Tools only needed 5 times a week, but billed as recurring monthly plans |
+| **🔑 API Key Sprawl** | Juggling 10 developer portals, 10 `.env` keys, and rate limits | High maintenance overhead and brittle production setups |
+| **🤖 Zero Agent Commerce** | Machine execution halts at credit card, 2FA, and checkout gates | Agents cannot fill checkout forms or approve MetaMask popups mid-loop |
+| **⚖️ The Trust Dilemma** | Pre-paying unverified APIs risks rug-pulls; delivering first invites scraping | Zero escrow protection or verification in traditional HTTP APIs |
 
 ---
 
@@ -59,25 +48,12 @@ Every time Ketupat's agent needs an external capability, it encounters four majo
 
 Instead of forcing developers to buy subscriptions or manually approve transactions, MicroMinds introduces a unified **Discovery, Execution & Escrow Protocol** powered by Monad's high-speed consensus:
 
-```
-+-----------------------------------------------------------------------------------+
-|                            THE MICROMINDS WORKFLOW                                |
-|                                                                                   |
-|  [ Ketupat (Human Developer) ]                                                    |
-|        │                                                                          |
-|        ├─ 1. Connects Monad Wallet once at microminds-monad.vercel.app            |
-|        ├─ 2. Deposits MON into the non-custodial Escrow.sol Smart Contract        |
-|        ├─ 3. Generates 1 Universal API Key (x-api-key)                            |
-|        └─ 4. Installs MicroMinds MCP Server / Skill into their Agent              |
-|                                                                                   |
-|  [ The Autonomous AI Agent ] (Zero Human Intervention Required)                   |
-|        │                                                                          |
-|        ├─ 1. Needs a tool? Agent calls search_api("data extraction")              |
-|        ├─ 2. Evaluates live listings, pricing (wei), and performance latency     |
-|        ├─ 3. Calls call_api(listingId, input) autonomously                        |
-|        └─ 4. Gateway locks escrow -> verifies output -> releases MON on-chain     |
-+-----------------------------------------------------------------------------------+
-```
+| Phase | Actor | Action & Mechanism |
+| :--- | :--- | :--- |
+| **1. One-Time Setup** | **Ketupat** *(Human Developer)* | Connects Monad wallet once $\rightarrow$ Deposits `MON` into `Escrow.sol` $\rightarrow$ Generates universal `x-api-key`. |
+| **2. Autonomous Discovery** | **AI Agent** *(Autonomous)* | Calls `search_api("data extraction")` via MCP to find live tool listings, prices, and schemas. |
+| **3. Autonomous Execution** | **AI Agent** *(Autonomous)* | Calls `call_api(listingId, input)` directly—zero human approval or checkout forms needed. |
+| **4. On-Chain Settlement** | **Monad Escrow Protocol** | Reserves funds on Monad $\rightarrow$ verifies response $\rightarrow$ releases MON upon success (or 100% refund). |
 
 ### The Three Core Pillars:
 1. **One Universal Key (`x-api-key`):** Access hundreds of community and enterprise micro-APIs through a single credential. No more API key sprawl.
