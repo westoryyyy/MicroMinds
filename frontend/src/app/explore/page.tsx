@@ -109,7 +109,7 @@ export default function ExplorePage() {
                   <div className={`card h-full flex flex-col gap-4 transition-transform duration-300 ${idx % 2 === 0 ? 'hover:rotate-1 hover:-translate-y-1' : 'hover:-rotate-1 hover:-translate-y-1'}`}>
                     
                     {/* Character Visual */}
-                    <div className="h-[140px] flex items-center justify-center border-b-[3px] border-dashed border-[#e0e0e0] pb-4 mb-2">
+                    <div className="h-[140px] flex items-center justify-center border-b-[3px] border-dashed border-ink/15 pb-4 mb-2">
                       <div className="group-hover:animate-bob">
                         <Sv id={s} w={s === "croc" ? 170 : 100} />
                       </div>
@@ -125,7 +125,7 @@ export default function ExplorePage() {
                     </div>
 
                     {/* Pricing & Stats */}
-                    <div className="border-t-[3px] border-dashed border-[#e0e0e0] pt-4 mt-auto">
+                    <div className="border-t-[3px] border-dashed border-ink/15 pt-4 mt-auto">
                       <div className="flex justify-between items-end">
                         <div className="flex flex-col">
                           <span className="font-gochi text-2xl font-bold text-[#1a8537]">{fmtMon(l.priceWei)} tMON</span>

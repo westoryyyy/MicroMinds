@@ -225,14 +225,14 @@ export default function DashboardPage() {
                     </thead>
                     <tbody>
                       {calls.map((c) => (
-                        <tr key={c.callId} className="hover:bg-[#f9f9f9] transition-colors">
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] opacity-70">
+                        <tr key={c.callId} className="hover:bg-ink/5 transition-colors">
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 opacity-70">
                             {new Date(Number(c.reservedAt) * 1000).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                           </td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-medium text-ink">{c.listingName || shortHash(c.provider)}</td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono text-red">-{fmtMon(c.amount)} tMON</td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0]"><Badge status={c.status} /></td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] text-right">
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 font-medium text-ink">{c.listingName || shortHash(c.provider)}</td>
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 font-mono text-red">-{fmtMon(c.amount)} tMON</td>
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15"><Badge status={c.status} /></td>
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 text-right">
                             {canForceRefund(c, nowSec) ? (
                               <button
                                 className="btn b-r !px-3 !py-1 !text-sm !font-sans !font-bold whitespace-nowrap"
@@ -338,18 +338,18 @@ export default function DashboardPage() {
                     </thead>
                     <tbody>
                       {calls.map((c) => (
-                        <tr key={c.callId} className="hover:bg-[#f9f9f9] transition-colors">
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] opacity-70">
+                        <tr key={c.callId} className="hover:bg-ink/5 transition-colors">
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 opacity-70">
                             {new Date(Number(c.reservedAt) * 1000).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                           </td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-medium text-ink">
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 font-medium text-ink">
                             {c.listingName || t("Unknown API", "API Tidak Dikenal")}
                           </td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono opacity-80">
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 font-mono opacity-80">
                             {shortHash(c.consumer)}
                           </td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] font-mono text-grn">+{fmtMon(c.amount)} tMON</td>
-                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-[#e0e0e0] text-right"><TxLink hash={c.finalTx || c.reserveTx} /></td>
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 font-mono text-grn">+{fmtMon(c.amount)} tMON</td>
+                          <td className="!py-4 !px-6 border-b-[2px] border-dashed border-ink/15 text-right"><TxLink hash={c.finalTx || c.reserveTx} /></td>
                         </tr>
                       ))}
                     </tbody>

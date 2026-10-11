@@ -12,23 +12,46 @@
     --yel: #f6c21c;
     --card: #ffffff;
     --mut: #65658a;
+    color-scheme: light;
   }
+
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not(.light):not([data-theme="light"]) {
       --paper: #171728;
       --ink: #f4efe0;
       --card: #222238;
       --mut: #a9a9c4;
+      color-scheme: dark;
     }
+  }
+
+  :root.dark,
+  :root[data-theme="dark"] {
+    --paper: #171728;
+    --ink: #f4efe0;
+    --card: #222238;
+    --mut: #a9a9c4;
+    color-scheme: dark;
+  }
+
+  :root.light,
+  :root[data-theme="light"] {
+    --paper: #fffdf6;
+    --ink: #2a2a4a;
+    --card: #ffffff;
+    --mut: #65658a;
+    color-scheme: light;
   }
 
   html {
     scroll-behavior: smooth;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   body {
     @apply m-0 bg-paper text-ink overflow-x-hidden;
     font: 19px/1.45 var(--font-patrick), "Comic Sans MS", cursive;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   h1, h2, h3 {
@@ -84,6 +107,7 @@
   .b-b { @apply !bg-blu !text-white; }
   .b-g { @apply !bg-grn !text-white; }
   .b-r { @apply !bg-red !text-white; }
+  .b-w { @apply !bg-card !text-ink; }
   
   .chip { @apply inline-block bg-yel text-[#2a2a4a] border-2 border-solid border-ink rounded-[20px_6px_18px_6px] px-[10px] py-[1px] text-[0.95rem]; }
   

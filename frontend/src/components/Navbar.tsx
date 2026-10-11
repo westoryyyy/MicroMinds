@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "@/lib/session";
 import { useLang } from "@/components/LangProvider";
+import { useTheme } from "@/components/ThemeProvider";
 import BalanceChip from "./BalanceChip";
 
 export default function Navbar() {
@@ -11,6 +12,7 @@ export default function Navbar() {
   const path = usePathname();
   const [copied, setCopied] = useState(false);
   const { lang, setLang, t } = useLang();
+  const { theme, setTheme } = useTheme();
 
   const links = [
     ["/explore", t("Explore", "Eksplor")],
@@ -55,12 +57,48 @@ export default function Navbar() {
         </div>
 
         {/* Right Section: Controls */}
-        <div className="flex items-center gap-2 md:gap-4 justify-end shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 justify-end shrink-0">
           
+          {/* Theme Mode Toggle (Light / Dark) */}
+          <div 
+            className="flex items-center bg-card/90 border-[2px] border-solid border-ink/20 rounded-[14px_6px_14px_6px] p-0.5 shadow-sm"
+            role="group"
+            aria-label={t("Theme selection", "Pilihan tema")}
+          >
+            <button
+              type="button"
+              onClick={() => setTheme("light")}
+              className={`flex items-center gap-1 px-2 py-1 rounded-[10px_4px_10px_4px] text-xs font-sans font-bold transition-all cursor-pointer ${
+                theme === "light"
+                  ? "bg-yel text-[#2a2a4a] shadow-[2px_2px_0_var(--ink)] border border-ink/30"
+                  : "text-mut hover:text-ink hover:bg-ink/5 border border-transparent"
+              }`}
+              title={t("Light Mode", "Mode Terang")}
+              aria-pressed={theme === "light"}
+            >
+              <span className="text-sm leading-none">☀️</span>
+              <span className="hidden md:inline">{t("Light", "Terang")}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setTheme("dark")}
+              className={`flex items-center gap-1 px-2 py-1 rounded-[10px_4px_10px_4px] text-xs font-sans font-bold transition-all cursor-pointer ${
+                theme === "dark"
+                  ? "bg-ink text-paper shadow-[2px_2px_0_var(--yel)] border border-ink/30"
+                  : "text-mut hover:text-ink hover:bg-ink/5 border border-transparent"
+              }`}
+              title={t("Dark Mode", "Mode Gelap")}
+              aria-pressed={theme === "dark"}
+            >
+              <span className="text-sm leading-none">🌙</span>
+              <span className="hidden md:inline">{t("Dark", "Gelap")}</span>
+            </button>
+          </div>
+
           {/* Minimal Lang Toggle */}
           <button 
             onClick={() => setLang(lang === "en" ? "id" : "en")} 
-            className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-[12px_4px_12px_4px] hover:bg-black/5 transition-colors border-[2px] border-transparent hover:border-ink/10 text-mut hover:text-ink font-sans font-bold text-xs md:text-sm cursor-pointer"
+            className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-[12px_4px_12px_4px] hover:bg-ink/5 transition-colors border-[2px] border-transparent hover:border-ink/10 text-mut hover:text-ink font-sans font-bold text-xs md:text-sm cursor-pointer"
             title={t("Switch Language", "Ganti Bahasa")}
           >
             <span className="text-base md:text-lg leading-none">🌍</span>
