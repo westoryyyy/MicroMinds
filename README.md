@@ -42,8 +42,7 @@ By **Team Ketupat** 🫔
 
 [🌐 Live App](https://microminds-monad.vercel.app) &nbsp;&bull;&nbsp;
 [⚡ API Gateway](https://microminds-production.up.railway.app) &nbsp;&bull;&nbsp;
-[📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a) &nbsp;&bull;&nbsp;
-[📄 Architecture PDF](./MicroMinds_Architecture_and_Product_Guide.pdf)
+[📜 Smart Contract](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
 
 </div>
 
