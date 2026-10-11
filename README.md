@@ -381,7 +381,18 @@ pnpm dev
 
 ---
 
+## 👥 Team Ketupat
+
+| Name | Role | Focus |
+| :--- | :--- | :--- |
+| **Rotua Paulina** | Smart Contract Engineer | Core `Escrow.sol` protocol, on-chain state machine, Foundry unit tests & Monad deployment |
+| **Grace Yoelanda Turnip** | Backend Engineer | NestJS API Gateway, operator signer orchestration, Viem + Alchemy RPC & MCP server |
+| **Renatha Amelia Manggala Putri** | Frontend Engineer | Next.js 16 Marketplace UI, Privy embedded wallet integration & Envio GraphQL hooks |
+| **Nabilah Aprilia Darwin** | Visual Artist | Product identity, crayon aesthetic design system, custom UI assets & visual direction |
+
+---
+
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE) - see the LICENSE file for details.  
-Copyright (c) 2026 Team Ketupat / Monad Metropolis Hackathon.
+Copyright (c) 2026 Team Ketupat.
