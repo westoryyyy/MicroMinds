@@ -2,6 +2,8 @@
   "name": "microminds-backend",
   "private": true,
   "scripts": {
+    "build": "pnpm --filter @microminds/api build",
+    "start": "pnpm --filter @microminds/api start:prod",
     "dev:api": "pnpm --filter @microminds/api dev",
     "build:api": "pnpm --filter @microminds/api build",
     "start:api": "pnpm --filter @microminds/api start:prod",
