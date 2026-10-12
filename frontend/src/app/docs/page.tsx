@@ -97,9 +97,9 @@ export default function DocsPage() {
       <header className="wrap py-12 md:py-20 border-b-[3px] border-dashed border-mut">
         <div className="flex flex-col md:flex-row gap-8 justify-between items-start md:items-center">
           <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl mb-4">{t("Connect to MicroMinds", "Hubungkan ke MicroMinds")}</h1>
+            <h1 className="text-5xl md:text-6xl mb-4">{t("How it Works", "Cara Kerja")}</h1>
             <p className="text-xl text-mut leading-relaxed m-0">
-              {t("MicroMinds offers THREE powerful ways to consume decentralized APIs. You can give your AI Agent autonomous access via the ", "MicroMinds menawarkan TIGA cara ampuh untuk mengkonsumsi API terdesentralisasi. Kamu bisa memberikan agen AI mu akses otonom lewat ")}<strong>Model Context Protocol (MCP)</strong>{t(", integrate it directly into your own code like a traditional API, or test it live in our Web Playground.", ", mengintegrasikan langsung ke kodemu layaknya API tradisional, atau mengujinya secara langsung di Web Playground kami.")}
+              {t("MicroMinds powers the AI Agent Economy on Monad. You can give your AI Agent autonomous access via the ", "MicroMinds menggerakkan Ekonomi Agen AI di Monad. Kamu bisa memberikan agen AI mu akses otonom lewat ")}<strong>Model Context Protocol (MCP)</strong>{t(", integrate it directly into your own code like a traditional API, or test it live in our Web Playground.", ", mengintegrasikan langsung ke kodemu layaknya API tradisional, atau mengujinya secara langsung di Web Playground kami.")}
             </p>
           </div>
           <div className="hidden md:block shrink-0">

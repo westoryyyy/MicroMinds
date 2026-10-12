@@ -17,7 +17,7 @@ export default function Navbar() {
   const links = [
     ["/explore", t("Explore", "Eksplor")],
     ["/dashboard", t("Dashboard", "Dasbor")],
-    ["/docs", t("Docs", "Dokumen")]
+    ["/docs", t("How it Works", "Cara Kerja")]
   ] as const;
 
   const handleCopy = () => {
