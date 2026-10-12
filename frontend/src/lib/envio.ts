@@ -29,15 +29,59 @@ export async function fetchCalls(address: Hex, role: "consumer" | "provider"): P
     await sleep(250);
     return mockDb.calls.filter((c) => (role === "consumer" ? c.consumer : c.provider).toLowerCase() === address.toLowerCase());
   }
-  if (!CFG.envioUrl) return [];
-  let res: Response;
-  try {
-    res = await fetch(CFG.envioUrl, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: QUERY, variables: { where: { [role]: { _eq: address.toLowerCase() } } } }),
-    });
-  } catch { throw new ApiError("NETWORK", "Indexer tidak bisa dihubungi."); }
-  const json = await res.json().catch(() => null);
-  if (!res.ok || json?.errors) throw new ApiError("ENVIO", json?.errors?.[0]?.message ?? "Indexer error.");
-  return (json.data.Call as any[]).map(toRecord);
+
+  // 1. Prioritaskan Backend API Gateway (Database PostgreSQL real-time dengan listingName & tx Monad)
+  if (CFG.apiBase) {
+    try {
+      const res = await fetch(`${CFG.apiBase}/calls?address=${address.toLowerCase()}&role=${role}`, {
+        headers: { "Accept": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json().catch(() => null);
+        if (Array.isArray(data) && data.length > 0) {
+          return data.map((r: any): CallRecord => {
+            const rawStatus = String(r.status || "released").toLowerCase();
+            const status: CallStatus = STATUSES.includes(rawStatus as CallStatus) 
+              ? (rawStatus as CallStatus) 
+              : "released";
+
+            return {
+              callId: r.callId as Hex,
+              consumer: r.consumer as Hex,
+              provider: r.provider as Hex,
+              amount: BigInt(String(r.amountWei || r.amount || "0")),
+              status,
+              reservedAt: Number(r.reservedAt || Math.floor(new Date(r.createdAt || Date.now()).getTime() / 1000)),
+              finalizedAt: r.finalizedAt ? Number(r.finalizedAt) : undefined,
+              reserveTx: (r.reserveTx || r.txReserve) as Hex | undefined,
+              finalTx: (r.finalTx || r.txFinal) as Hex | undefined,
+              listingName: r.listingName || undefined,
+            };
+          });
+        }
+      }
+    } catch (err) {
+      console.warn("Backend /calls query error, attempting Envio fallback:", err);
+    }
+  }
+
+  // 2. Fallback ke Envio GraphQL Indexer (jika dikonfigurasi & backend kosong)
+  if (CFG.envioUrl) {
+    try {
+      const res = await fetch(CFG.envioUrl, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: QUERY, variables: { where: { [role]: { _eq: address.toLowerCase() } } } }),
+      });
+      if (res.ok) {
+        const json = await res.json().catch(() => null);
+        if (json?.data?.Call && Array.isArray(json.data.Call)) {
+          return (json.data.Call as any[]).map(toRecord);
+        }
+      }
+    } catch (err) {
+      console.warn("Envio indexer query error:", err);
+    }
+  }
+
+  return [];
 }

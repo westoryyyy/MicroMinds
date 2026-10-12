@@ -38,6 +38,9 @@ export class AppModule implements NestModule {
         // Escrow debug endpoints (balance requires key in prod, but open for testing)
         { path: 'escrow/balance/(.*)', method: RequestMethod.GET },
         { path: 'escrow/mock-deposit', method: RequestMethod.POST },
+        // Calls history endpoint (can query with address or API key)
+        { path: 'calls', method: RequestMethod.GET },
+        { path: 'calls/(.*)', method: RequestMethod.GET },
       )
       .forRoutes('*');
   }

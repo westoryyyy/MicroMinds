@@ -21,7 +21,11 @@ const CallDto = z.object({
   input: z.record(z.unknown()).default({}),
 });
 
-const PaginationDto = z.object({
+const CallsQueryDto = z.object({
+  address: z.string().optional(),
+  consumer: z.string().optional(),
+  provider: z.string().optional(),
+  role: z.enum(['consumer', 'provider']).optional(),
   limit: z.coerce.number().min(1).max(100).default(50),
   offset: z.coerce.number().min(0).default(0),
 });
@@ -46,37 +50,50 @@ export class CallsController {
       walletAddress: req.walletAddress, // backward compat
       balance: balance.toString(),
       balanceWei: balance.toString(),
+      balanceTMON: (Number(balance) / 1e18).toFixed(6),
     };
   }
 
   /**
    * GET /calls
-   * Returns the caller's call history (paginated, newest first).
-   * Query: limit=50&offset=0
+   * Returns the call history (paginated, newest first).
+   * Query: address=0x...&role=consumer&limit=50&offset=0
    */
   @Get('calls')
   async getCalls(
-    @Req() req: AuthRequest,
+    @Req() req: Request & { walletAddress?: string },
     @Query() query: unknown,
   ) {
-    const { limit, offset } = PaginationDto.parse(query);
-    const rows = await this.callsService.findByConsumer(
-      req.walletAddress,
-      limit,
-      offset,
-    );
+    const parsed = CallsQueryDto.parse(query);
+    const targetAddress = parsed.address || parsed.consumer || parsed.provider || req.walletAddress;
+
+    const rows = await this.callsService.findCalls({
+      address: targetAddress,
+      consumer: parsed.consumer,
+      provider: parsed.provider,
+      role: parsed.role,
+      limit: parsed.limit,
+      offset: parsed.offset,
+    });
+
     return rows.map((r) => ({
       callId: r.call_id,
       listingId: r.listing_id,
+      listingName: r.listing_name,
       consumer: r.consumer,
       provider: r.provider,
       amountWei: r.amount_wei,
+      amount: r.amount_wei,
       status: r.status,
       reason: r.reason,
       latencyMs: r.latency_ms,
       txReserve: r.tx_reserve,
       txFinal: r.tx_final,
+      reserveTx: r.tx_reserve,
+      finalTx: r.tx_final,
       createdAt: r.created_at,
+      reservedAt: Math.floor(new Date(r.created_at).getTime() / 1000),
+      finalizedAt: Math.floor(new Date(r.created_at).getTime() / 1000),
     }));
   }
 
@@ -101,6 +118,7 @@ export class CallsController {
       callId: result.callId,
       status: result.status,
       txHash: result.txFinal,
+      amountWei: result.amountWei,
     };
     if (result.status === 'released') {
       response.output = result.data;

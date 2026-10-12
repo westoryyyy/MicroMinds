@@ -87,6 +87,47 @@ export class CallsService {
     return rows;
   }
 
+  async findCalls(params: {
+    address?: string;
+    consumer?: string;
+    provider?: string;
+    role?: 'consumer' | 'provider';
+    limit?: number;
+    offset?: number;
+  }): Promise<(CallRow & { listing_name?: string })[]> {
+    const limit = params.limit ?? 50;
+    const offset = params.offset ?? 0;
+
+    let whereSql = '';
+    const queryParams: any[] = [];
+
+    const targetAddress = params.address || params.consumer || params.provider;
+    if (targetAddress) {
+      const addr = targetAddress.toLowerCase();
+      queryParams.push(addr);
+      if (params.role === 'provider' || params.provider) {
+        whereSql = `WHERE LOWER(c.provider) = $${queryParams.length}`;
+      } else if (params.role === 'consumer' || params.consumer) {
+        whereSql = `WHERE LOWER(c.consumer) = $${queryParams.length}`;
+      } else {
+        whereSql = `WHERE (LOWER(c.consumer) = $${queryParams.length} OR LOWER(c.provider) = $${queryParams.length})`;
+      }
+    }
+
+    queryParams.push(limit, offset);
+    const sql = `
+      SELECT c.*, l.name as listing_name
+      FROM calls c
+      LEFT JOIN listings l ON c.listing_id = l.id
+      ${whereSql}
+      ORDER BY c.created_at DESC
+      LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}
+    `;
+
+    const { rows } = await this.pool.query(sql, queryParams);
+    return rows;
+  }
+
   // ── POST /call — 10-step gateway ───────────────────────────────────────────
 
   /**
@@ -117,6 +158,7 @@ export class CallsService {
     txReserve: string;
     txFinal: string;
     reason?: string | null;
+    amountWei?: string;
   }> {
     // ── Step 1: Rate limit ──────────────────────────────────────────────────
     checkRateLimit(walletAddress.toLowerCase());
@@ -327,6 +369,7 @@ export class CallsService {
       txReserve,
       txFinal: txFinal!,
       reason,
+      amountWei: amountWei.toString(),
     };
   }
 

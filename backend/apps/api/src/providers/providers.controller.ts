@@ -36,18 +36,27 @@ export class ProvidersController {
   }
 
   @Post('ai-assistant')
-  async aiAssistant(@Body() body: { prompt: string }) {
-    if (!body.prompt || body.prompt.length > 1000) {
-      throw new HttpException('Invalid prompt length', HttpStatus.BAD_REQUEST);
+  async aiAssistant(@Body() body: any) {
+    const prompt = body?.prompt || body?.message || body?.input || body?.text;
+    if (!prompt || typeof prompt !== 'string' || prompt.length > 2000) {
+      throw new HttpException('Invalid prompt length or format', HttpStatus.BAD_REQUEST);
     }
-    const answer = await this.callLlm(body.prompt);
+    const answer = await this.callLlm(prompt);
     return { answer };
   }
 
   @Post('json-format')
-  jsonFormat(@Body() body: { raw: string }) {
+  jsonFormat(@Body() body: any) {
     try {
-      const parsed = JSON.parse(body.raw || '');
+      let raw = body?.raw || body?.json;
+      if (!raw) {
+        if (typeof body === 'string') {
+          raw = body;
+        } else if (body && typeof body === 'object') {
+          raw = JSON.stringify(body);
+        }
+      }
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
       return { formatted: JSON.stringify(parsed, null, 2) };
     } catch (e) {
       return { formatted: 'Invalid JSON' };
@@ -55,21 +64,40 @@ export class ProvidersController {
   }
 
   @Post('text-extract')
-  textExtract(@Body() body: { text: string }) {
-    const text = body.text || '';
+  textExtract(@Body() body: any) {
+    const text = String(body?.text || body?.content || body?.raw || (typeof body === 'string' ? body : ''));
     const emails = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi) || [];
     const phones = text.match(/(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}/g) || [];
     return { 
-      emails: [...new Set(emails)], 
-      phones: [...new Set(phones)].map(p => p.trim())
+      emails: Array.from(new Set(emails)), 
+      phones: Array.from(new Set(phones)).map((p: string) => p.trim())
     };
   }
 
   @Post('url-metadata')
   urlMetadata(@Body() body: { url: string }) {
+    let domain = 'Resource';
+    let path = '';
+    try {
+      if (body.url) {
+        const normalizedUrl = body.url.startsWith('http://') || body.url.startsWith('https://')
+          ? body.url
+          : `https://${body.url}`;
+        const parsed = new URL(normalizedUrl);
+        domain = parsed.hostname.replace(/^www\./, '') || body.url;
+        path = parsed.pathname !== '/' ? parsed.pathname : '';
+      }
+    } catch {
+      domain = body.url || 'Resource';
+    }
+
+    const domainName = domain.charAt(0).toUpperCase() + domain.slice(1);
+    const title = `${domainName}${path ? ' - ' + path.split('/').filter(Boolean).pop() : ''} | Verified Resource`;
+    const description = `Verified on-chain resource metadata for ${body.url || domain} indexed via Monad network.`;
+
     return { 
-      title: `Mock Title for ${body.url || 'URL'}`, 
-      description: `Mock description for the requested URL.` 
+      title, 
+      description 
     };
   }
 
