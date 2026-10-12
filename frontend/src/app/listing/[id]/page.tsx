@@ -18,6 +18,8 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
   const { t } = useLang();
 
   const [inputStr, setInputStr] = useState("");
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedId, setCopiedId] = useState(false);
   const [log, setLog] = useState<{ type: "step" | "error" | "result"; msg: React.ReactNode }[]>([]);
 
   useEffect(() => {
@@ -109,7 +111,60 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
             {t("output must match schema: ", "output harus sesuai skema: ")}{l.outputSchema ? Object.keys(l.outputSchema.properties || {}).join(", ") : t("any", "bebas")}
           </pre>
 
-          <h3 style={{ marginTop: 24 }}>{t("Try a call", "Coba Panggil")}</h3>
+          {/* Autonomous AI Agent (MCP) Card */}
+          <div className="bg-[#836EF9]/10 border-[3px] border-solid border-[#836EF9] p-5 md:p-6 rounded-[16px_4px_16px_4px]" style={{ marginTop: 24, marginBottom: 24 }}>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🤖</span>
+                <h3 className="m-0 text-2xl font-bold text-ink">
+                  {t("Use with Autonomous AI Agent (MCP)", "Gunakan dengan Agen AI Otonom (MCP)")}
+                </h3>
+              </div>
+              <span className="badge b-g !text-xs font-mono">⚡ 100% Agent-Ready on Monad</span>
+            </div>
+            <p className="text-sm md:text-base text-mut font-sans m-0 mb-4 leading-relaxed">
+              {t(
+                "Your AI Agent in Claude Desktop, Cursor, or VS Code can autonomously discover, negotiate, and execute this microservice with on-chain escrow protection on Monad Testnet.",
+                "Agen AI kamu di Claude Desktop, Cursor, atau VS Code dapat mencari, menawar, dan mengeksekusi layanan mikro ini secara otonom dengan perlindungan escrow on-chain di Monad Testnet."
+              )}
+            </p>
+
+            <div className="bg-paper border-[2px] border-dashed border-mut p-4 rounded-[10px_4px_10px_4px]">
+              <span className="text-xs font-bold uppercase tracking-wider text-mut block mb-1">
+                💬 {t("Suggested Agent Prompt:", "Prompt Agen Siap Pakai:")}
+              </span>
+              <p className="font-mono text-sm text-ink m-0 mb-3 select-all">
+                {`"Please search MicroMinds for '${l.name}' and execute it for my current task on Monad testnet."`}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button 
+                  className="btn b-b !py-1 !px-3 !text-sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`Please search MicroMinds for '${l.name}' and execute it for my current task on Monad testnet.`);
+                    setCopiedPrompt(true);
+                    setTimeout(() => setCopiedPrompt(false), 2000);
+                  }}
+                >
+                  {copiedPrompt ? t("Prompt Copied! ✅", "Prompt Tersalin! ✅") : t("Copy Agent Prompt", "Salin Prompt Agen")}
+                </button>
+                <button 
+                  className="btn b-w !py-1 !px-3 !text-sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(l.id);
+                    setCopiedId(true);
+                    setTimeout(() => setCopiedId(false), 2000);
+                  }}
+                >
+                  {copiedId ? t("UUID Copied! ✅", "UUID Tersalin! ✅") : t("Copy Listing UUID", "Salin UUID Listing")}
+                </button>
+                <Link className="btn b-y !py-1 !px-3 !text-sm" href="/docs">
+                  📖 {t("View Setup Guide", "Lihat Panduan Setup")}
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <h3 style={{ marginTop: 24 }}>{t("Manual Web Testing (Sandbox)", "Pengujian Web Manual (Sandbox)")}</h3>
           <textarea 
             value={inputStr} 
             onChange={(e) => setInputStr(e.target.value)} 

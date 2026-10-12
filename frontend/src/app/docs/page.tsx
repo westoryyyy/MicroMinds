@@ -14,7 +14,7 @@ export default function DocsPage() {
   const [copied, setCopied] = useState(false);
   const [listingId, setListingId] = useState<string>("YOUR_LISTING_ID_HERE");
   const [listingName, setListingName] = useState<string>("Text Extraction");
-  const [activeTab, setActiveTab] = useState<'mcp' | 'api' | 'playground'>('mcp');
+  const [activeTab, setActiveTab] = useState<'mcp' | 'playground'>('mcp');
   const [mcpClient, setMcpClient] = useState<'claude' | 'cursor' | 'vscode'>('claude');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
   const { t } = useLang();
@@ -99,7 +99,7 @@ export default function DocsPage() {
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl mb-4">{t("How it Works", "Cara Kerja")}</h1>
             <p className="text-xl text-mut leading-relaxed m-0">
-              {t("MicroMinds powers the AI Agent Economy on Monad. You can give your AI Agent autonomous access via the ", "MicroMinds menggerakkan Ekonomi Agen AI di Monad. Kamu bisa memberikan agen AI mu akses otonom lewat ")}<strong>Model Context Protocol (MCP)</strong>{t(", integrate it directly into your own code like a traditional API, or test it live in our Web Playground.", ", mengintegrasikan langsung ke kodemu layaknya API tradisional, atau mengujinya secara langsung di Web Playground kami.")}
+              {t("MicroMinds powers the Autonomous AI Agent Economy on Monad. Give your AI Agents (Claude Desktop, Cursor, VS Code) direct access to discover, negotiate, and settle decentralized micro-services via the Model Context Protocol (MCP) backed by Monad Smart Contract Escrow.", "MicroMinds menggerakkan Ekonomi Agen AI Otonom di Monad. Berikan agen AI mu (Claude Desktop, Cursor, VS Code) akses langsung untuk mencari, menawar, dan menyelesaikan transaksi micro-services terdesentralisasi lewat Model Context Protocol (MCP) yang dijamin Smart Contract Escrow Monad.")}
             </p>
           </div>
           <div className="hidden md:block shrink-0">
@@ -119,19 +119,13 @@ export default function DocsPage() {
               className={`btn !text-lg !px-6 !py-3 ${activeTab === 'mcp' ? 'b-b' : 'b-w'}`}
               onClick={() => setActiveTab('mcp')}
             >
-              🤖 {t("For AI Agents (MCP)", "Untuk Agen AI (MCP)")}
-            </button>
-            <button 
-              className={`btn !text-lg !px-6 !py-3 ${activeTab === 'api' ? 'b-r' : 'b-w'}`}
-              onClick={() => setActiveTab('api')}
-            >
-              💻 {t("For Developers (Direct API)", "Untuk Developer (API Langsung)")}
+              🤖 {t("For Autonomous AI Agents (MCP)", "Untuk Agen AI Otonom (MCP)")}
             </button>
             <button 
               className={`btn !text-lg !px-6 !py-3 ${activeTab === 'playground' ? 'b-g' : 'b-w'}`}
               onClick={() => setActiveTab('playground')}
             >
-              🕹️ {t("Web Playground (Testing)", "Web Playground (Pengujian)")}
+              🕹️ {t("Web Playground Sandbox", "Web Playground Sandbox")}
             </button>
           </div>
 
@@ -140,7 +134,7 @@ export default function DocsPage() {
             {/* TAB 1: MCP */}
             {activeTab === 'mcp' && (
               <div className="animate-fade-in">
-                <h2 className="text-4xl md:text-5xl mb-4 text-center">{t("Method 1: For AI Agents via MCP", "Metode 1: Untuk Agen AI via MCP")}</h2>
+                <h2 className="text-4xl md:text-5xl mb-4 text-center">{t("The Model Context Protocol (MCP) Standard", "Standar Model Context Protocol (MCP)")}</h2>
                 <p className="text-lg text-mut font-sans text-center mb-8 max-w-2xl mx-auto">
                   {t("Use Model Context Protocol (MCP) to let your AI Agents automatically discover, negotiate, and pay for APIs on Monad with trustless escrow.", "Gunakan Model Context Protocol (MCP) agar Agen AI kamu bisa otomatis mencari, menawar, dan membayar API di Monad dengan trustless escrow.")}
                 </p>
@@ -218,7 +212,7 @@ export default function DocsPage() {
                   <div className="flex-1 min-w-0 pb-12">
                     <h3 className="text-3xl m-0 mb-2">{t("Restart Your Client", "Restart Aplikasi Kamu")}</h3>
                     <p className="text-base text-mut m-0 font-sans">
-                      {t("Close and restart your application (press Cmd + Q on macOS) to load the new MCP server. You will see the tools icon (search_api, call_api) ready to use!", "Tutup dan restart aplikasimu (tekan Cmd + Q di macOS) untuk memuat server MCP baru. Ikon tools (search_api, call_api) akan siap digunakan!")}
+                      {t("Close and restart your application (press Cmd + Q on macOS) to load the new MCP server. You will see 3 official tools (check_balance, search_api, call_api) ready to use!", "Tutup dan restart aplikasimu (tekan Cmd + Q di macOS) untuk memuat server MCP baru. 3 tools resmi (check_balance, search_api, call_api) akan langsung siap digunakan!")}
                     </p>
                   </div>
                 </div>
@@ -252,7 +246,21 @@ export default function DocsPage() {
                       {/* Prompt 2 */}
                       <div className="bg-paper border-[3px] border-dashed border-mut p-4 md:p-5 rounded-[12px_4px_12px_4px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex-1">
-                          <span className="font-bold text-ink block mb-1">⚡ {t("Prompt B: Contact & Lead Extraction (Pay-per-use)", "Prompt B: Ekstraksi Kontak & Lead")}</span>
+                          <span className="font-bold text-ink block mb-1">💳 {t("Prompt B: Autonomous Balance Awareness (New!)", "Prompt B: Cek Saldo tMON Otonom (Baru!)")}</span>
+                          <p className="font-mono text-xs md:text-sm text-ink m-0">"Please check my available tMON balance on MicroMinds to see if I have enough funds for micro-API calls."</p>
+                        </div>
+                        <button 
+                          className="btn b-w !py-1 !px-3 !text-sm shrink-0"
+                          onClick={() => handleCopyPrompt("Please check my available tMON balance on MicroMinds to see if I have enough funds for micro-API calls.", "p_bal")}
+                        >
+                          {copiedPrompt === "p_bal" ? t("Copied! ✅", "Tersalin! ✅") : t("Copy", "Salin")}
+                        </button>
+                      </div>
+
+                      {/* Prompt 3 */}
+                      <div className="bg-paper border-[3px] border-dashed border-mut p-4 md:p-5 rounded-[12px_4px_12px_4px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div className="flex-1">
+                          <span className="font-bold text-ink block mb-1">⚡ {t("Prompt C: Contact & Lead Extraction (Pay-per-use)", "Prompt C: Ekstraksi Kontak & Lead")}</span>
                           <p className="font-mono text-xs md:text-sm text-ink m-0">"Morning! Can you search MicroMinds for an API on Monad, and buy/call it to extract emails and phone numbers from: 'Hey! Contact our team at partnerships@innovatecorp.com or +1-800-555-0199'?"</p>
                         </div>
                         <button 
@@ -263,10 +271,10 @@ export default function DocsPage() {
                         </button>
                       </div>
 
-                      {/* Prompt 3 */}
+                      {/* Prompt 4 */}
                       <div className="bg-paper border-[3px] border-dashed border-mut p-4 md:p-5 rounded-[12px_4px_12px_4px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex-1">
-                          <span className="font-bold text-ink block mb-1">🔗 {t("Prompt C: OpenGraph Link Preview", "Prompt C: Preview Link OpenGraph")}</span>
+                          <span className="font-bold text-ink block mb-1">🔗 {t("Prompt D: OpenGraph Link Preview", "Prompt D: Preview Link OpenGraph")}</span>
                           <p className="font-mono text-xs md:text-sm text-ink m-0">"In index.html, borrow the URL Metadata API from MicroMinds to generate preview card details for 'https://monad.xyz' on Monad testnet."</p>
                         </div>
                         <button 
@@ -295,100 +303,10 @@ export default function DocsPage() {
               </div>
             )}
 
-            {/* TAB 2: Direct API */}
-            {activeTab === 'api' && (
-              <div className="animate-fade-in">
-                <h2 className="text-4xl md:text-5xl mb-4 text-center">{t("Method 2: Direct API Access", "Metode 2: Akses API Langsung")}</h2>
-                <p className="text-lg text-mut font-sans text-center mb-10">
-                  {t("Don't want to use MCP? You can call MicroMinds directly from your code using your API key. Integrate it into your Node.js or Python backend easily!", "Tidak ingin menggunakan MCP? Kamu bisa memanggil MicroMinds langsung dari kodemu menggunakan API key. Integrasikan dengan mudah ke backend Node.js atau Python kamu!")}
-                </p>
-                
-                <div className="flex flex-col gap-8">
-                  {/* Mac/Linux cURL */}
-                  <div>
-                    <h4 className="text-xl m-0 mb-2 font-bold">1. Mac / Linux / Git Bash (cURL)</h4>
-                    <div className="relative">
-                      <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
-{`curl -X POST ${CFG.apiBase}/call \\
-  -H "x-api-key: ${key || "YOUR_API_KEY"}" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "listingId": "${listingId}",
-    "input": {
-      "text": "Hello, contact team Ketupat at hello@microminds.tech or +1-800-555-0199."
-    }
-  }'`}
-                      </pre>
-                    </div>
-                  </div>
-
-                  {/* Windows CMD cURL */}
-                  <div>
-                    <h4 className="text-xl m-0 mb-2 font-bold">2. Windows CMD (cURL)</h4>
-                    <div className="relative">
-                      <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
-{`curl -X POST ${CFG.apiBase}/call ^
-  -H "x-api-key: ${key || "YOUR_API_KEY"}" ^
-  -H "Content-Type: application/json" ^
-  -d "{\\"listingId\\": \\"${listingId}\\", \\"input\\": { \\"text\\": \\"Hello, contact team Ketupat at hello@microminds.tech or +1-800-555-0199.\\" }}"`}
-                      </pre>
-                    </div>
-                  </div>
-
-                  {/* Node.js (Fetch) */}
-                  <div>
-                    <h4 className="text-xl m-0 mb-2 font-bold">3. Node.js (Javascript)</h4>
-                    <div className="relative">
-                      <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
-{`fetch("${CFG.apiBase}/call", {
-  method: "POST",
-  headers: {
-    "x-api-key": "${key || "YOUR_API_KEY"}",
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    listingId: "${listingId}",
-    input: { text: "Hello, contact team Ketupat at hello@microminds.tech or +1-800-555-0199." }
-  })
-})
-.then(res => res.json())
-.then(console.log);
-`}
-                      </pre>
-                    </div>
-                  </div>
-
-                  {/* Python */}
-                  <div>
-                    <h4 className="text-xl m-0 mb-2 font-bold">4. Python (Requests)</h4>
-                    <div className="relative">
-                      <pre className="!bg-[#151520] !text-[#f4efe0] !border-[3px] !border-solid !border-ink !rounded-[12px_4px_12px_4px] !p-5 shadow-inner overflow-x-auto text-sm md:text-base font-mono leading-relaxed m-0">
-{`import requests
-
-response = requests.post(
-    "${CFG.apiBase}/call",
-    headers={
-        "x-api-key": "${key || "YOUR_API_KEY"}",
-        "Content-Type": "application/json"
-    },
-    json={
-        "listingId": "${listingId}",
-        "input": { "text": "Hello, contact team Ketupat at hello@microminds.tech or +1-800-555-0199." }
-    }
-)
-print(response.json())
-`}
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: Playground */}
+            {/* TAB 2: Playground */}
             {activeTab === 'playground' && (
               <div className="animate-fade-in">
-                <h2 className="text-4xl md:text-5xl mb-4 text-center">{t("Method 3: Web Playground", "Metode 3: Web Playground")}</h2>
+                <h2 className="text-4xl md:text-5xl mb-4 text-center">{t("Web Playground & Manual Sandbox", "Web Playground & Sandbox Manual")}</h2>
                 <div className="flex flex-col items-center text-center">
                   <div className="bg-yel border-[3px] border-solid border-ink rounded-full w-24 h-24 flex items-center justify-center shadow-sm mb-6">
                     <span className="text-4xl">🕹️</span>
