@@ -132,7 +132,7 @@ export default function DashboardPage() {
                 <h3 className="text-2xl m-0 relative z-10">{t("Balance", "Saldo")}</h3>
                 <p className="text-5xl font-gochi text-grn m-0 leading-none mt-2 relative z-10 break-all">{fmtMon(bal)} tMON</p>
                 <div className="mt-auto pt-6 relative z-10">
-                  <p className="text-mut text-sm font-sans m-0">{t("Held by cat:", "Ditahan kucing:")} <b>{fmtMon(heldByCat)}</b></p>
+                  <p className="text-mut text-sm font-sans m-0">{t("In Escrow:", "Ditahan Escrow:")} <b>{fmtMon(heldByCat)} tMON</b></p>
                   <p className="text-mut text-sm font-sans m-0">{t("Est.", "Est.")} {fmtIdr(bal)}</p>
                 </div>
               </div>

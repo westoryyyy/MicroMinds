@@ -56,13 +56,13 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
       return;
     }
 
-    setLog([{ type: "step", msg: t(`The cat holds ${fmtMon(l.priceWei)} tMON in reserve.`, `Kucing menahan ${fmtMon(l.priceWei)} tMON sebagai cadangan.`) }]);
+    setLog([{ type: "step", msg: t(`Escrow smart contract holds ${fmtMon(l.priceWei)} tMON in reserve.`, `Smart contract escrow menahan ${fmtMon(l.priceWei)} tMON sebagai cadangan.`) }]);
     
     callApi.mutate({ listingId: l.id, input: inp }, {
       onSuccess: (res) => {
         const out = res.output ? JSON.stringify(res.output, null, 2) : "";
         const badge = <Badge status={res.status} />;
-        const txt = res.status === "released" ? t("Coins moved to the provider.", "Koin diserahkan ke penyedia.") :
+        const txt = res.status === "released" ? t("Funds released to provider on-chain.", "Dana dirilis ke penyedia on-chain.") :
                     res.status === "refunded" ? t(`Refunded: ${res.reason || "Provider error"}. Your coins came back.`, `Dikembalikan: ${res.reason || "Kesalahan penyedia"}. Koin kamu kembali.`) : 
                     t("Failed", "Gagal");
         

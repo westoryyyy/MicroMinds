@@ -7,5 +7,5 @@ export const CFG = {
   apiBase: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001",
   envioUrl: process.env.NEXT_PUBLIC_ENVIO_GRAPHQL_URL ?? "",
   explorerTx: "https://testnet.monadexplorer.com/tx/",
-  idrRate: 16000, // estimasi demo untuk badge Rupiah
+  idrRate: 450, // Harga Monad (MON) coin terkini ~Rp 449 - Rp 450 IDR ($0.025 USD)
 };

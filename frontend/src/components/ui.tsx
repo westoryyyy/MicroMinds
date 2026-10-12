@@ -9,7 +9,7 @@ export function Badge({ status }: { status: "released" | "refunded" | "force_ref
     released: ["rel", t("Released", "Selesai")],
     refunded: ["ref", t("Refunded", "Dikembalikan")],
     force_refunded: ["ref", t("Force refunded", "Refund paksa")],
-    reserved: ["hold", t("Held by cat", "Ditahan kucing")],
+    reserved: ["hold", t("In Escrow", "Ditahan Escrow")],
     failed: ["ref", t("Failed", "Gagal")],
   };
   const [cls, label] = MAP[status] || ["ref", status];

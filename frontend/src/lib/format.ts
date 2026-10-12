@@ -14,6 +14,9 @@ export function fmtMon(wei?: bigint | string | null): string {
 
 export function fmtIdr(wei: bigint | string): string {
   const v = Number(formatEther(BigInt(wei))) * CFG.idrRate;
+  if (v > 0 && v < 1) {
+    return "≈ Rp " + v.toFixed(2);
+  }
   return "≈ Rp " + Math.round(v).toLocaleString("id-ID");
 }
 
