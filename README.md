@@ -81,6 +81,66 @@ Until now, developers building specialized utilities (e.g. smart contract vulner
 
 ---
 
+## 💼 Business Model & Sustainable Unit Economics
+
+MicroMinds is architected from the ground up to monetize **high-frequency, machine-to-machine commerce** where traditional Web2 payment aggregators fail.
+
+### 💰 Four Diversified Revenue Streams:
+
+| Revenue Stream | Mechanism | Target Audience | Projected Economics |
+| :--- | :--- | :--- | :--- |
+| **1. Protocol Take-Rate** | **2.5% fee** deducted on-chain upon successful `release()` of funds | All Tool Providers | 0% on Testnet; 2.5% on Mainnet. Highly scalable across millions of daily agent calls. |
+| **2. Staked Tool Discovery** | Providers stake `MON` to boost ranking and trust score in `search_api` results | Tool Creators & Sellers | Locked liquidity reduces circulating MON supply while generating curation yields. |
+| **3. Enterprise Agent Gateway** | Dedicated egress infrastructure, custom rate-limits, and guaranteed TPS SLAs | Enterprise AI Agent Swarms | Tiered B2B subscription for hedge funds, legal tech, and automated auditing swarms. |
+| **4. Serverless Tool Hosting** *(Roadmap)* | 1-Click containerized microservice hosting with built-in escrow integration | Independent Developers | Infrastructure margin on decentralized serverless compute and egress bandwidth. |
+
+---
+
+### 📊 The Micro-Transaction Math: Why Web2 Fails & Monad Wins
+
+Traditional payment processors make micro-transactions economically unviable. MicroMinds leverages Monad's parallel architecture to make sub-cent transactions profitable:
+
+| Economic Metric | Web2 Payment Rails (Stripe / PayPal) | Traditional EVM / L2s | **MicroMinds on Monad** |
+| :--- | :--- | :--- | :--- |
+| **Target Transaction Size** | $10.00 – $250.00 | $5.00 – $50.00 | **$0.001 – $0.05 per API call** |
+| **Fixed Processing Fee** | $0.30 per transaction | $0.05 – $2.50 (Gas volatility) | **<$0.0001 per transaction** |
+| **Effective Fee on $0.002 Call** | **1,500%** *(Completely Impossible)* | **2,500%** *(Unviable for Agents)* | **2.5% protocol fee ($0.00005)** |
+| **Settlement Time** | 2 – 5 business days | 12 – 60 seconds | **Sub-second atomic settlement** |
+| **Refund Mechanism** | Manual dispute (chargeback fee) | Manual multisig interaction | **Automated 100% on-chain refund** |
+
+---
+
+### 🛡️ Competitive Moat: The Flywheel of Autonomous Commerce
+
+```text
+               +-------------------------------------------+
+               |  More Autonomous Agents (Cursor / Claude) |
+               +---------------------+---------------------+
+                                     |
+                                     ▼
+                      +-----------------------------+
+                      | Higher Daily Transaction    |
+                      | Volume Settled in MON       |
+                      +--------------+--------------+
+                                     |
+                                     ▼
+   +-------------------------+       |       +-------------------------+
+   | Lower Per-Call Fees &   |<------+------>| Greater Revenue for     |
+   | Deeper Tool Liquidity   |               | Tool Creators (Sellers) |
+   +-------------------------+               +-------------------------+
+                                     ▲
+                                     |
+               +---------------------+---------------------+
+               | More Specialized Tools & Micro-APIs Listed |
+               +-------------------------------------------+
+```
+
+1. **First-Mover MCP Advantage:** By deploying native Model Context Protocol (MCP) servers, MicroMinds becomes the default runtime tool provider for developers in Claude Desktop and Cursor.
+2. **Defensible Network Effects:** As more AI agents query `/listings`, providers receive immediate paying machine traffic, attracting more tool creators and deepening the catalog.
+3. **Trustless On-Chain Moat:** Unlike centralized API aggregators that can withhold payouts, MicroMinds' non-custodial `Escrow.sol` contract ensures sellers can pull their accumulated MON at any time, cementing provider loyalty.
+
+---
+
 ## 🔄 Sequence Diagrams
 
 ### 1. Developer Setup & Autonomous Agent Discovery (MCP)
