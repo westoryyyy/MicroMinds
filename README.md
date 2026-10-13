@@ -141,6 +141,43 @@ Traditional payment processors make micro-transactions economically unviable. Mi
 
 ---
 
+## 📈 Go-to-Market & User Acquisition Strategy
+
+### Overview & The Two-Sided Flywheel
+MicroMinds is a two-sided marketplace. Our go-to-market is a self-reinforcing flywheel: high-utility tool creators on the supply side, autonomous agent developers on the demand side, and the Model Context Protocol (MCP) as the distribution bridge that connects them. On-chain escrow-backed settlement is what keeps it turning without counterparty risk.
+
+### 1. Why Now? (Macro Tailwinds)
+* **Distribution Already Exists:** MCP boasts 97M+ monthly SDK downloads and 10,000+ public servers, governed by the Agentic AI Foundation under the Linux Foundation.
+* **Machine Payments Are Real:** The x402 protocol recorded ~75M transactions worth $24M over a 30-day window in mid-2026, and Stripe unveiled its Machine Payments Protocol in March 2026.
+* **Measurable Subscription Fatigue:** Zylo's 2026 SaaS Management Index reports that **46% of SaaS licenses go unused in any 30-day window** (costing ~$19.8M annually per enterprise). AI agent developers inherit the same broken model: rigid monthly plans for occasional tools.
+* **Monad Enables True Micro-Commerce:** Traditional card rails charge `2.9% + $0.30` (150x the cost of a $0.002 API call). A native transfer on Monad costs ~0.0021 MON (~$0.00005 at $0.02/MON), making sub-cent machine transactions economically viable.
+
+> *"Payment standards answer how an agent pays. MicroMinds answers what comes before and after: which tool to use, and what happens if the call fails."*
+
+### 2. Target Audience & First Adopters
+* **Demand Side (Buyers):** AI engineers building multi-agent systems, power users of Claude Desktop and Cursor, hackathon teams building rapid prototypes, and automated Web3 trading/analytics bots.
+* **Supply Side (Sellers):** Independent developers, scrapers, ML engineers, and smart contract researchers with specialized scripts who want instant monetization without building billing systems or Stripe portals.
+
+### 3. Acquisition Channels
+* **MCP Hub Distribution (Demand Side):** Publish open-source MCP server to the Official MCP Registry, Smithery.ai, and PulseMCP. Lightweight TypeScript and Python client SDKs for LangChain, CrewAI, and Microsoft Agent Framework.
+* **Supply-Side Bootstrap ("First 50 Providers" Program):** Hand-picked launch cohort across smart contract auditors, DEX arbitrage calculators, social sentiment parsers, and wallet analytics. Funded launch credits ensure providers see real paid calls from Day 1. Zero protocol fees during bootstrap.
+* **Monad Native Ecosystem & DeltaV:** Partner with Monad DeFi protocols to list on-chain state feeds. Carry MicroMinds into DeltaV (800+ Monad startups) and leverage Metropolis ecosystem support to fund provider incentives.
+
+### 4. Rollout Phases
+* **Phase 1 (Launch):** Live product on Monad Testnet, MCP server published to registries, interactive Playground live.
+* **Phase 2 (Bootstrap):** Onboard the first 50 providers with launch credits, zero protocol fees, and first-party seed tools.
+* **Phase 3 (Scale):** Open permissionless listings, add ecosystem data feeds, and transition the escrow protocol to Monad Mainnet.
+
+### 5. Key Metrics We Track
+* Active verified tool listings
+* Weekly successful paid agent invocations
+* Agent retention (share of agents returning for repeat calls)
+* Refund rate (vital health metric for provider quality)
+* Time from provider sign-up to first paid call
+
+
+---
+
 ## 🔄 Sequence Diagrams
 
 ### 1. Developer Setup & Autonomous Agent Discovery (MCP)
@@ -411,6 +448,70 @@ MicroMinds/
 ```
 
 ---
+
+
+---
+
+## 🧪 How to Test MicroMinds (3-Minute Judge Walkthrough)
+
+* **🌐 Live App:** [https://www.microminds.tech](https://www.microminds.tech)
+* **⚡ Monad Testnet:** Chain ID `10143`
+* **📜 Escrow Contract:** [`0x5c7141ab4d637915858ee97881fd613af468c76a`](https://testnet.monadscan.com/address/0x5c7141ab4d637915858ee97881fd613af468c76a)
+
+### ⚡ Fastest Path (Under 3 Minutes)
+
+#### Step 1: Sign in with Google (Zero Seed-Phrase Friction)
+1. Open [https://www.microminds.tech](https://www.microminds.tech) and click **"Connect Wallet"** (top right).
+2. Choose **"Continue with Google"**. Privy automatically provisions an embedded Monad Testnet wallet for your account.
+
+#### Step 2: Fund Your Escrow Balance
+1. Copy your wallet address from the user profile menu.
+2. Get free testnet MON from the official faucet: [https://faucet.monad.xyz](https://faucet.monad.xyz).
+3. Open the **Dashboard** tab, click **"Deposit"**, enter `0.5 tMON`, and confirm.
+4. Your escrow balance updates on-chain instantly.
+
+#### Step 3: Run a Paid Call & Test the Zero-Trust Refund
+* **Success Path:**
+  1. Open **Playground** (or pick **Smart Contract Auditor** from Explore).
+  2. Paste this sample vulnerable contract and click **"Execute"**:
+```solidity
+contract Vault {
+    mapping(address => uint256) public balances;
+    function deposit() external payable { balances[msg.sender] += msg.value; }
+    function withdraw() external {
+        uint256 amount = balances[msg.sender];
+        (bool ok, ) = msg.sender.call{value: amount}("");
+        require(ok);
+        balances[msg.sender] = 0;
+    }
+}
+```
+  3. Watch the loop: funds are locked in Monad Escrow, the AI audits the contract, returns vulnerability findings, and releases payment on-chain.
+* **Failure Path (Automatic Refund Guarantee):**
+  1. Submit an empty or invalid payload.
+  2. The call returns an error, and 100% of reserved funds are instantly refunded to your escrow balance.
+
+#### Step 4 (Optional): Autonomous AI Agent via Claude Desktop / MCP
+1. In the Dashboard, click **"Generate API Key"** and copy your key.
+2. Clone this repo: `git clone https://github.com/westoryyyy/MicroMinds.git`
+3. Add MicroMinds to your MCP client config (`claude_desktop_config.json` or `.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "microminds": {
+      "command": "node",
+      "args": ["./MicroMinds/backend/packages/mcp-server/dist/index.js"],
+      "env": {
+        "MICROMINDS_API_KEY": "YOUR_COPIED_KEY",
+        "MICROMINDS_BASE_URL": "https://microminds-production.up.railway.app"
+      }
+    }
+  }
+}
+```
+4. Prompt Claude: *"Check my MicroMinds balance, find a smart contract audit tool, and review this Vault contract."*
+5. Watch Claude discover, execute, and settle payments autonomously!
+
 
 ## 🚀 Local Development Quickstart
 
